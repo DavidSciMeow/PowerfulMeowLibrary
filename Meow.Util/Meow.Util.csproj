@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <PackageId>Electronicute.Meow.Util</PackageId>
+    <Authors>DavidSciMeow</Authors>
+    <Company>Electronicute</Company>
+    <Product>Meow.Util</Product>
+    <Copyright>Electronicute @ 2021</Copyright>
+    <NeutralLanguage>zh-CN</NeutralLanguage>
+    <PackageProjectUrl>https://github.com/DavidSciMeow/MeowsLibraryCore</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/DavidSciMeow/MeowsLibraryCore</RepositoryUrl>
+    <Version>1.0.0</Version>
+    <RepositoryType>gitrepo</RepositoryType>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="6.0.0" />
+  </ItemGroup>
+
+</Project>

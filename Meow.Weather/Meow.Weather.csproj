@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <AssemblyName>Electronicute.Weather</AssemblyName>
+    <Description>中央气象台获取组件</Description>
+    <Copyright>Electronicute @ 2021</Copyright>
+    <PackageLicenseExpression>LGPL-2.0-only</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/Electronicute/Meow.Weather</RepositoryUrl>
+    <NeutralLanguage>zh</NeutralLanguage>
+    <PackageProjectUrl>https://github.com/Electronicute/Meow.Weather</PackageProjectUrl>
+    <RepositoryType>gitrepo</RepositoryType>
+    <PackageTags>Weather  NMC_China 中国中央气象台</PackageTags>
+    <PackageReleaseNotes>中国中央气象台V3版天气获取组件</PackageReleaseNotes>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <AssemblyVersion>1.0.1</AssemblyVersion>
+    <FileVersion>1.0.1</FileVersion>
+    <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <Version>1.0.1</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="WeatherTest\**" />
+    <EmbeddedResource Remove="WeatherTest\**" />
+    <None Remove="WeatherTest\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HtmlAgilityPack" Version="1.11.36" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MeowCore\MeowCore.csproj" />
+  </ItemGroup>
+
+</Project>

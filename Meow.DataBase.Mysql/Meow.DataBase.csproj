@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <PackageId>Electronicute.Meow.DataBase</PackageId>
+    <Version>1.0.0</Version>
+    <Company>Electronicute</Company>
+    <Product>Meow.DataBase</Product>
+    <Authors>DavidSciMeow</Authors>
+    <PackageProjectUrl>https://github.com/DavidSciMeow/MeowsLibraryCore</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/DavidSciMeow/MeowsLibraryCore</RepositoryUrl>
+    <RepositoryType>gitrepo</RepositoryType>
+    <NeutralLanguage>zh-CN</NeutralLanguage>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <AssemblyName>$(MSBuildProjectName)</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="8.0.28" />
+  </ItemGroup>
+
+</Project>

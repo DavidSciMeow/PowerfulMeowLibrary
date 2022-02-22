@@ -1,0 +1,181 @@
+﻿using MySql.Data.MySqlClient;
+using System;
+using System.Data;
+
+namespace Meow.Database.Mysql
+{
+    /// <summary>
+    /// MysqlHelper
+    /// <para>使用的时候自动包裹using语句即可</para>
+    /// <para>when use this classes, don't forget using as our suggest Form as below</para>
+    /// <code>
+    /// using var dbc = new MysqlDBH(`ConnectionString`);
+    /// </code>
+    /// </summary>
+    public class MysqlDBH : IDisposable
+    {
+        string cmdText;
+        MySqlParameter[] commandParameters;
+        CommandType cmdType;
+        MySqlConnection conn = null;
+        /// <summary>
+        /// 初始化一个Mysql连接(字符串初始化)
+        /// <para>to Initialize a link with a ConnectionString</para>
+        /// </summary>
+        /// <param name="d">
+        /// 连接字符串
+        /// <para>ConnectionString</para>
+        /// </param>
+        public MysqlDBH(string d) => conn ??= new MySqlConnection(d);
+        /// <summary>
+        /// 初始化一个Mysql连接(实例初始化)
+        /// <para>init instance with a Connection Instance</para>
+        /// </summary>
+        /// <param name="d">
+        /// 一个Mysql连接实例
+        /// <para>An Instance of Connection</para>
+        /// </param>
+        public MysqlDBH(MySqlConnection d) => conn ??= d;
+        /// <summary>
+        /// 根据参数初始化一个Mysql连接
+        /// <para>by define of MySql's Connection</para>
+        /// </summary>
+        /// <param name="DataBase">数据库名称<para>Database's Name</para></param>
+        /// <param name="DataSource">源地址<para>DataSource</para></param>
+        /// <param name="Port">端口<para>Port of database</para></param>
+        /// <param name="UserId">用户名<para>User Name</para></param>
+        /// <param name="password">密码<para>Password</para></param>
+        /// <param name="Charset">字符集(默认utf8)<para>Charachter Set</para></param>
+        /// <param name="otherParameter">其他子串,如果有默认以;结尾<para>Other Parameter (mustends with ';')</para></param>
+        public MysqlDBH(string DataBase, string DataSource, string Port, string UserId, string password, string Charset = "utf8", string otherParameter = "")
+            => conn = new MySqlConnection(
+                $"Database={DataBase};DataSource={DataSource};Port={Port};UserId={UserId};Password={password};Charset={Charset};{otherParameter}"
+                );
+        /// <summary>
+        /// 准备一个数据库连接
+        /// <para>prepare a connection,TO first Init Connection with this</para>
+        /// </summary>
+        /// <param name="cmdText">
+        /// 执行的SQL命令
+        /// <para>the SQL Command that you want to send</para>
+        /// </param>
+        /// <param name="cmdType">
+        /// 命令模式*一般使用Text*输入`default`不更改本项
+        /// <para>Command MODE, like wise we all using Text, which you can type Default.</para>
+        /// </param>
+        /// <param name="commandParameters">命令参数</param>
+        /// <returns>返回一个可连写的DBH</returns>
+        public MysqlDBH PrepareDb(string cmdText, CommandType cmdType = CommandType.Text, params MySqlParameter[] commandParameters)
+        {
+            this.cmdText = cmdText;
+            this.commandParameters = commandParameters;
+            this.cmdType = cmdType;
+            return this;
+        }
+        /// <summary>
+        /// 执行一个无返回值的SQL操作(非查询类)
+        /// <para>perform an action that without SQL SELECT.(mostly)</para>
+        /// </summary>
+        /// <returns>
+        /// 操作的行数
+        /// <para>Infected lines</para>
+        /// </returns>
+        public int ExecuteNonQuery()
+        {
+            try
+            {
+                using MySqlCommand cmd = new();
+                PrepareCommand(cmd, conn, null, cmdType, cmdText, commandParameters);
+                int val = cmd.ExecuteNonQuery();
+                return val;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        /// <summary>
+        /// 获取查询操作的一个Reader
+        /// <para>Get an SQL reader (which SELECT)</para>
+        /// </summary>
+        /// <returns>
+        /// 一个Reader
+        /// <para>a Reader</para>
+        /// </returns>
+        public MySqlDataReader ExecuteReader()
+        {
+            try
+            {
+                using MySqlCommand cmd = new();
+                PrepareCommand(cmd, conn, null, cmdType, cmdText, commandParameters);
+                MySqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
+                return reader;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        /// <summary>
+        /// 获取一个DataSet对象(查询操作)
+        /// <para>get A DataSet Instance (For SELECT)</para>
+        /// </summary>
+        /// <returns>
+        /// 一个DataSet
+        /// <para>a DataSet</para>
+        /// </returns>
+        public DataSet GetDataSet()
+        {
+            try
+            {
+                using MySqlCommand cmd = new();
+                PrepareCommand(cmd, conn, null, cmdType, cmdText, commandParameters);
+                MySqlDataAdapter adapter = new();
+                adapter.SelectCommand = cmd;
+                DataSet ds = new();
+                adapter.Fill(ds);
+                return ds;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        /// <summary>
+        /// 默认关闭的Dispose
+        /// <para>for using statement auto close conn</para>
+        /// </summary>
+        public void Dispose()
+        {
+            GC.SuppressFinalize(this);
+            try
+            {
+                conn.Close();
+                conn.Dispose();
+            }
+            catch
+            {
+                conn = null;
+                GC.Collect();
+            }
+        }
+        private static void PrepareCommand(MySqlCommand cmd, MySqlConnection conn,
+            MySqlTransaction trans, CommandType cmdType, string cmdText,
+            MySqlParameter[] cmdParms)
+        {
+            if (conn.State != ConnectionState.Open) { conn.Open(); }
+            cmd.Connection = conn;
+            cmd.CommandText = cmdText;
+            cmd.CommandType = cmdType;
+            cmd.Transaction = trans;
+            if (cmdParms != null)
+            {
+                cmd.Parameters.Clear();
+                foreach (MySqlParameter parm in cmdParms)
+                {
+                    cmd.Parameters.Add(parm);
+                }
+            }
+        }
+    }
+}

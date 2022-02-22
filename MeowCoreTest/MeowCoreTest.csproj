@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Meow.DataBase.Mysql\Meow.DataBase.csproj" />
+    <ProjectReference Include="..\Meow.Interpreter\Meow.Interpreter.csproj" />
+    <ProjectReference Include="..\Meow.Util\Meow.Util.csproj" />
+    <ProjectReference Include="..\MeowCore\MeowCore.csproj" />
+  </ItemGroup>
+
+</Project>
