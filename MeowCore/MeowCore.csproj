@@ -7,24 +7,25 @@
     <PackageId>Electronicute.Meow</PackageId>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <Copyright>2021 Electronicute</Copyright>
+    <PackageLicenseExpression>LGPL-2.0-only</PackageLicenseExpression>
+    <Copyright>2022 Electronicute</Copyright>
     <Description>An Product easy to use and write-easy.
-3.1.0 - Unpack some features</Description>
+4.0.0 - Upgrade to .net6 Version.</Description>
     <Product>MeowProductX</Product>
     <Company>Electronicute</Company>
     <Authors>DavidSciMeow</Authors>
     <PackageIcon></PackageIcon>
     <PackageIconUrl />
-    <PackageProjectUrl>https://github.com/DavidSciMeow/MeowsLibraryCore</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary</PackageProjectUrl>
     <RepositoryUrl>https://github.com/DavidSciMeow/MeowsLibraryCore</RepositoryUrl>
     <RepositoryType>gitrepo</RepositoryType>
     <NeutralLanguage>zh</NeutralLanguage>
     <PackageTags>Csharp-Library C# library</PackageTags>
-    <Version>3.1.1</Version>
+    <Version>4.0.0</Version>
     <ApplicationIcon />
     <Win32Resource />
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <BaseOutputPath>..\Ouput\</BaseOutputPath>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

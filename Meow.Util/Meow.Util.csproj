@@ -7,13 +7,17 @@
     <Authors>DavidSciMeow</Authors>
     <Company>Electronicute</Company>
     <Product>Meow.Util</Product>
-    <Copyright>Electronicute @ 2021</Copyright>
+    <Copyright>Electronicute @ 2022</Copyright>
     <NeutralLanguage>zh-CN</NeutralLanguage>
-    <PackageProjectUrl>https://github.com/DavidSciMeow/MeowsLibraryCore</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/DavidSciMeow/MeowsLibraryCore</RepositoryUrl>
-    <Version>1.0.0</Version>
+    <PackageProjectUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary</RepositoryUrl>
+    <Version>4.0.0</Version>
     <RepositoryType>gitrepo</RepositoryType>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Description>MeowPowerfulLibrary - Util Core
+(.net 6)</Description>
+    <BaseOutputPath>..\Ouput\</BaseOutputPath>
+    <PackageLicenseExpression>LGPL-2.0-only</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>
