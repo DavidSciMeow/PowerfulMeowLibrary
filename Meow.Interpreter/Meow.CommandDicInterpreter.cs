@@ -312,7 +312,7 @@ namespace Meow.Interpreter.Command
         {
             if (Log)
             {
-                Console.WriteLine($"[Meow.Interpreter] {DateTime.Now} \n{s}");
+                Console.WriteLine($"[MI {DateTime.Now:t}] :: {s}");
             }
         }
         /// <summary>
@@ -361,7 +361,7 @@ namespace Meow.Interpreter.Command
             }
             var end = DateTime.Now;
             var s = (end - start).TotalMilliseconds;
-            LogInfo($"Interpreter Complete in {s} ms \n:: On Command {context}");
+            LogInfo($"Interpreter Complete in {s} ms :: On Command {context}");
             return s;
         }
         /// <summary>
@@ -389,8 +389,20 @@ namespace Meow.Interpreter.Command
             }
             var end = DateTime.Now;
             var s = (end - start).TotalMilliseconds;
-            LogInfo($"Interpreter Complete in {s} ms \n:: On Command {context}");
+            LogInfo($"Interpreter Complete in {s} ms :: On Command {context}");
             return s;
+        }
+        /// <summary>
+        /// 初始化表
+        /// </summary>
+        public void DoInit()
+        {
+            var start = DateTime.Now;
+            var cc = "".ToExpression();
+            _ = PatternDictionary.GetAction(cc);
+            var end = DateTime.Now;
+            var s = (end - start).TotalMilliseconds;
+            LogInfo($"Interpreter Load in {s} ms :: On Init");
         }
     }
 }
