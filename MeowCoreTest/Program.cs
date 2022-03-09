@@ -1,4 +1,5 @@
-﻿using Meow.Database.Mysql;
+﻿
+using Meow.Interpreter.Command;
 
 namespace MeowCoreTest
 {
@@ -6,16 +7,15 @@ namespace MeowCoreTest
     {
 		public static void Main(string[] args)
         {
-            using var d = ReturnService();
-            var k = d.PrepareDb("SELECT qid," +
-                "rinkorushenable,rinkorushtype,rinkorushscore," +
-                "rinkorushdndtimestart,rinkorushdndtimeend" +
-                " FROM RinkoUser").GetDataSet();
-            System.Console.WriteLine(k);
-        }
-        public static MysqlDBH ReturnService()
-        {
-            return new MysqlDBH("rinko", "112.6.216.175", "12306", "rinkobot", "rinkobot");
+            var ipt = new Interpreter();
+            ipt.InjectAction("天气 $ $".ToExpression(), (s, a) => { System.Console.WriteLine($"command 您要查询天气,{s[1]} {s[2]}"); });
+            ipt.InjectAction("a $".ToExpression(), (s, a) => { System.Console.WriteLine($"command a,{s[1]}"); });
+
+            while (true)
+            {
+                System.Console.WriteLine("---");
+                ipt.DoInterpret(System.Console.ReadLine(),null);
+            }
         }
     }
 }

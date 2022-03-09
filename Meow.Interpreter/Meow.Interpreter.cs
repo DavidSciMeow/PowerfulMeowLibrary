@@ -60,7 +60,7 @@ namespace Meow.Interpreter
     public class CommandInterpreter
     {
         List<(string[] CommandPattern, Action<string[], dynamic> action)> PatternList { get; } = new();
-        Action<string[], dynamic> DefaultAction;
+        Action<string[], dynamic>? DefaultAction;
         dynamic? @Object;
         private sealed class CommandEqualityComparer : IEqualityComparer<string>
         {
@@ -80,7 +80,6 @@ namespace Meow.Interpreter
                 return hashProductCode;
             }
         }
-
         /// <summary>
         /// 命令分隔符
         /// </summary>
@@ -134,6 +133,6 @@ namespace Meow.Interpreter
             var d = new BaseInterpreter(BaseString, Spliter).GetPhrase();
             ((from a in PatternList where Enumerable.SequenceEqual(d, a.CommandPattern,new CommandEqualityComparer()) select a).FirstOrDefault().action ?? DefaultAction)?.Invoke(d, @Object);
         }
-        
     }
+
 }

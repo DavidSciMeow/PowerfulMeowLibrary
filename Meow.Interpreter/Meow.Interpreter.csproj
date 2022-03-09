@@ -9,7 +9,7 @@
     <RepositoryType>gitrepo</RepositoryType>
     <Copyright>Electronicute @ 2022</Copyright>
     <PackageId>Electronicute.Meow.Interpreter</PackageId>
-    <Version>4.0.0</Version>
+    <Version>4.0.1</Version>
     <Authors>DavidSciMeow</Authors>
     <Product>Meow.Interpreter</Product>
     <Company>Electronicute</Company>
@@ -22,5 +22,11 @@
 (.net 6)</Description>
     <BaseOutputPath>..\Ouput\</BaseOutputPath>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="bin\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <None Remove="bin\**" />
+  </ItemGroup>
 
 </Project>

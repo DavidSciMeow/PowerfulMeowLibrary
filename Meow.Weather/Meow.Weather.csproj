@@ -28,8 +28,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="bin\**" />
     <Compile Remove="WeatherTest\**" />
+    <EmbeddedResource Remove="bin\**" />
     <EmbeddedResource Remove="WeatherTest\**" />
+    <None Remove="bin\**" />
     <None Remove="WeatherTest\**" />
   </ItemGroup>
 
