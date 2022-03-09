@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 namespace Meow.Interpreter.Command
 {
@@ -58,7 +59,11 @@ namespace Meow.Interpreter.Command
                     }
                     else if (v.Equals(default_command_placeholder))//是命令字
                     {
-                        result.Add(new Expression("", true));// 增加表达式
+                        result.Add(new Expression("",isPlaceholder:true));// 增加表达式
+                    }
+                    else if (v.StartsWith(default_command_placeholder) && v.EndsWith(default_command_placeholder)) //正则类
+                    {
+                        result.Add(new Expression(v[1..^1], isRegex: true)); //是正则表达式
                     }
                     else
                     {
@@ -180,13 +185,33 @@ namespace Meow.Interpreter.Command
         /// </summary>
         public bool IsPlaceholder;
         /// <summary>
+        /// 是否为正则表达式
+        /// </summary>
+        public bool IsRegex;
+        /// <summary>
         /// 创建表达式结构
         /// </summary>
         /// <param name="expressionString">命令字</param>
         /// <param name="isPlaceholder">是否为参数列</param>
-        public Expression(string expressionString, bool isPlaceholder = false)
+        /// <param name="isRegex">是否为正则表达式串</param>
+        public Expression(string expressionString, bool isPlaceholder = false, bool isRegex = false)
         {
-            ExpressionString = expressionString;
+            IsRegex = isRegex;
+            if (isRegex)
+            {
+                if(expressionString.Length > 3)
+                {
+                    ExpressionString = expressionString[1..^1];
+                }
+                else
+                {
+                    ExpressionString = expressionString;
+                }
+            }
+            else
+            {
+                ExpressionString = expressionString;
+            }
             IsPlaceholder = isPlaceholder;
         }
         /// <summary>
@@ -204,6 +229,18 @@ namespace Meow.Interpreter.Command
             else if(a.IsPlaceholder || b.IsPlaceholder)
             {
                 return true;
+            }
+            else if (a.IsRegex && b.IsRegex)
+            {
+                return a.ExpressionString == b.ExpressionString;
+            }
+            else if (a.IsRegex)
+            {
+                return Regex.IsMatch(b.ExpressionString, a.ExpressionString);
+            }
+            else if (b.IsRegex)
+            {
+                return Regex.IsMatch(a.ExpressionString, b.ExpressionString);
             }
             else
             {
@@ -229,7 +266,18 @@ namespace Meow.Interpreter.Command
             {
                 return true;
             }
-            return b.IsPlaceholder;
+            else if (b.IsPlaceholder)
+            {
+                return true;
+            }
+            else if (b.IsRegex)
+            {
+                return Regex.IsMatch(a, b.ExpressionString);
+            }
+            else
+            {
+                return false;
+            }
         }
         /// <summary>
         /// 判断字符串是否和表达式一致
@@ -308,6 +356,10 @@ namespace Meow.Interpreter.Command
         /// 是否标记日志
         /// </summary>
         public static bool Log { private set; get; }
+        /// <summary>
+        /// 内部日志记录函数
+        /// </summary>
+        /// <param name="s"></param>
         private static void LogInfo(string s)
         {
             if (Log)
@@ -399,10 +451,19 @@ namespace Meow.Interpreter.Command
         {
             var start = DateTime.Now;
             var cc = "".ToExpression();
-            _ = PatternDictionary.GetAction(cc);
-            var end = DateTime.Now;
-            var s = (end - start).TotalMilliseconds;
-            LogInfo($"Interpreter Load in {s} ms :: On Init");
+            var d = PatternDictionary.GetAction(cc);
+            if (d == null)
+            {
+                var end = DateTime.Now;
+                var s = (end - start).TotalMilliseconds;
+                LogInfo($"Interpreter Load in {s} ms :: On Init *Default null*");
+            }
+            else
+            {
+                var end = DateTime.Now;
+                var s = (end - start).TotalMilliseconds;
+                LogInfo($"Interpreter Load in {s} ms :: On Init *Substantial null*");
+            }
         }
     }
 }
