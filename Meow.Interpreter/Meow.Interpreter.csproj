@@ -9,7 +9,7 @@
     <RepositoryType>gitrepo</RepositoryType>
     <Copyright>Electronicute @ 2022</Copyright>
     <PackageId>Electronicute.Meow.Interpreter</PackageId>
-    <Version>4.1.0</Version>
+    <Version>4.1.1</Version>
     <Authors>DavidSciMeow</Authors>
     <Product>Meow.Interpreter</Product>
     <Company>Electronicute</Company>
