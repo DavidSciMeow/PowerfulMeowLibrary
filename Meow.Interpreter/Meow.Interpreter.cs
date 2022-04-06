@@ -53,7 +53,6 @@ namespace Meow.Interpreter
             return sb.ToString();
         }
     }
-
     /// <summary>
     /// 命令解释器
     /// </summary>
@@ -134,5 +133,4 @@ namespace Meow.Interpreter
             ((from a in PatternList where Enumerable.SequenceEqual(d, a.CommandPattern,new CommandEqualityComparer()) select a).FirstOrDefault().action ?? DefaultAction)?.Invoke(d, @Object);
         }
     }
-
 }

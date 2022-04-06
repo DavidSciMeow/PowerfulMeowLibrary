@@ -84,7 +84,7 @@ namespace Meow.Interpreter.Command
             //return (from a in dic where a.Key.Compare(expr) == true select a).FirstOrDefault().Value; //much more expres
             foreach (var i in dic)
             {
-                if(i.Key.Compare(expr))
+                if (i.Key.Compare(expr))
                 {
                     return i.Value;
                 }
@@ -351,16 +351,16 @@ namespace Meow.Interpreter.Command
     public class Interpreter
     {
         SortedDictionary<Expression[], Action<string[], object?>> PatternDictionary { get; } = new(new ExpressionCompare());
-        Action<object?> DefaultAction = (e) => { LogInfo("No Such Command Even Exist"); };
+        Action<object?> DefaultAction = (e) => { Console.WriteLine($"[MI { DateTime.Now:t}] :: No Such Command Even Exist"); };
         /// <summary>
         /// 是否标记日志
         /// </summary>
-        public static bool Log { private set; get; }
+        public bool Log { private set; get; }
         /// <summary>
         /// 内部日志记录函数
         /// </summary>
         /// <param name="s"></param>
-        private static void LogInfo(string s)
+        private void LogInfo(string s)
         {
             if (Log)
             {
@@ -373,7 +373,7 @@ namespace Meow.Interpreter.Command
         /// <param name="Log"></param>
         public Interpreter(bool Log = true)
         {
-            Interpreter.Log = Log;
+            this.Log = Log;
         }
         /// <summary>
         /// 尝试增加一条命令
@@ -452,6 +452,140 @@ namespace Meow.Interpreter.Command
             var start = DateTime.Now;
             var cc = "".ToExpression();
             var d = PatternDictionary.GetAction(cc);
+            if (d == null)
+            {
+                var end = DateTime.Now;
+                var s = (end - start).TotalMilliseconds;
+                LogInfo($"Interpreter Load in {s} ms :: On Init *Default null*");
+            }
+            else
+            {
+                var end = DateTime.Now;
+                var s = (end - start).TotalMilliseconds;
+                LogInfo($"Interpreter Load in {s} ms :: On Init *Substantial null*");
+            }
+        }
+    }
+    /// <summary>
+    /// 泛型类解释器
+    /// </summary>
+    /// <typeparam name="T">泛型列</typeparam>
+    public class Interpreter<T>
+    {
+        SortedDictionary<Expression[], Action<string[], T?>> PatternDictionary { get; } = new(new ExpressionCompare());
+        Action<T?> DefaultAction = (e) => { Console.WriteLine($"[MI { DateTime.Now:t}] :: No Such Command Even Exist"); };
+        private Action<string[], T?>? GetAction(SortedDictionary<Expression[], Action<string[], T?>> dic, Expression[] expr)
+        {
+            //return (from a in dic where a.Key.Compare(expr) == true select a).FirstOrDefault().Value; //much more expres
+            foreach (var i in dic)
+            {
+                if (i.Key.Compare(expr))
+                {
+                    return i.Value;
+                }
+            }
+            return null;
+        }
+        /// <summary>
+        /// 是否标记日志
+        /// </summary>
+        public bool Log { private set; get; }
+        /// <summary>
+        /// 内部日志记录函数
+        /// </summary>
+        /// <param name="s"></param>
+        private void LogInfo(string s)
+        {
+            if (Log)
+            {
+                Console.WriteLine($"[MI {DateTime.Now:t}] :: {s}");
+            }
+        }
+        /// <summary>
+        /// 生成一个解析器实例
+        /// </summary>
+        /// <param name="Log"></param>
+        public Interpreter(bool Log = true)
+        {
+            this.Log = Log;
+        }
+        /// <summary>
+        /// 尝试增加一条命令
+        /// </summary>
+        /// <param name="epls">命令列</param>
+        /// <param name="action">需要执行的动作</param>
+        /// <returns></returns>
+        public bool InjectAction(Expression[] epls, Action<string[], T?> action) => PatternDictionary.TryAdd(epls, action);
+        /// <summary>
+        /// 注入命令空余操作
+        /// </summary>
+        /// <param name="DefaultAction">默认操作</param>
+        public void InjectDefaultAction(Action<T?> DefaultAction) => this.DefaultAction = DefaultAction;
+        /// <summary>
+        /// 尝试获取命令要执行的操作
+        /// </summary>
+        /// <param name="context">文法</param>
+        /// <returns></returns>
+        public Action<string[], T?>? GetInterpreterAction(string[] context) => GetAction(PatternDictionary,context.StringDataToExpression());
+        /// <summary>
+        /// 开始执行对文法的解析(分割好的字符串组)
+        /// </summary>
+        /// <param name="context">操作句</param>
+        /// <param name="action_object">传入参数</param>
+        /// <returns>解析总计时间(ms)</returns>
+        public double DoInterpret(string[] context, T? action_object)
+        {
+            var start = DateTime.Now;
+            var k = GetInterpreterAction(context); // 获取命令执行的操作
+            if (k != null)
+            {
+                k?.Invoke(context, action_object); // 如查找到则开始判断
+            }
+            else
+            {
+                DefaultAction.Invoke(action_object); // 未查找到
+            }
+            var end = DateTime.Now;
+            var s = (end - start).TotalMilliseconds;
+            LogInfo($"Interpreter Complete in {s} ms :: On Command {context}");
+            return s;
+        }
+        /// <summary>
+        /// 开始执行对文法的解析(字符串)
+        /// <para>默认使用string.ToExpression()分割[Util扩展]</para>
+        /// </summary>
+        /// <param name="context">操作句</param>
+        /// <param name="action_object">传入参数</param>
+        /// <param name="default_Splitor">默认分隔符为空格,如果使用请注意不要使用和命令串一致的字符</param>
+        /// <param name="default_command_placeholder">默认的命令串为$,如需要输入字符串$请输入两次</param>
+        /// <param name="_filter_space">默认过滤空格,输入false不进行过滤</param>
+        /// <returns>解析总计时间(ms)</returns>
+        public double DoInterpret(string context, T? action_object, string default_Splitor = " ", string default_command_placeholder = "$", bool _filter_space = true)
+        {
+            var start = DateTime.Now;
+            var cc = context.ToExpression(default_Splitor, default_command_placeholder, _filter_space);
+            var k = GetAction(PatternDictionary,cc);
+            if (k != null) //获取命令
+            {
+                k?.Invoke(cc.ExpressionDataToString(), action_object); // 如查找到则开始判断
+            }
+            else
+            {
+                DefaultAction?.Invoke(action_object); // 未查找到
+            }
+            var end = DateTime.Now;
+            var s = (end - start).TotalMilliseconds;
+            LogInfo($"Interpreter Complete in {s} ms :: On Command {context}");
+            return s;
+        }
+        /// <summary>
+        /// 初始化表
+        /// </summary>
+        public void DoInit()
+        {
+            var start = DateTime.Now;
+            var cc = "".ToExpression();
+            var d = GetAction(PatternDictionary,cc);
             if (d == null)
             {
                 var end = DateTime.Now;
