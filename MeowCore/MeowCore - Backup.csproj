@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <RootNamespace>Meow</RootNamespace>
+    <Nullable>disable</Nullable>
+    <PackageId>Electronicute.Meow</PackageId>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>LGPL-2.0-only</PackageLicenseExpression>
+    <Copyright>2022 Electronicute</Copyright>
+    <Description>An Product easy to use and write-easy.
+4.0.0 - Upgrade to .net6 Version.</Description>
+    <Product>MeowProductX</Product>
+    <Company>Electronicute</Company>
+    <Authors>DavidSciMeow</Authors>
+    <PackageIcon></PackageIcon>
+    <PackageIconUrl />
+    <PackageProjectUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/DavidSciMeow/MeowsLibraryCore</RepositoryUrl>
+    <RepositoryType>gitrepo</RepositoryType>
+    <NeutralLanguage>zh</NeutralLanguage>
+    <PackageTags>Csharp-Library C# library</PackageTags>
+    <Version>4.1.1</Version>
+    <ApplicationIcon />
+    <Win32Resource />
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <BaseOutputPath>..\Ouput\</BaseOutputPath>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
+    <Optimize>false</Optimize>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="bin\**" />
+    <EmbeddedResource Remove="bin\**" />
+    <None Remove="bin\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="dina_circ.png" />
+    <None Remove="dina_circ.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Meow.DataBase.Mysql\Meow.DataBase.csproj" />
+    <ProjectReference Include="..\Meow.Interpreter\Meow.Interpreter.csproj" />
+    <ProjectReference Include="..\Meow.Util\Meow.Util.csproj" />
+  </ItemGroup>
+
+</Project>
