@@ -205,16 +205,26 @@ namespace Meow.Weather.CN
             }
             var sb = new StringBuilder();
             sb.Append('{');
-            var sx = await DoGetPercBasicInfo(citycode);
-            try { sb.Append($"\"basic\":{(string.IsNullOrWhiteSpace(sx) || string.IsNullOrEmpty(sx) ? "\"null\"" : sx)},"); } catch { }
-            var sx1 = await DoGetPercAQIInfo(citycode);
-            try { sb.Append($"\"aqi\":{(string.IsNullOrWhiteSpace(sx1) || string.IsNullOrEmpty(sx1) ? "\"null\"" : sx1)},"); } catch { }
-            var sx2 = await DoGetPercPassedInfo(citycode);
-            try { sb.Append($"\"passed\":{(string.IsNullOrWhiteSpace(sx2) || string.IsNullOrEmpty(sx2) ? "\"null\"" : sx2)},"); } catch { }
-            var sx3 = await DoGetPercWeatherInfo(citycode);
-            try { sb.Append($"\"predict\":{(string.IsNullOrWhiteSpace(sx3) || string.IsNullOrEmpty(sx3) ? "\"null\"" : sx3)},"); } catch { }
-            var sx4 = await DoGetPercTempchartInfo(citycode);
-            try { sb.Append($"\"tempchart1w\":{(string.IsNullOrWhiteSpace(sx4) || string.IsNullOrEmpty(sx4) ? "\"null\"" : sx4)},"); } catch { }
+            try {
+                var sx = await DoGetPercBasicInfo(citycode);
+                sb.Append($"\"basic\":{(string.IsNullOrWhiteSpace(sx) || string.IsNullOrEmpty(sx) ? "\"null\"" : sx)},"); 
+            } catch { }
+            try {
+                var sx1 = await DoGetPercAQIInfo(citycode);
+                sb.Append($"\"aqi\":{(string.IsNullOrWhiteSpace(sx1) || string.IsNullOrEmpty(sx1) ? "\"null\"" : sx1)},"); 
+            } catch { }
+            try {
+                var sx2 = await DoGetPercPassedInfo(citycode);
+                sb.Append($"\"passed\":{(string.IsNullOrWhiteSpace(sx2) || string.IsNullOrEmpty(sx2) ? "\"null\"" : sx2)},"); 
+            } catch { }
+            try {
+                var sx3 = await DoGetPercWeatherInfo(citycode);
+                sb.Append($"\"predict\":{(string.IsNullOrWhiteSpace(sx3) || string.IsNullOrEmpty(sx3) ? "\"null\"" : sx3)},"); 
+            } catch { }
+            try {
+                var sx4 = await DoGetPercTempchartInfo(citycode);
+                sb.Append($"\"tempchart1w\":{(string.IsNullOrWhiteSpace(sx4) || string.IsNullOrEmpty(sx4) ? "\"null\"" : sx4)},"); 
+            } catch { }
             sb.Append('}');
             return JObject.Parse(sb.ToString().Replace(",}", "}"));
         }
