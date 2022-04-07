@@ -15,7 +15,7 @@ namespace MeowCoreTest
             while (true)
             {
                 System.Console.WriteLine("---");
-                ipt.DoInterpret(System.Console.ReadLine(),null);
+                ipt.DoInterpret(System.Console.ReadLine(),1);
             }
         }
     }

@@ -205,11 +205,16 @@ namespace Meow.Weather.CN
             }
             var sb = new StringBuilder();
             sb.Append('{');
-            try { sb.Append($"\"basic\":{await DoGetPercBasicInfo(citycode)},"); } catch { }
-            try { sb.Append($"\"aqi\":{await DoGetPercAQIInfo(citycode)},"); } catch { }
-            try { sb.Append($"\"passed\":{await DoGetPercPassedInfo(citycode)},"); } catch { }
-            try { sb.Append($"\"predict\":{await DoGetPercWeatherInfo(citycode)},"); } catch { }
-            try { sb.Append($"\"tempchart1w\":{await DoGetPercTempchartInfo(citycode)},"); } catch { }
+            var sx = await DoGetPercBasicInfo(citycode);
+            try { sb.Append($"\"basic\":{(string.IsNullOrWhiteSpace(sx) || string.IsNullOrEmpty(sx) ? "\"null\"" : sx)},"); } catch { }
+            var sx1 = await DoGetPercAQIInfo(citycode);
+            try { sb.Append($"\"aqi\":{(string.IsNullOrWhiteSpace(sx1) || string.IsNullOrEmpty(sx1) ? "\"null\"" : sx1)},"); } catch { }
+            var sx2 = await DoGetPercPassedInfo(citycode);
+            try { sb.Append($"\"passed\":{(string.IsNullOrWhiteSpace(sx2) || string.IsNullOrEmpty(sx2) ? "\"null\"" : sx2)},"); } catch { }
+            var sx3 = await DoGetPercWeatherInfo(citycode);
+            try { sb.Append($"\"predict\":{(string.IsNullOrWhiteSpace(sx3) || string.IsNullOrEmpty(sx3) ? "\"null\"" : sx3)},"); } catch { }
+            var sx4 = await DoGetPercTempchartInfo(citycode);
+            try { sb.Append($"\"tempchart1w\":{(string.IsNullOrWhiteSpace(sx4) || string.IsNullOrEmpty(sx4) ? "\"null\"" : sx4)},"); } catch { }
             sb.Append('}');
             return JObject.Parse(sb.ToString().Replace(",}", "}"));
         }
