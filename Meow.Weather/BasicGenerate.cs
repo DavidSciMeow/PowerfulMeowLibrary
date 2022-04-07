@@ -249,7 +249,7 @@ namespace Meow.Weather.CN
         private static async Task<string> DoGetPercAQIInfo(string para) => await Util.Network.Http.Get.String($"http://www.nmc.cn/f/rest/aqi/{para}");
         private static async Task<string> DoGetPercPassedInfo(string para) => await Util.Network.Http.Get.String($"http://www.nmc.cn/f/rest/passed/{para}");
         private static async Task<string> DoGetPercTempchartInfo(string para) => await Util.Network.Http.Get.String($"http://www.nmc.cn/f/rest/tempchart/{para}");
-        private static async Task<string> DoGetPercWeatherInfo(string para) => await Util.Network.Http.Get.String($"http://www.nmc.cn/f/rest/weather/{para}");
+        private static async Task<string> DoGetPercWeatherInfo(string para) => await Util.Network.Http.Get.String($"http://www.nmc.cn/f/rest/weather/?stationid={para}");
     }
     public class WImage
     {
