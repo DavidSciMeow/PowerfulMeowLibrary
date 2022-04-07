@@ -19,7 +19,7 @@
     <FileVersion></FileVersion>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <AnalysisLevel>latest</AnalysisLevel>
-    <Version>4.1.0</Version>
+    <Version>4.1.1</Version>
     <PackageId>Electronicute.Meow.Weather</PackageId>
     <Authors>DavidSciMeow</Authors>
     <Company>Electronicute</Company>
