@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SkiaSharp;
+using System;
 using System.Drawing;
 using System.IO;
 using System.Net;
@@ -115,24 +116,6 @@ namespace Meow.Util.Network.Http
                 {
                     return (false, HttpFiles.PROGRESS_FAIL, ex.Message);
                 }
-            }
-        }
-        /// <summary>
-        /// 获取一个图片
-        /// </summary>
-        /// <param name="url">网络地址</param>
-        /// <returns></returns>
-        public static async Task<Image> Image(string url)
-        {
-            try
-            {
-                var resp = await Client.Basic.GetAsync(url);
-                Stream resStream = resp.Content.ReadAsStream();
-                return System.Drawing.Image.FromStream(resStream);
-            }
-            catch
-            {
-                throw;
             }
         }
     }

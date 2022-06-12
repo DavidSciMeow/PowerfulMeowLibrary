@@ -1,5 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Meow.Database.Mysql
@@ -51,9 +52,10 @@ namespace Meow.Database.Mysql
             => conn = new MySqlConnection(
                 $"Database={DataBase};DataSource={DataSource};Port={Port};UserId={UserId};Password={password};Charset={Charset};{otherParameter}"
                 );
+
         /// <summary>
-        /// 准备一个数据库连接
-        /// <para>prepare a connection,TO first Init Connection with this</para>
+        /// 准备一个数据库查询操作
+        /// <para>prepare a command for sql- which is your statement</para>
         /// </summary>
         /// <param name="cmdText">
         /// 执行的SQL命令
@@ -72,6 +74,24 @@ namespace Meow.Database.Mysql
             this.cmdType = cmdType;
             return this;
         }
+        /// <summary>
+        /// 准备一个数据库查询操作
+        /// <para>prepare a command for sql- which is your statement</para>
+        /// </summary>
+        /// <param name="cmdText">
+        /// 执行的SQL命令
+        /// <para>the SQL Command that you want to send</para>
+        /// </param>
+        /// <param name="commandParameters">命令参数</param>
+        /// <returns>返回一个可连写的DBH</returns>
+        public MysqlDBH PrepareDb(string cmdText, params MySqlParameter[] commandParameters)
+        {
+            this.cmdText = cmdText;
+            this.commandParameters = commandParameters;
+            this.cmdType = CommandType.Text;
+            return this;
+        }
+
         /// <summary>
         /// 执行一个无返回值的SQL操作(非查询类)
         /// <para>perform an action that without SQL SELECT.(mostly)</para>
@@ -159,6 +179,7 @@ namespace Meow.Database.Mysql
                 GC.Collect();
             }
         }
+
         private static void PrepareCommand(MySqlCommand cmd, MySqlConnection conn,
             MySqlTransaction trans, CommandType cmdType, string cmdText,
             MySqlParameter[] cmdParms)
