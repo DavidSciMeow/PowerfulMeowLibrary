@@ -2,6 +2,7 @@
 本组件包已经上传nuget, 请关注 nuget Electronicute.Weather 包  
 使用 Meow.Weather.CN.Interpreter.RectifyWord(string) string 为下面表格内某个"指令" 函数来获取识别类   
 使用 Meow.Weather.CN.Interpreter.RectifyWord(string\[\]) 列表省市顺序为 \[ 省 , 市 \] 函数来获取此位置的天气详细信息  
+
 | 功能                 | 指令      |
 |--------------------|---------|
 | 基本天气分析std.hpa中国    | cdwh0   |
