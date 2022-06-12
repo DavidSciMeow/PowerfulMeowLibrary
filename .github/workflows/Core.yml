@@ -1,0 +1,37 @@
+# This is a basic workflow to help you get started with Actions
+
+name: MeowCore
+
+# Controls when the workflow will run
+on:
+ workflow_dispatch:
+  inputs:
+    Publish:
+      required: true 
+      type: boolean 
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  BuildAndRelease:
+      runs-on: ubuntu-latest
+      if:  ${{ github.event.inputs.Publish == 'true' }} 
+      steps:
+      - uses: actions/checkout@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: 6.0.x
+      - name: Restore dependencies
+        run: dotnet restore MeowCore.csproj
+        working-directory: ./MeowCore/
+      - name: Build
+        run: dotnet build MeowCore.csproj --no-restore
+        working-directory: ./MeowCore/
+      - name: Test
+        run: dotnet test MeowCore.csproj --no-build --verbosity normal
+        working-directory: ./MeowCore/
+      - name: Publish
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+         PROJECT_FILE_PATH: ./MeowCore/MeowCore.csproj
+         NUGET_KEY: ${{secrets.NUGET_API_KEY}}
