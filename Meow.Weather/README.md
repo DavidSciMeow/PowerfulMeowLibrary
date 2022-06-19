@@ -1,7 +1,65 @@
 # 中央气象台天气获取组件
+
+# 0 导 言
 本组件包已经上传nuget, 请关注 nuget Electronicute.Weather 包  
-使用 Meow.Weather.CN.Interpreter.RectifyWord(string) string 为下面表格内某个"指令" 函数来获取识别类   
-使用 Meow.Weather.CN.Interpreter.RectifyWord(string\[\]) 列表省市顺序为 \[ 省 , 市 \] 函数来获取此位置的天气详细信息  
+使用 Meow.Weather.CN.Interpreter.RectifyWord(string)   
+`string` 为下面`1.2`内某个"指令";   
+使用 Meow.Weather.CN.Interpreter.RectifyWord(string\[\])   
+列表顺序为 \[ 省 , 市 \] 函数来获取此位置的天气详细信息;
+
+# 1.1 简易使用方法
+
+```csharp
+public static void Main(string[] args)
+{
+    while (true)
+    {
+        //获取一般图像类(检测类)
+        var k = Meow.Weather.CN.Interpreter.RectifyWord(Console.ReadLine());//尝试输入 nf4i
+        Console.WriteLine(k.Data[0].ImgUrl);//得到图片地址
+    }
+}
+```
+```csharp
+//获取城市天气
+....
+var prov = input[1];
+var city = input.Length > 2 ? input[2] : null;
+JObject jo;
+if (city != null)
+{
+    jo = Meow.Weather.CN.Interpreter.RectifyWord(new string[] { prov, city }).GetAwaiter().GetResult();
+}
+else
+{
+    jo = Meow.Weather.CN.Interpreter.RectifyWord(new string[] { prov }).GetAwaiter().GetResult();
+}
+var stationname = jo?["basic"]?["station"]?["city"]?.ToString();
+var publishtime = jo?["basic"]?["publish_time"]?.ToString();
+var weather_temp = jo?["basic"]?["weather"]?["temperature"]?.ToString();
+var weather_tempdiff = jo?["basic"]?["weather"]?["temperatureDiff"]?.ToString();
+var airpressureHpa = jo?["basic"]?["weather"]?["airpressure"]?.ToString();
+var humidity = jo?["basic"]?["weather"]?["humidity"]?.ToString();
+var rainpred = jo?["basic"]?["weather"]?["rain"]?.ToString();
+var weainfo = jo?["basic"]?["weather"]?["info"]?.ToString();
+var wind_dir = jo?["basic"]?["wind"]?["direct"]?.ToString();
+var wind_pow = jo?["basic"]?["wind"]?["power"]?.ToString();
+var warn = jo?["basic"]?["warn"]?["alert"]?.ToString();
+var aqi = jo?["aqi"]?["aqi"]?.ToString();
+var aqitext = jo?["aqi"]?["text"]?.ToString();
+var aqipredtime = jo?["aqi"]?["forecasttime"]?.ToString();
+var finstr = $"气象单站:{stationname},\n" +
+    $"气象发布时间:{publishtime}\n" +
+    $"当前天气:{(weainfo == "9999" ? "/" : weainfo)},降水概率:{(rainpred == "9999" ? "/" : rainpred)}%\n" +
+    $"当前温度:{(weather_temp == "9999" ? "/" : weather_temp)},可能的误差:{(weather_tempdiff == "9999" ? "/" : weather_tempdiff)}\n" +
+    $"当前气压:{(airpressureHpa == "9999" ? "/" : $"{airpressureHpa}Hpa")}, 湿度:{(humidity == "9999" ? "/" : humidity)}%\n" +
+    $"风:{wind_dir}{wind_pow}\n" +
+    $"空气质量:{aqi}[{aqitext}] @ {aqipredtime}\n" +
+    $"中央气象局提醒:\n{(warn == "9999" ? "/" : warn)}";
+Console.WriteLine(finstr);
+....
+```
+# 1.2 功能一览
 
 | 功能                 | 指令      |
 |--------------------|---------|

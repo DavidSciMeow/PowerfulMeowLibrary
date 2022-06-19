@@ -5,4 +5,9 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Meow.Weather\Meow.Weather.csproj" />
+    <ProjectReference Include="..\MeowCore\MeowCore.csproj" />
+  </ItemGroup>
+
 </Project>

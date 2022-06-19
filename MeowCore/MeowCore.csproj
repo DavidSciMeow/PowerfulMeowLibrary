@@ -45,7 +45,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Meow.DataBase.Mysql\Meow.DataBase.csproj" />
+    <ProjectReference Include="..\Meow.DataBase\Meow.DataBase.csproj" />
     <ProjectReference Include="..\Meow.Interpreter\Meow.Interpreter.csproj" />
     <ProjectReference Include="..\Meow.Util\Meow.Util.csproj" />
   </ItemGroup>

@@ -2,7 +2,6 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -265,8 +264,6 @@ namespace Meow.Weather.CN
     {
         public string DataTime;
         public string ImgUrl;
-        public async Task<Image> GetImageAsync() => await Util.Network.Http.Get.Image(ImgUrl);
-        public Image GetImage() => Util.Network.Http.Get.Image(ImgUrl).GetAwaiter().GetResult();
     }
     public abstract class MWG
     {
@@ -276,37 +273,21 @@ namespace Meow.Weather.CN
             HtmlDocument doc = new HtmlWeb().Load($"http://www.nmc.cn/publish/{input}");
             try
             {
-                try
+                var r = doc.GetElementbyId("timeWrap")?.ChildNodes; //fffmmWrap
+                if (r == null)
                 {
-                    var r = doc.GetElementbyId("timeWrap").ChildNodes; //fffmmWrap
-                    foreach (var d in r)
-                    {
-                        var rx = d.Attributes["data-img"].Value;
-                        var rt = d.Attributes["data-time"].Value;
-                        Data.Add(new() { DataTime = rt, ImgUrl = rx });
-                    }
+                    r = doc.GetElementbyId("fffmmWrap")?.ChildNodes; //fffmmWrap
                 }
-                catch
+                foreach (var d in r)
                 {
-                    try
-                    {
-                        var r = doc.GetElementbyId("fffmmWrap").ChildNodes; //fffmmWrap
-                        foreach (var d in r)
-                        {
-                            var rx = d.Attributes["data-img"].Value;
-                            var rt = d.Attributes["data-time"].Value;
-                            Data.Add(new() { DataTime = rt, ImgUrl = rx });
-                        }
-                    }
-                    catch
-                    {
-                        throw new("可能的错误由于内部Id识别错误,断点检查");
-                    }
+                    var rx = d.Attributes["data-img"].Value;
+                    var rt = d.Attributes["data-time"].Value;
+                    Data.Add(new() { DataTime = rt, ImgUrl = rx });
                 }
             }
             catch (Exception ex)
             {
-                throw new("可能的错误由于网页网址不正确,断点检查", ex);
+                throw new("可能的错误由于网页不正确,断点检查", ex);
             }
         }
     }
@@ -492,56 +473,56 @@ namespace Meow.Weather.CN
         }
         namespace GRAPES全球
         {
-            public sealed class 北半球500hpa : MWG { public 北半球500hpa() : base($"nwpc/grapes_gfs/nh/500hPa-hgt_0000.htm") { } }
-            public sealed class 北半球850hpa : MWG { public 北半球850hpa() : base($"nwpc/grapes_gfs/nh/850hPa-temp_0000.htm") { } }
-            public sealed class 北半球海平面气压 : MWG { public 北半球海平面气压() : base($"nwpc/grapes_gfs/nh/sea-level-pressure_0000.htm") { } }
-            public sealed class 亚欧500高800风 : MWG { public 亚欧500高800风() : base($"nwpc/grapes_gfs/ae/500hPa+hgt+850hPa+wind_0000.htm") { } }
-            public sealed class 东亚海平面气压 : MWG { public 东亚海平面气压() : base($"nwpc/grapes_gfs/ea/slp_0000.htm") { } }
-            public sealed class 东亚500高800风 : MWG { public 东亚500高800风() : base($"nwpc/grapes_gfs/ea/500hPa+hgt+850hPa+wind_0000.htm") { } }
-            public sealed class 东亚24小时降水 : MWG { public 东亚24小时降水() : base($"nwpc/grapes_gfs/ea/24hour-rain_0000.htm") { } }
-            public sealed class 东亚积累降水 : MWG { public 东亚积累降水() : base($"nwpc/grapes_gfs/ea/cumulative_precipitation_0000.htm") { } }
-            public sealed class 东亚2m温度 : MWG { public 东亚2m温度() : base($"nwpc/grapes_gfs/ea/t2m_0000.htm") { } }
-            public sealed class 东亚2m最高温度 : MWG { public 东亚2m最高温度() : base($"nwpc/grapes_gfs/ea/wind/T2mMax_0000.htm") { } }
-            public sealed class 东亚2m最低温度 : MWG { public 东亚2m最低温度() : base($"nwpc/grapes_gfs/ea/wind/T2mMin_0000.htm") { } }
-            public sealed class 东亚2m相对湿度 : MWG { public 东亚2m相对湿度() : base($"nwpc/grapes_gfs/ea/wind/RH2m_0000.htm") { } }
-            public sealed class 东亚雷达组合反射率 : MWG { public 东亚雷达组合反射率() : base($"nwpc/grapes_gfs/ea/ldzhfsl_0000.htm") { } }
-            public sealed class FY4A红外亮温 : MWG { public FY4A红外亮温() : base($"nwpc/grapes_gfs/ea/grapes_mswx/11um_0000.htm") { } }
-            public sealed class FY4A水汽亮温 : MWG { public FY4A水汽亮温() : base($"nwpc/grapes_gfs/ea/grapes_mswx/6.8um_0000.htm") { } }
+            public sealed class 北半球500hpa : MWG { public 北半球500hpa() : base($"nwpc/grapes_gfs/nh/500hPa-hgt.htm") { } }
+            public sealed class 北半球850hpa : MWG { public 北半球850hpa() : base($"nwpc/grapes_gfs/nh/850hPa-temp.htm") { } }
+            public sealed class 北半球海平面气压 : MWG { public 北半球海平面气压() : base($"nwpc/grapes_gfs/nh/sea-level-pressure.htm") { } }
+            public sealed class 亚欧500高800风 : MWG { public 亚欧500高800风() : base($"nwpc/grapes_gfs/ae/500hPa+hgt+850hPa+wind.htm") { } }
+            public sealed class 东亚海平面气压 : MWG { public 东亚海平面气压() : base($"nwpc/grapes_gfs/ea/slp.htm") { } }
+            public sealed class 东亚500高800风 : MWG { public 东亚500高800风() : base($"nwpc/grapes_gfs/ea/500hPa+hgt+850hPa+wind.htm") { } }
+            public sealed class 东亚24小时降水 : MWG { public 东亚24小时降水() : base($"nwpc/grapes_gfs/ea/24hour-rain.htm") { } }
+            public sealed class 东亚积累降水 : MWG { public 东亚积累降水() : base($"nwpc/grapes_gfs/ea/cumulative_precipitation.htm") { } }
+            public sealed class 东亚2m温度 : MWG { public 东亚2m温度() : base($"nwpc/grapes_gfs/ea/t2m.htm") { } }
+            public sealed class 东亚2m最高温度 : MWG { public 东亚2m最高温度() : base($"nwpc/grapes_gfs/ea/wind/T2mMax.htm") { } }
+            public sealed class 东亚2m最低温度 : MWG { public 东亚2m最低温度() : base($"nwpc/grapes_gfs/ea/wind/T2mMin.htm") { } }
+            public sealed class 东亚2m相对湿度 : MWG { public 东亚2m相对湿度() : base($"nwpc/grapes_gfs/ea/wind/RH2m.htm") { } }
+            public sealed class 东亚雷达组合反射率 : MWG { public 东亚雷达组合反射率() : base($"nwpc/grapes_gfs/ea/ldzhfsl.htm") { } }
+            public sealed class FY4A红外亮温 : MWG { public FY4A红外亮温() : base($"nwpc/grapes_gfs/ea/grapes_mswx/11um.htm") { } }
+            public sealed class FY4A水汽亮温 : MWG { public FY4A水汽亮温() : base($"nwpc/grapes_gfs/ea/grapes_mswx/6.8um.htm") { } }
         }
         namespace GRAPES全球集合
         {
-            public sealed class 累积降水24h概率预报1mm : MWG { public 累积降水24h概率预报1mm() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/24hleijijiangshui/gailvyubao/1mm/index_0000.html") { } }
-            public sealed class 累积降水24h概率预报10mm : MWG { public 累积降水24h概率预报10mm() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/24hleijijiangshui/gailvyubao/10mm/index_0000.html") { } }
-            public sealed class 累积降水24h概率预报25mm : MWG { public 累积降水24h概率预报25mm() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/24hleijijiangshui/gailvyubao/25mm/index_0000.html") { } }
-            public sealed class 累积降水24h概率预报50mm : MWG { public 累积降水24h概率预报50mm() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/24hleijijiangshui/gailvyubao/50mm/index_0000.html") { } }
-            public sealed class 累积降水24h概率预报100mm : MWG { public 累积降水24h概率预报100mm() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/24hleijijiangshui/gailvyubao/100mm/index_0000.html") { } }
-            public sealed class 累积降水24h极端预报指数 : MWG { public 累积降水24h极端预报指数() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/24hleijijiangshui/jiduanyubaozhishu/index_0000.html") { } }
-            public sealed class 累积降水24h集合平均和离散度 : MWG { public 累积降水24h集合平均和离散度() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/24hleijijiangshui/jihepingjunhelisandu/index_0000.html") { } }
-            public sealed class 累积降水24h邮票图 : MWG { public 累积降水24h邮票图() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/24hleijijiangshui/youpiaotu/index_0000.html") { } }
-            public sealed class 累积降水24h分位数最大值 : MWG { public 累积降水24h分位数最大值() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/zuidazhi/fenweishuchanpin/24hleijijiangshui/index_0000.html") { } }
-            public sealed class 位势高度500hPa面条图 : MWG { public 位势高度500hPa面条图() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/500hPaweishigaodu/miantiaotu/index_0000.html") { } }
-            public sealed class 位势高度500hPa集合平均和离散度 : MWG { public 位势高度500hPa集合平均和离散度() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/500hPaweishigaodu/jihepingjunhelisandu/index_0000.html") { } }
-            public sealed class 温度2米极端预报指数 : MWG { public 温度2米极端预报指数() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/2miwendu/jiduanyubaozhishu/index_0000.html") { } }
-            public sealed class 温度2米集合平均和离散度 : MWG { public 温度2米集合平均和离散度() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/2miwendu/jihepingjunhelisandu/index_0000.html") { } }
-            public sealed class 全风速10米极端预报指数 : MWG { public 全风速10米极端预报指数() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/10miquanfengsu/jiduanyubaozhishu/index_0000.html") { } }
-            public sealed class 全风速10米集合平均和离散度 : MWG { public 全风速10米集合平均和离散度() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/10miquanfengsu/jihepingjunhelisandu/index_0000.html") { } }
-            public sealed class 全风速10米概率预报10米秒 : MWG { public 全风速10米概率预报10米秒() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/10miquanfengsu/gailvyubao/10.8/index_0000.html") { } }
-            public sealed class 全风速10米概率预报17米秒 : MWG { public 全风速10米概率预报17米秒() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/10miquanfengsu/gailvyubao/17.2/index_0000.html") { } }
+            public sealed class 累积降水24h概率预报1mm : MWG { public 累积降水24h概率预报1mm() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/24hleijijiangshui/gailvyubao/1mm/index.html") { } }
+            public sealed class 累积降水24h概率预报10mm : MWG { public 累积降水24h概率预报10mm() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/24hleijijiangshui/gailvyubao/10mm/index.html") { } }
+            public sealed class 累积降水24h概率预报25mm : MWG { public 累积降水24h概率预报25mm() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/24hleijijiangshui/gailvyubao/25mm/index.html") { } }
+            public sealed class 累积降水24h概率预报50mm : MWG { public 累积降水24h概率预报50mm() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/24hleijijiangshui/gailvyubao/50mm/index.html") { } }
+            public sealed class 累积降水24h概率预报100mm : MWG { public 累积降水24h概率预报100mm() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/24hleijijiangshui/gailvyubao/100mm/index.html") { } }
+            public sealed class 累积降水24h极端预报指数 : MWG { public 累积降水24h极端预报指数() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/24hleijijiangshui/jiduanyubaozhishu/index.html") { } }
+            public sealed class 累积降水24h集合平均和离散度 : MWG { public 累积降水24h集合平均和离散度() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/24hleijijiangshui/jihepingjunhelisandu/index.html") { } }
+            public sealed class 累积降水24h邮票图 : MWG { public 累积降水24h邮票图() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/24hleijijiangshui/youpiaotu/index.html") { } }
+            public sealed class 累积降水24h分位数最大值 : MWG { public 累积降水24h分位数最大值() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/zuidazhi/fenweishuchanpin/24hleijijiangshui/index.html") { } }
+            public sealed class 位势高度500hPa面条图 : MWG { public 位势高度500hPa面条图() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/500hPaweishigaodu/miantiaotu/index.html") { } }
+            public sealed class 位势高度500hPa集合平均和离散度 : MWG { public 位势高度500hPa集合平均和离散度() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/500hPaweishigaodu/jihepingjunhelisandu/index.html") { } }
+            public sealed class 温度2米极端预报指数 : MWG { public 温度2米极端预报指数() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/2miwendu/jiduanyubaozhishu/index.html") { } }
+            public sealed class 温度2米集合平均和离散度 : MWG { public 温度2米集合平均和离散度() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/2miwendu/jihepingjunhelisandu/index.html") { } }
+            public sealed class 全风速10米极端预报指数 : MWG { public 全风速10米极端预报指数() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/10miquanfengsu/jiduanyubaozhishu/index.html") { } }
+            public sealed class 全风速10米集合平均和离散度 : MWG { public 全风速10米集合平均和离散度() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/10miquanfengsu/jihepingjunhelisandu/index.html") { } }
+            public sealed class 全风速10米概率预报10米秒 : MWG { public 全风速10米概率预报10米秒() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/10miquanfengsu/gailvyubao/10.8/index.html") { } }
+            public sealed class 全风速10米概率预报17米秒 : MWG { public 全风速10米概率预报17米秒() : base($"nwpc/grapes_gfs/shuzhiyubao/GRAPESquanqiujiheyubao_new/10miquanfengsu/gailvyubao/17.2/index.html") { } }
         }
         namespace GRAPES台风预报
         {
             public sealed class 台风强度 : MWG { public 台风强度() : base($"nwpc/stym/cnpw-01/img1.html") { } }
-            public sealed class 累计降水24h : MWG { public 累计降水24h() : base($"shuzhiyubao/GRAPEStaifengyubao/GRAPES_TYM/leijijiangshui/24xiaoshi/index_0000.html") { } }
-            public sealed class 累计大风24h : MWG { public 累计大风24h() : base($"shuzhiyubao/GRAPEStaifengyubao/GRAPES_TYM/leijidafeng/24xiaoshi/index_0000.html") { } }
+            public sealed class 累计降水24h : MWG { public 累计降水24h() : base($"shuzhiyubao/GRAPEStaifengyubao/GRAPES_TYM/leijijiangshui/24xiaoshi/index.html") { } }
+            public sealed class 累计大风24h : MWG { public 累计大风24h() : base($"shuzhiyubao/GRAPEStaifengyubao/GRAPES_TYM/leijidafeng/24xiaoshi/index.html") { } }
             public sealed class 台风路径 : MWG { public 台风路径() : base($"shuzhiyubao/GRAPES_TYMquyutaifengmoshi/taifenglujing/index.html") { } }
-            public sealed class 风场10m : MWG { public 风场10m() : base($"shuzhiyubao/GRAPES_TYMquyutaifengmoshi/10mfengchang/index_0000.html") { } }
-            public sealed class 组合雷达反射率 : MWG { public 组合雷达反射率() : base($"shuzhiyubao/GRAPES_TYMquyutaifengmoshi/zuheleidafanshelv/index_0000.html") { } }
-            public sealed class FY4A云图模拟红外亮温 : MWG { public FY4A云图模拟红外亮温() : base($"shuzhiyubao/GRAPES_TYMquyutaifengmoshi/FY2Gweixingyuntumoni/11umliangwen(hongwai)/index_0000.html") { } }
-            public sealed class FY4A云图模拟水汽亮温 : MWG { public FY4A云图模拟水汽亮温() : base($"shuzhiyubao/GRAPES_TYMquyutaifengmoshi/FY2Gweixingyuntumoni/6.8/index_0000.html") { } }
+            public sealed class 风场10m : MWG { public 风场10m() : base($"shuzhiyubao/GRAPES_TYMquyutaifengmoshi/10mfengchang/index.html") { } }
+            public sealed class 组合雷达反射率 : MWG { public 组合雷达反射率() : base($"shuzhiyubao/GRAPES_TYMquyutaifengmoshi/zuheleidafanshelv/index.html") { } }
+            public sealed class FY4A云图模拟红外亮温 : MWG { public FY4A云图模拟红外亮温() : base($"shuzhiyubao/GRAPES_TYMquyutaifengmoshi/FY2Gweixingyuntumoni/11umliangwen(hongwai)/index.html") { } }
+            public sealed class FY4A云图模拟水汽亮温 : MWG { public FY4A云图模拟水汽亮温() : base($"shuzhiyubao/GRAPES_TYMquyutaifengmoshi/FY2Gweixingyuntumoni/6.8/index.html") { } }
         }
         namespace 海浪模式
         {
-            public sealed class 全球浪高浪向叠加图 : MWG { public 全球浪高浪向叠加图() : base($"nwp/ww3/globe/index_0000.html") { } }
+            public sealed class 全球浪高浪向叠加图 : MWG { public 全球浪高浪向叠加图() : base($"nwp/ww3/globe/index.html") { } }
             public sealed class 大西洋浪高浪向叠加图 : MWG { public 大西洋浪高浪向叠加图() : base($"nwp/ww3/atlantic/waveheight-wavespeed-meandirection.html") { } }
             public sealed class 印度洋浪高浪向叠加图 : MWG { public 印度洋浪高浪向叠加图() : base($"nwp/ww3/indianocean/waveheight-wavespeed-meandirection_0000.html") { } }
             public sealed class 太平洋浪高浪向叠加图 : MWG { public 太平洋浪高浪向叠加图() : base($"nwp/ww3/pacific/waveheight-wavespeed-meandirection.html") { } }
