@@ -91,6 +91,21 @@ namespace Meow.Database.Mysql
             this.cmdType = CommandType.Text;
             return this;
         }
+        /// <summary>
+        /// 准备一个数据库查询操作
+        /// <para>prepare a command for sql- which is your statement</para>
+        /// </summary>
+        /// <param name="cmdText">
+        /// 执行的SQL命令
+        /// <para>the SQL Command that you want to send</para>
+        /// </param>
+        /// <returns>返回一个可连写的DBH</returns>
+        public MysqlDBH PrepareDb(string cmdText)
+        {
+            this.cmdText = cmdText;
+            this.cmdType = CommandType.Text;
+            return this;
+        }
 
         /// <summary>
         /// 执行一个无返回值的SQL操作(非查询类)
@@ -155,6 +170,27 @@ namespace Meow.Database.Mysql
                 DataSet ds = new();
                 adapter.Fill(ds);
                 return ds;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+        /// <summary>
+        /// 获取结果表
+        /// </summary>
+        /// <returns></returns>
+        public DataTable GetTable()
+        {
+            try
+            {
+                using MySqlCommand cmd = new();
+                PrepareCommand(cmd, conn, null, cmdType, cmdText, commandParameters);
+                MySqlDataAdapter adapter = new();
+                adapter.SelectCommand = cmd;
+                DataSet ds = new();
+                adapter.Fill(ds);
+                return ds.Tables[0];
             }
             catch
             {
