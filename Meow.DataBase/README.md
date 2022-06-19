@@ -1,4 +1,6 @@
 ﻿# Meow Database 
+![](https://img.shields.io/nuget/dt/Electronicute.Meow.DataBase)
+[![MeowDataBase](https://github.com/DavidSciMeow/PowerfulMeowLibrary/actions/workflows/Db.yml/badge.svg?branch=master)](https://github.com/DavidSciMeow/PowerfulMeowLibrary/actions/workflows/Db.yml)
 -----------
 
 ## 1. 引 言
