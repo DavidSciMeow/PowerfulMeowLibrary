@@ -29,11 +29,11 @@
 ## 3. 使用方案
 ### 3.1 建立数据库链接(Mysql)/生成DBHelper  
 #### 3.1.1 使用实例化链接方案  
-```csharp
+```
 using MysqlDBH dblk = new("dbname", "ip", "port", "user", "pass");
 ```
 #### 3.1.2 使用链接字符串  
-```csharp
+```
 using MysqlDBH dblk = new($"Database={DataBase};DataSource={DataSource};Port={Port};UserId={UserId};Password={password};Charset={Charset};{otherParameter}")
 ```
 
