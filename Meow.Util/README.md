@@ -38,7 +38,8 @@
 |Meow.Util.Imaging|Skia|`ext` ToBase64String(SKImage)| 转换一个SKImage到Base64|
 
 # 2 更新计划
-1.网络图片下载解析
-1.标准流Skia图片绘制
-1.解密加密库
-1.其他协议网络收发报文
+
+1. 网络图片下载解析  
+1. 标准流Skia图片绘制  
+1. 解密加密库  
+1. 其他协议网络收发报文  
