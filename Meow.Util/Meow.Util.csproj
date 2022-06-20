@@ -9,9 +9,9 @@
     <Product>Meow.Util</Product>
     <Copyright>Electronicute @ 2022</Copyright>
     <NeutralLanguage>zh-CN</NeutralLanguage>
-    <PackageProjectUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary</PackageProjectUrl>
-    <RepositoryUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary</RepositoryUrl>
-    <Version>4.0.0</Version>
+    <PackageProjectUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary/tree/master/Meow.Util</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary/tree/master/Meow.Util</RepositoryUrl>
+    <Version>4.1.0</Version>
     <RepositoryType>gitrepo</RepositoryType>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Description>MeowPowerfulLibrary - Util Core

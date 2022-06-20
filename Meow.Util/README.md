@@ -10,7 +10,7 @@
 ## 函数参数请在VisualStudio调用时查看
 
 |命名空间|类|成员名|作用|
-|-|-|-|
+|----|----|----|----|
 |Meow.Util.Dir|DirX|GetWebSiteDirs(string)|获取一个网页URL的完整后缀路径|
 |----|----|----|----|
 |Meow.Util.Encrypt|Hash|`ext` DiscuzMd5(string)|用于特殊加密Discuz的MD5|
@@ -29,3 +29,16 @@
 |Meow.Util.Network.Http|Get|`async` Block(string)| 获取某URL的一个块(可以是gzip压缩)|
 |Meow.Util.Network.Http|Get|File(string,string)| 获取某个URL的一个文件(当作文件下载)|
 |Meow.Util.Network.Http|Post|`async` Create(....)| 朝某个URL进行一次POST|
+|----|----|----|----|
+|Meow.Util.Imaging|Skia|FileToBase64(string)| 将文件转换成Base64格式|
+|Meow.Util.Imaging|Skia|Read(string)| 读取一个文件|
+|Meow.Util.Imaging|Skia|`ext` Save(SKBitMap,string,Format,int)| 保存一个文件|
+|Meow.Util.Imaging|Skia|`ext` ToBase64String(SKBitMap)| 转换一个SKbitmap到Base64|
+|Meow.Util.Imaging|Skia|`ext` Base64ToSKBitmap(string)| 转换一个base64编码字符串到SKbitmap|
+|Meow.Util.Imaging|Skia|`ext` ToBase64String(SKImage)| 转换一个SKImage到Base64|
+
+# 2 更新计划
+1.网络图片下载解析
+1.标准流Skia图片绘制
+1.解密加密库
+1.其他协议网络收发报文
