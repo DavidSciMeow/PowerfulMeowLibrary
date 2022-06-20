@@ -1,125 +1,64 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
+using SkiaSharp;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Meow.Util.Imaging
 {
     /// <summary>
-    /// Base64 常用工具集
+    /// 图片处理
     /// </summary>
-    public class Base64
+    public static class Skia
     {
         /// <summary>
-        /// Base64加密，采用utf8编码方式加密
+        /// 将文件转换成Base64格式
         /// </summary>
-        /// <param name="source">待加密的明文</param>
-        /// <returns>加密后的字符串</returns>
-        public static string Encode(string source) => Encode(Encoding.UTF8, source);
+        public static string FileToBase64(string fileName)
+        {
+            using FileStream fs = new(fileName, FileMode.Open, FileAccess.Read);
+            byte[] byteArray = new byte[fs.Length];
+            fs.Read(byteArray, 0, byteArray.Length);
+            return Convert.ToBase64String(byteArray);
+        }
         /// <summary>
-        /// Base64加密
+        /// 读取图片
         /// </summary>
-        /// <param name="encodeType">加密采用的编码方式</param>
-        /// <param name="source">待加密的明文</param>
+        /// <param name="fp">文件指针</param>
         /// <returns></returns>
-        public static string Encode(Encoding encodeType, string source)
-        {
-            byte[] bytes = encodeType.GetBytes(source);
-            string encode;
-            try
-            {
-                encode = Convert.ToBase64String(bytes);
-            }
-            catch
-            {
-                encode = source;
-            }
-            return encode;
-        }
+        public static SKBitmap Read(string fp) => SKBitmap.Decode(new SKManagedStream(File.OpenRead(fp)));
         /// <summary>
-        /// Base64解密，采用utf8编码方式解密
+        /// 保存位图图像
         /// </summary>
-        /// <param name="result">待解密的密文</param>
-        /// <returns>解密后的字符串</returns>
-        public static string Decode(string result) => Decode(Encoding.UTF8, result);
+        /// <param name="i"></param>
+        /// <param name="path">路径</param>
+        /// <param name="f">图像格式</param>
+        /// <param name="Quality">质量参数</param>
+        public static void Save(this SKBitmap i, string path, SKEncodedImageFormat f = SKEncodedImageFormat.Jpeg, int Quality = 100) => i.Encode(f, Quality).SaveTo(File.OpenWrite(path));
         /// <summary>
-        /// Base64解密
+        /// 将Bitmap对象转换为Base64
         /// </summary>
-        /// <param name="encodeType">解密采用的编码方式，注意和加密时采用的方式一致</param>
-        /// <param name="result">待解密的密文</param>
-        /// <returns>解密后的字符串</returns>
-        public static string Decode(Encoding encodeType, string result)
-        {
-            byte[] bytes = Convert.FromBase64String(result);
-            string decode;
-            try
-            {
-                decode = encodeType.GetString(bytes);
-            }
-            catch
-            {
-                decode = result;
-            }
-            return decode;
-        }
-        /// <summary>
-        /// Image 转成 base64
-        /// </summary>
-        /// <param name="imagePath"></param>
-        public static string ToBase64(string imagePath)
-        {
-            try
-            {
-                Bitmap bmp = new(imagePath);
-                MemoryStream ms = new();
-                var suffix = imagePath.Substring(imagePath.LastIndexOf('.') + 1,
-                    imagePath.Length - imagePath.LastIndexOf('.') - 1).ToLower();
-                var suffixName = suffix == "png"
-                    ? ImageFormat.Png
-                    : suffix == "jpg" || suffix == "jpeg"
-                        ? ImageFormat.Jpeg
-                        : suffix == "bmp"
-                            ? ImageFormat.Bmp
-                            : suffix == "gif"
-                                ? ImageFormat.Gif
-                                : ImageFormat.Jpeg;
-
-                bmp.Save(ms, suffixName);
-                byte[] arr = new byte[ms.Length]; ms.Position = 0;
-                ms.Read(arr, 0, (int)ms.Length); ms.Close();
-                bmp.Dispose();
-                return Convert.ToBase64String(arr);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
-
-        }
-        /// <summary>
-        /// bitmap转换Base64 
-        /// </summary>
-        /// <param name="bmp">Bitmap实例</param>
+        /// <param name="b"></param>
         /// <returns></returns>
-        public static string ToBase64(Bitmap bmp)
+        public static string ToBase64String(this SKBitmap b) => SKImage.FromBitmap(b).ToBase64String();
+        /// <summary>
+        /// 将Base64字符串转换成Image对象
+        /// </summary>
+        /// <param name="base64String"></param>
+        /// <returns></returns>
+        public static SKBitmap Base64ToSKBitmap(this string base64String) => SKBitmap.Decode(Convert.FromBase64String(base64String));
+        /// <summary>
+        /// 将Image对象转换为Base64
+        /// </summary>
+        /// <param name="i">等待转换图像</param>
+        /// <returns></returns>
+        public static string ToBase64String(this SKImage i)
         {
-            try
-            {
-                MemoryStream ms = new();
-                bmp.Save(ms, ImageFormat.Jpeg);
-                byte[] arr = new byte[ms.Length]; ms.Position = 0;
-                ms.Read(arr, 0, (int)ms.Length); ms.Close();
-                bmp.Dispose();
-                return Convert.ToBase64String(arr);
-            }
-            catch (Exception)
-            {
-                return null;
-            }
+            MemoryStream ms = new();
+            i.Encode(SkiaSharp.SKEncodedImageFormat.Jpeg, 100).SaveTo(ms);
+            byte[] arr = new byte[ms.Length];
+            ms.Position = 0;
+            ms.Read(arr, 0, (int)ms.Length);
+            ms.Close();
+            return Convert.ToBase64String(arr);
         }
     }
 }
