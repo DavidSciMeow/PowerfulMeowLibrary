@@ -11,4 +11,9 @@ Weather:
 ![](https://img.shields.io/nuget/vpre/Electronicute.Meow.Weather?label=NuGet%20Version)
 [![MeowWeather](https://github.com/DavidSciMeow/PowerfulMeowLibrary/actions/workflows/Weather.yml/badge.svg?branch=master)](https://github.com/DavidSciMeow/PowerfulMeowLibrary/actions/workflows/Weather.yml)
 
+Util:
+![](https://img.shields.io/nuget/dt/Electronicute.Meow.Util)
+![](https://img.shields.io/nuget/vpre/Electronicute.Meow.Util?label=NuGet%20Version)
+[![MeowUtil](https://github.com/DavidSciMeow/PowerfulMeowLibrary/actions/workflows/Util.yml/badge.svg?branch=master)](https://github.com/DavidSciMeow/PowerfulMeowLibrary/actions/workflows/Util.yml)
+
 自用C#(.net6)函数库
