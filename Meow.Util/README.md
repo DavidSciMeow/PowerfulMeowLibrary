@@ -1,5 +1,7 @@
-﻿# MeowUtil
-
+# MeowUtil
+![](https://img.shields.io/nuget/dt/Electronicute.Meow.Util)
+![](https://img.shields.io/nuget/vpre/Electronicute.Meow.Util?label=NuGet%20Version)
+[![MeowUtil](https://github.com/DavidSciMeow/PowerfulMeowLibrary/actions/workflows/Util.yml/badge.svg?branch=master)](https://github.com/DavidSciMeow/PowerfulMeowLibrary/actions/workflows/Util.yml)
 -----
 
 # 0 引言
