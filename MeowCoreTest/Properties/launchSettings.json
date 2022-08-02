@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MeowCoreTest": {
+      "commandName": "Project",
+      "commandLineArgs": "--dav cc --req cp ca --kk"
+    }
+  }
+}

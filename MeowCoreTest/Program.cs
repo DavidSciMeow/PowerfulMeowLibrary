@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Data;
 using System.Linq;
+using System.Timers;
+using Meow.Interpreter.Args;
 
 namespace MeowCoreTest
 {
@@ -7,11 +10,7 @@ namespace MeowCoreTest
     {
 		public static void Main(string[] args)
         {
-            while (true)
-            {
-                var k = Meow.Weather.CN.Interpreter.RectifyWord(Console.ReadLine());
-                Console.WriteLine(k.Data[0].ImgUrl);
-            }
+
         }
     }
 }

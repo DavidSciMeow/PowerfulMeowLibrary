@@ -22,7 +22,19 @@ namespace Meow.Util.Network.Http
         /// <summary>
         /// 带压缩解析的HttpClient
         /// </summary>
-        public readonly static HttpClient Compression = new(new HttpClientHandler() {AutomaticDecompression = DecompressionMethods.All });
+        public readonly static HttpClient Compression = new(
+            new HttpClientHandler() {
+                AutomaticDecompression = DecompressionMethods.All,
+            });
+        /// <summary>
+        /// SSLless
+        /// </summary>
+        public readonly static HttpClient UNAutho = new(
+            new HttpClientHandler()
+            {
+                AutomaticDecompression = DecompressionMethods.All,
+                ServerCertificateCustomValidationCallback = (sender, cert, chain, sslPolicyErrors) => { return true; },
+            });
     }
     /// <summary>
     /// 文件获取枚举类

@@ -41,4 +41,8 @@
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Meow.Util\Meow.Util.csproj" />
+  </ItemGroup>
+
 </Project>
