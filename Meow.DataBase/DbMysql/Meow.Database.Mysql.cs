@@ -1,6 +1,6 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Meow.DataBase;
+using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
 using System.Data;
 
 namespace Meow.Database.Mysql
@@ -13,37 +13,25 @@ namespace Meow.Database.Mysql
     /// using var dbc = new MysqlDBH(`ConnectionString`);
     /// </code>
     /// </summary>
-    public class MysqlDBH : IDisposable
+    public class MysqlDBH : DbHelper, IDbHelper<MysqlDBH>, IDisposable
     {
-        string cmdText;
-        MySqlParameter[] commandParameters;
-        CommandType cmdType;
         readonly System.Timers.Timer WatchDog;
-        MySqlConnection conn = null;
-
         /// <summary>
         /// 保持长连接(默认保持)
         /// </summary>
         public bool KeepAlive { get; }
         /// <summary>
-        /// 是否记录日志
-        /// </summary>
-        public bool Log { get; }
-        /// <summary>
         /// 最大超时时间
         /// </summary>
         public int MaxTimedOut { get; set; } = 600000;
-
         /// <summary>
         /// 初始化一个Mysql连接(字符串初始化)
         /// <para>to Initialize a link with a ConnectionString</para>
         /// </summary>
-        /// <param name="d">
-        /// 连接字符串
-        /// <para>ConnectionString</para>
-        /// <param name="initOpen">
-        /// 构造时链接
-        /// <para>ConnectWhenConstruct</para>
+        /// <param name="d">链接字符串</param>
+        /// <param name="initOpen">是否初始化</param>
+        /// <param name="log">是否记录日志</param>
+        /// <param name="keepAlive">是否保持长连接</param>
         public MysqlDBH(string d, bool initOpen = false, bool log = false, bool keepAlive = false)
         {
             conn ??= new MySqlConnection(d);
@@ -56,15 +44,13 @@ namespace Meow.Database.Mysql
             KeepAlive = keepAlive;
         }
         /// <summary>
-        /// 初始化一个Mysql连接(实例初始化)
-        /// <para>init instance with a Connection Instance</para>
+        /// 初始化一个Mysql连接(字符串初始化)
+        /// <para>to Initialize a link with a ConnectionString</para>
         /// </summary>
-        /// <param name="d">
-        /// 一个Mysql连接实例
-        /// <para>An Instance of Connection</para>
-        /// <param name="initOpen">
-        /// 构造时链接
-        /// <para>ConnectWhenConstruct</para>
+        /// <param name="d">链接字符串</param>
+        /// <param name="initOpen">是否初始化</param>
+        /// <param name="log">是否记录日志</param>
+        /// <param name="keepAlive">是否保持长连接</param>
         public MysqlDBH(MySqlConnection d, bool initOpen = false, bool log = false, bool keepAlive = false)
         {
             conn ??= d;
@@ -77,19 +63,19 @@ namespace Meow.Database.Mysql
             KeepAlive = keepAlive;
         }
         /// <summary>
-        /// 根据参数初始化一个Mysql连接
-        /// <para>by define of MySql's Connection</para>
+        /// 初始化一个Mysql连接(字符串初始化)
+        /// <para>to Initialize a link with a ConnectionString</para>
         /// </summary>
-        /// <param name="DataBase">数据库名称<para>Database's Name</para></param>
-        /// <param name="DataSource">源地址<para>DataSource</para></param>
-        /// <param name="Port">端口<para>Port of database</para></param>
-        /// <param name="UserId">用户名<para>User Name</para></param>
-        /// <param name="password">密码<para>Password</para></param>
-        /// <param name="Charset">字符集(默认utf8)<para>Charachter Set</para></param>
-        /// <param name="otherParameter">其他子串,如果有默认以;结尾<para>Other Parameter (mustends with ';')</para></param>
-        /// <param name="initOpen">
-        /// 构造时链接
-        /// <para>ConnectWhenConstruct</para>
+        /// <param name="initOpen">是否初始化</param>
+        /// <param name="log">是否记录日志</param>
+        /// <param name="keepAlive">是否保持长连接</param>
+        /// <param name="DataBase">数据库</param>
+        /// <param name="DataSource">数据源</param>
+        /// <param name="Port">端口</param>
+        /// <param name="UserId">用户名</param>
+        /// <param name="password">密码</param>
+        /// <param name="Charset">字符集</param>
+        /// <param name="otherParameter">其他添加函数</param>
         public MysqlDBH(string DataBase, string DataSource, string Port, string UserId, string password, string Charset = "utf8", string otherParameter = "", bool initOpen = false, bool log = false, bool keepAlive = false)
         {
             conn = new MySqlConnection(
@@ -104,13 +90,6 @@ namespace Meow.Database.Mysql
             KeepAlive = keepAlive;
         }
 
-        void ExtLog(string s)
-        {
-            if (Log)
-            {
-                Console.WriteLine(s);
-            }
-        }
 
         /// <summary>
         /// 长连接全局开启
@@ -125,10 +104,11 @@ namespace Meow.Database.Mysql
                 WatchDog.Elapsed += (e, c) =>
                 {
                     ExtLog($"[MYSQLWD] PINGED");
-                    conn.Ping();
+                    ((MySqlConnection)conn).Ping();
                 };
             }
         }
+
 
         /// <summary>
         /// 准备一个数据库查询操作
@@ -146,9 +126,18 @@ namespace Meow.Database.Mysql
         /// <returns>返回一个可连写的DBH</returns>
         public MysqlDBH PrepareDb(string cmdText, CommandType cmdType = CommandType.Text, params MySqlParameter[] commandParameters)
         {
-            this.cmdText = cmdText;
-            this.commandParameters = commandParameters;
-            this.cmdType = cmdType;
+            if (conn.State != ConnectionState.Open) { conn.Open(); }
+            command.Connection = conn;
+            command.CommandText = cmdText;
+            command.CommandType = cmdType;
+            if (commandParameters != null)
+            {
+                command.Parameters.Clear();
+                foreach (MySqlParameter parm in commandParameters)
+                {
+                    command.Parameters.Add(parm);
+                }
+            }
             return this;
         }
         /// <summary>
@@ -163,9 +152,18 @@ namespace Meow.Database.Mysql
         /// <returns>返回一个可连写的DBH</returns>
         public MysqlDBH PrepareDb(string cmdText, params MySqlParameter[] commandParameters)
         {
-            this.cmdText = cmdText;
-            this.commandParameters = commandParameters;
-            this.cmdType = CommandType.Text;
+            if (conn.State != ConnectionState.Open) { conn.Open(); }
+            command.Connection = conn;
+            command.CommandText = cmdText;
+            command.CommandType = CommandType.Text;
+            if (commandParameters != null)
+            {
+                command.Parameters.Clear();
+                foreach (MySqlParameter parm in commandParameters)
+                {
+                    command.Parameters.Add(parm);
+                }
+            }
             return this;
         }
         /// <summary>
@@ -179,10 +177,13 @@ namespace Meow.Database.Mysql
         /// <returns>返回一个可连写的DBH</returns>
         public MysqlDBH PrepareDb(string cmdText)
         {
-            this.cmdText = cmdText;
-            this.cmdType = CommandType.Text;
+            if (conn.State != ConnectionState.Open) { conn.Open(); }
+            command.Connection = conn;
+            command.CommandText = cmdText;
+            command.CommandType = CommandType.Text;
             return this;
         }
+
 
         /// <summary>
         /// 执行一个无返回值的SQL操作(非查询类)
@@ -196,57 +197,7 @@ namespace Meow.Database.Mysql
         {
             try
             {
-                using MySqlCommand cmd = new();
-                PrepareCommand(cmd, conn, null, cmdType, cmdText, commandParameters);
-                int val = cmd.ExecuteNonQuery();
-                return val;
-            }
-            catch
-            {
-                throw;
-            }
-        }
-        /// <summary>
-        /// 获取查询操作的一个Reader
-        /// <para>Get an SQL reader (which SELECT)</para>
-        /// </summary>
-        /// <returns>
-        /// 一个Reader
-        /// <para>a Reader</para>
-        /// </returns>
-        public MySqlDataReader ExecuteReader()
-        {
-            try
-            {
-                using MySqlCommand cmd = new();
-                PrepareCommand(cmd, conn, null, cmdType, cmdText, commandParameters);
-                MySqlDataReader reader = cmd.ExecuteReader(CommandBehavior.CloseConnection);
-                return reader;
-            }
-            catch
-            {
-                throw;
-            }
-        }
-        /// <summary>
-        /// 获取一个DataSet对象(查询操作)
-        /// <para>get A DataSet Instance (For SELECT)</para>
-        /// </summary>
-        /// <returns>
-        /// 一个DataSet
-        /// <para>a DataSet</para>
-        /// </returns>
-        public DataSet GetDataSet()
-        {
-            try
-            {
-                using MySqlCommand cmd = new();
-                PrepareCommand(cmd, conn, null, cmdType, cmdText, commandParameters);
-                MySqlDataAdapter adapter = new();
-                adapter.SelectCommand = cmd;
-                DataSet ds = new();
-                adapter.Fill(ds);
-                return ds;
+                return ((MySqlCommand)command).ExecuteNonQuery();
             }
             catch
             {
@@ -261,10 +212,8 @@ namespace Meow.Database.Mysql
         {
             try
             {
-                using MySqlCommand cmd = new();
-                PrepareCommand(cmd, conn, null, cmdType, cmdText, commandParameters);
                 MySqlDataAdapter adapter = new();
-                adapter.SelectCommand = cmd;
+                adapter.SelectCommand = (MySqlCommand)command;
                 DataSet ds = new();
                 adapter.Fill(ds);
                 return ds.Tables[0];
@@ -274,6 +223,8 @@ namespace Meow.Database.Mysql
                 throw;
             }
         }
+
+
         /// <summary>
         /// 默认关闭的Dispose
         /// <para>for using statement auto close conn</para>
@@ -301,24 +252,6 @@ namespace Meow.Database.Mysql
             WatchDog.Stop();
             WatchDog.Dispose();
             ExtLog($"[MYSQLWD] CLOSE");
-        }
-        private static void PrepareCommand(MySqlCommand cmd, MySqlConnection conn,
-            MySqlTransaction trans, CommandType cmdType, string cmdText,
-            MySqlParameter[] cmdParms)
-        {
-            if (conn.State != ConnectionState.Open) { conn.Open(); }
-            cmd.Connection = conn;
-            cmd.CommandText = cmdText;
-            cmd.CommandType = cmdType;
-            cmd.Transaction = trans;
-            if (cmdParms != null)
-            {
-                cmd.Parameters.Clear();
-                foreach (MySqlParameter parm in cmdParms)
-                {
-                    cmd.Parameters.Add(parm);
-                }
-            }
         }
     }
 }

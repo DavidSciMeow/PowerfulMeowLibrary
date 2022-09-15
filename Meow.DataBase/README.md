@@ -4,17 +4,23 @@
 -----------
 
 ## 1. 引 言
-1.1 总 
+### 1.1 总 
 本包当前为Mysql.Data(Nuget)标准包的二次封装, 其目的是为了更加便捷的简写使用.  
-1.2 包和包更新  
+### 1.2 包和包更新  
 您可以在 `Nuget` 搜索 `Electronicute.Meow.DataBase`  
 如果在Nuget更新您只需要关注VisualStudio的内部的Dep管理即可  
 如果为单独下载或者Clone本库请注意版本和时间  
-1.3 包的计划内容  
-> 1. 更新关于SQLlite的使用方案
+### 1.3 包的计划内容  
+> 1. 更新关于DataTable绑定备份和云端快速缓存类的使用
 > 1. 更新关于DBO的使用方案
-> 1. 优化SQL(mysql)的安全性质
 > 1. 根据微软语法糖提供更多简写方案
+
+### 1.4 本次更新内容(20220915)
+> 1. SQLite的链接模式,且和Mysql写法一致;
+> 1. SQLite的DBHelper;
+> 1. SQLite的快速删除库函数 `DeleteDb()`
+> 1. 将类合并, 类模式重新设计, 引入接口类 `IDbHelper<T>` 和 抽象类 `DbHelper`
+
 
 ----------
 
@@ -29,21 +35,23 @@
 ----------
 
 ## 3. 使用方案
-### 3.1 建立数据库链接(Mysql)/生成DBHelper  
+### 3.1 建立数据库链接/生成DBHelper  
 #### 3.1.1 使用实例化链接方案  
 ```
 using MysqlDBH dblk = new("dbname", "ip", "port", "user", "pass");
+using SQLiteDBH sqlite = new("D:\\testdb.db");
 ```
 #### 3.1.2 使用链接字符串  
 ```
+using SQLiteDBH sqlite = new("D:\\testdb.db");
 using MysqlDBH dblk = new($"Database={DataBase};DataSource={DataSource};Port={Port};UserId={UserId};Password={password};Charset={Charset};{otherParameter}");
 ```
 
-注1: 使用 `using` 引起是因为 `MysqlDBH` 实现了接口 `IDisposeable`,  
+注1: 使用 `using` 引起是因为 `MysqlDBH` 和 `SQLiteDBH` 实现了接口 `IDisposable`,  
 从而在其生命周期内(定义域/作用域内)当其失去使用效果时`自动断开链接`,  
 防止过多链接导致Mysql达到最大连接数;  
 
-注2: 如果您希望一直`保持单一(长)链接`链接数据库, 您需要实现如下功能:  
+注2: 如果您希望一直`保持Mysql的单一(长)链接`链接数据库, 您需要实现如下功能:  
 1.将实例化的DBH设置为`全局静态成员`   
 2.设置参数 `initOpen`为`true`  
 3.设置参数 `KeepAlive`为`true` (默认设置false)  
@@ -57,10 +65,7 @@ using MysqlDBH dblk = new($"Database={DataBase};DataSource={DataSource};Port={Po
 using var d = ReturnService(); //数据库链接已经准备完毕
 ```
 #### 3.2.1 增删改查,修改权限等 (PlainText)
-```
-//简单写法
-链接.PrepareDb(...).操作().
-```
+总写法: ` HelperInstance.PrepareDb(...).Operation();`
 #### 3.2.1.1 无需参数和变量传入的操作
 ```csharp
 //查表,并返回整个表
@@ -76,6 +81,14 @@ else
 {
     return 0; //空行
 }
+```
+注 1. 因为SQLite的支持类型有限, 您在引用 `Meow.DataBase` 命名空间后,  
+可以使用经由`SQLiteDataHelper`静态类实现的扩展方法  
+扩展方法如下: 
+`GetInt` `GetString` `GetFloat` `GetBLOB` `Get<T>`  
+您可以简写获取元素为如下逻辑模式:  
+```csharp
+var vk = tbfo.Rows[0].GetInt("name");
 ```
 ```csharp
 //执行NonQuery类型

@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageId>Electronicute.Meow.DataBase</PackageId>
-    <Version>5.0.0</Version>
+    <Version>5.1.0</Version>
     <Company>Electronicute</Company>
     <Product>Meow.DataBase</Product>
     <Authors>DavidSciMeow</Authors>
@@ -28,6 +28,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.8" />
     <PackageReference Include="MySql.Data" Version="8.0.28" />
   </ItemGroup>
 
