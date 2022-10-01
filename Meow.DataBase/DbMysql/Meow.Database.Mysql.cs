@@ -16,6 +16,24 @@ namespace Meow.Database.Mysql
     public class MysqlDBH : DbHelper, IDbHelper<MysqlDBH>, IDisposable
     {
         readonly System.Timers.Timer WatchDog;
+        private void GlobalOpen()
+        {
+            conn.Open();
+            command = ((MySqlConnection)conn).CreateCommand();
+            ExtLog($"[MYSQLWD] Conn Opened");
+            if (KeepAlive)
+            {
+                WatchDog.Start();
+                ExtLog($"[MYSQLWD] WatchDog Enabled");
+                WatchDog.Elapsed += (e, c) =>
+                {
+                    ExtLog($"[MYSQLWD] PINGED");
+                    ((MySqlConnection)conn).Ping();
+                };
+            }
+        }
+
+
         /// <summary>
         /// 保持长连接(默认保持)
         /// </summary>
@@ -32,16 +50,13 @@ namespace Meow.Database.Mysql
         /// <param name="initOpen">是否初始化</param>
         /// <param name="log">是否记录日志</param>
         /// <param name="keepAlive">是否保持长连接</param>
-        public MysqlDBH(string d, bool initOpen = false, bool log = false, bool keepAlive = false)
+        public MysqlDBH(string d, bool log = false, bool keepAlive = false)
         {
             conn ??= new MySqlConnection(d);
             WatchDog = new(MaxTimedOut);
-            if (initOpen)
-            {
-                GlobalOpen();
-            }
             Log = log;
             KeepAlive = keepAlive;
+            GlobalOpen();
         }
         /// <summary>
         /// 初始化一个Mysql连接(字符串初始化)
@@ -51,16 +66,13 @@ namespace Meow.Database.Mysql
         /// <param name="initOpen">是否初始化</param>
         /// <param name="log">是否记录日志</param>
         /// <param name="keepAlive">是否保持长连接</param>
-        public MysqlDBH(MySqlConnection d, bool initOpen = false, bool log = false, bool keepAlive = false)
+        public MysqlDBH(MySqlConnection d, bool log = false, bool keepAlive = false)
         {
             conn ??= d;
             WatchDog = new(MaxTimedOut);
-            if (initOpen)
-            {
-                GlobalOpen();
-            }
             Log = log;
             KeepAlive = keepAlive;
+            GlobalOpen();
         }
         /// <summary>
         /// 初始化一个Mysql连接(字符串初始化)
@@ -76,39 +88,18 @@ namespace Meow.Database.Mysql
         /// <param name="password">密码</param>
         /// <param name="Charset">字符集</param>
         /// <param name="otherParameter">其他添加函数</param>
-        public MysqlDBH(string DataBase, string DataSource, string Port, string UserId, string password, string Charset = "utf8", string otherParameter = "", bool initOpen = false, bool log = false, bool keepAlive = false)
+        public MysqlDBH(
+            string DataBase, string DataSource, string Port, string UserId, string password, string Charset = "utf8", string otherParameter = "", 
+            bool log = false, bool keepAlive = false)
         {
             conn = new MySqlConnection(
                $"Database={DataBase};DataSource={DataSource};Port={Port};UserId={UserId};Password={password};Charset={Charset};{otherParameter}"
                );
             WatchDog = new(MaxTimedOut);
-            if (initOpen)
-            {
-                GlobalOpen();
-            }
             Log = log;
             KeepAlive = keepAlive;
+            GlobalOpen();
         }
-
-
-        /// <summary>
-        /// 长连接全局开启
-        /// </summary>
-        public void GlobalOpen()
-        {
-            conn.Open();
-            if (KeepAlive)
-            {
-                ExtLog($"[MYSQLWD] KEEP ALIVE OPEN");
-                WatchDog.Start();
-                WatchDog.Elapsed += (e, c) =>
-                {
-                    ExtLog($"[MYSQLWD] PINGED");
-                    ((MySqlConnection)conn).Ping();
-                };
-            }
-        }
-
 
         /// <summary>
         /// 准备一个数据库查询操作
@@ -126,7 +117,6 @@ namespace Meow.Database.Mysql
         /// <returns>返回一个可连写的DBH</returns>
         public MysqlDBH PrepareDb(string cmdText, CommandType cmdType = CommandType.Text, params MySqlParameter[] commandParameters)
         {
-            if (conn.State != ConnectionState.Open) { conn.Open(); }
             command.Connection = conn;
             command.CommandText = cmdText;
             command.CommandType = cmdType;
@@ -152,7 +142,6 @@ namespace Meow.Database.Mysql
         /// <returns>返回一个可连写的DBH</returns>
         public MysqlDBH PrepareDb(string cmdText, params MySqlParameter[] commandParameters)
         {
-            if (conn.State != ConnectionState.Open) { conn.Open(); }
             command.Connection = conn;
             command.CommandText = cmdText;
             command.CommandType = CommandType.Text;
@@ -177,7 +166,6 @@ namespace Meow.Database.Mysql
         /// <returns>返回一个可连写的DBH</returns>
         public MysqlDBH PrepareDb(string cmdText)
         {
-            if (conn.State != ConnectionState.Open) { conn.Open(); }
             command.Connection = conn;
             command.CommandText = cmdText;
             command.CommandType = CommandType.Text;
@@ -234,24 +222,17 @@ namespace Meow.Database.Mysql
             GC.SuppressFinalize(this);
             try
             {
-                GC.ReRegisterForFinalize(this);
+                conn.Close();
+                conn.Dispose();
+                WatchDog.Stop();
+                WatchDog.Dispose();
+                ExtLog($"[MYSQLWD] CLOSE");
             }
             catch
             {
                 conn = null;
                 GC.Collect();
             }
-        }
-        /// <summary>
-        /// 析构
-        /// </summary>
-        ~MysqlDBH()
-        {
-            conn.Close();
-            conn.Dispose();
-            WatchDog.Stop();
-            WatchDog.Dispose();
-            ExtLog($"[MYSQLWD] CLOSE");
         }
     }
 }

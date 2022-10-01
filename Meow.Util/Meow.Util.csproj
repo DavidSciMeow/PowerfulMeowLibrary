@@ -18,6 +18,7 @@
 (.net 6)</Description>
     <BaseOutputPath>..\Ouput\</BaseOutputPath>
     <PackageLicenseExpression>LGPL-2.0-only</PackageLicenseExpression>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

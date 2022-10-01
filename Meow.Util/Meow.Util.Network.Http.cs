@@ -106,18 +106,18 @@ namespace Meow.Util.Network.Http
             }
             else
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(path));
+                Directory.CreateDirectory(Path.GetDirectoryName(path)??"");
                 try
                 {
                     FileStream fs = new(path, FileMode.Append, FileAccess.Write, FileShare.ReadWrite);
                     var response = Client.Basic.GetAsync(url).GetAwaiter().GetResult();
                     Stream responseStream = response.Content.ReadAsStream();
                     byte[] bArr = new byte[1024];
-                    int size = responseStream.Read(bArr, 0, (int)bArr.Length);
+                    int size = responseStream.Read(bArr, 0, bArr.Length);
                     while (size > 0)
                     {
                         fs.Write(bArr, 0, size);
-                        size = responseStream.Read(bArr, 0, (int)bArr.Length);
+                        size = responseStream.Read(bArr, 0, bArr.Length);
                     }
                     fs.Close();
                     responseStream.Close();

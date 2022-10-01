@@ -8,8 +8,19 @@
 本库为基础标准功能库,含有网络处理,解密加密,时间处理,图像处理等库
 
 # 1 内函数一览
-
 ## 函数参数请在VisualStudio调用时查看
+
+
+```CSharp
+//标注 ext 的是静态扩展方法, 可以使用第一参数直接后接其他参数. 
+//例如 DiscuzMd5(string)
+var pwd = "abc".DiscuzMd5();
+//标注 async 的是异步方法, 可以不带异步同步调用, 但也可以使用异步交换. 
+//例如 DiscuzMd5(string)
+var html = Get.String("www.github.com");
+//or
+Task.Factory.StartNew(async () => { var html = await Meow.Util.Network.Http.Get.String("www.github.com"); });
+```
 
 |命名空间|类|成员名|作用|
 |----|----|----|----|
@@ -18,6 +29,13 @@
 |Meow.Util.Encrypt|Hash|`ext` DiscuzMd5(string)|用于特殊加密Discuz的MD5|
 |Meow.Util.Encrypt|Hash|`ext` Md5(string)|加密Md5|
 |Meow.Util.Encrypt|Hash|`ext` MD5S2ExpressPwd(string)|Md5Salt2加密方案|
+|----|----|----|----|
+|***Meow.Util.Bit***|***BitSource***|***BitSource(byte)/BitSource(bool[])/BitSource()***|***比特类帮助结构体***|
+|Meow.Util.Bit|BitUtil|`ext` ToBit(byte)|转换成二进制帮助类|
+|Meow.Util.Bit|BitUtil|`ext` SetBit(byte, int,bool)|设置Byte的某一位到某个状态|
+|Meow.Util.Bit|BitUtil|`ext` SetBit(byte, bool[])|设置Byte的所有位|
+|Meow.Util.Bit|BitUtil|`ext` GetBit(byte)|获取Byte的所有位|
+|Meow.Util.Bit|BitUtil|`ext` GetBit(byte, int)|获取Byte的某一位|
 |----|----|----|----|
 |Meow.Util|Time|`ext` Second(long)|秒制时间戳转换时间类|
 |Meow.Util|Time|`ext` MilliSecond(long)|毫秒制时间戳转换时间类|
