@@ -5,21 +5,24 @@
 -----
 
 # 0 引言
-本库为基础标准功能库,含有网络处理,解密加密,时间处理,图像处理等库
+本库为基础标准功能库,含有`网络处理`,`解密加密`,`时间处理`,`图像处理`等库
 
 # 1 内函数一览
 ## 函数参数请在VisualStudio调用时查看
-
 
 ```CSharp
 //标注 ext 的是静态扩展方法, 可以使用第一参数直接后接其他参数. 
 //例如 DiscuzMd5(string)
 var pwd = "abc".DiscuzMd5();
 //标注 async 的是异步方法, 可以不带异步同步调用, 但也可以使用异步交换. 
-//例如 DiscuzMd5(string)
-var html = Get.String("www.github.com");
+//例如 Get.String(string)
+var html = Get.String("www.github.com").GetAwaiter().GetResult();
 //or
-Task.Factory.StartNew(async () => { var html = await Meow.Util.Network.Http.Get.String("www.github.com"); });
+Task.Factory.StartNew(
+	async () => { 
+		var html = await Meow.Util.Network.Http.Get.String("www.github.com"); 
+	}
+);
 ```
 
 |命名空间|类|成员名|作用|
@@ -58,7 +61,6 @@ Task.Factory.StartNew(async () => { var html = await Meow.Util.Network.Http.Get.
 |Meow.Util.Imaging|Skia|`ext` ToBase64String(SKImage)| 转换一个SKImage到Base64|
 
 # 2 更新计划
-
 1. 网络图片下载解析  
 1. 标准流Skia图片绘制  
 1. 解密加密库  
