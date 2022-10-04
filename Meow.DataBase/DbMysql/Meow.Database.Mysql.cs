@@ -1,6 +1,7 @@
 ﻿using Meow.DataBase;
 using MySql.Data.MySqlClient;
 using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace Meow.Database.Mysql
@@ -101,20 +102,7 @@ namespace Meow.Database.Mysql
             GlobalOpen();
         }
 
-        /// <summary>
-        /// 准备一个数据库查询操作
-        /// <para>prepare a command for sql- which is your statement</para>
-        /// </summary>
-        /// <param name="cmdText">
-        /// 执行的SQL命令
-        /// <para>the SQL Command that you want to send</para>
-        /// </param>
-        /// <param name="cmdType">
-        /// 命令模式*一般使用Text*输入`default`不更改本项
-        /// <para>Command MODE, like wise we all using Text, which you can type Default.</para>
-        /// </param>
-        /// <param name="commandParameters">命令参数</param>
-        /// <returns>返回一个可连写的DBH</returns>
+        /// <inheritdoc/>
         public MysqlDBH PrepareDb(string cmdText, CommandType cmdType = CommandType.Text, params MySqlParameter[] commandParameters)
         {
             command.Connection = conn;
@@ -130,16 +118,7 @@ namespace Meow.Database.Mysql
             }
             return this;
         }
-        /// <summary>
-        /// 准备一个数据库查询操作
-        /// <para>prepare a command for sql- which is your statement</para>
-        /// </summary>
-        /// <param name="cmdText">
-        /// 执行的SQL命令
-        /// <para>the SQL Command that you want to send</para>
-        /// </param>
-        /// <param name="commandParameters">命令参数</param>
-        /// <returns>返回一个可连写的DBH</returns>
+        /// <inheritdoc/>
         public MysqlDBH PrepareDb(string cmdText, params MySqlParameter[] commandParameters)
         {
             command.Connection = conn;
@@ -155,15 +134,7 @@ namespace Meow.Database.Mysql
             }
             return this;
         }
-        /// <summary>
-        /// 准备一个数据库查询操作
-        /// <para>prepare a command for sql- which is your statement</para>
-        /// </summary>
-        /// <param name="cmdText">
-        /// 执行的SQL命令
-        /// <para>the SQL Command that you want to send</para>
-        /// </param>
-        /// <returns>返回一个可连写的DBH</returns>
+        /// <inheritdoc/>
         public MysqlDBH PrepareDb(string cmdText)
         {
             command.Connection = conn;
@@ -173,14 +144,7 @@ namespace Meow.Database.Mysql
         }
 
 
-        /// <summary>
-        /// 执行一个无返回值的SQL操作(非查询类)
-        /// <para>perform an action that without SQL SELECT.(mostly)</para>
-        /// </summary>
-        /// <returns>
-        /// 操作的行数
-        /// <para>Infected lines</para>
-        /// </returns>
+        /// <inheritdoc/>
         public int ExecuteNonQuery()
         {
             try
@@ -192,10 +156,7 @@ namespace Meow.Database.Mysql
                 throw;
             }
         }
-        /// <summary>
-        /// 获取结果表
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public DataTable GetTable()
         {
             try
@@ -212,6 +173,12 @@ namespace Meow.Database.Mysql
             }
         }
 
+        /// <inheritdoc/>
+        public bool SelectExist() => GetTable().Rows.Count > 0;
+        /// <inheritdoc/>
+        public DataRowCollection GetRows() => GetTable()?.Rows;
+        /// <inheritdoc/>
+        public R GetFirstRowItem<R>(string colname) => GetTable().Rows[0].Field<R>(colname);
 
         /// <summary>
         /// 默认关闭的Dispose

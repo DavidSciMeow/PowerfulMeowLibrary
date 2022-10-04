@@ -38,4 +38,62 @@ namespace Meow.DataBase.SQLite
         /// </summary>
         ASC
     }
+    /// <summary>
+    /// Sqlite表结构不一致类型
+    /// </summary>
+    public enum SqliteTableStructureDiff
+    {
+        /// <summary>
+        /// 一致
+        /// </summary>
+        Synced,
+        /// <summary>
+        /// 列不一致(数量)
+        /// </summary>
+        Col_Count,
+        /// <summary>
+        /// 主键数量不一致
+        /// </summary>
+        PK_Length,
+        /// <summary>
+        /// 某列名称不一致
+        /// </summary>
+        Col_Name,
+        /// <summary>
+        /// 某列数据不一致
+        /// </summary>
+        Col_Type,
+        /// <summary>
+        /// 某列唯一约束不一致
+        /// </summary>
+        Col_Unique,
+        /// <summary>
+        /// 某列默认值不一致
+        /// </summary>
+        Col_DefaultValue,
+        /// <summary>
+        /// 某列步进模式种子不一致
+        /// </summary>
+        Col_AutoIncrementSeed,
+        /// <summary>
+        /// 某列步进模式步长不一致
+        /// </summary>
+        Col_AutoIncrementStep,
+        /// <summary>
+        /// 某列自动步进模式不一致
+        /// </summary>
+        Col_AutoIncrementMode,
+        /// <summary>
+        /// 行数不一致
+        /// </summary>
+        Rows_Count,
+        /// <summary>
+        /// 行内数据不一致
+        /// </summary>
+        Rows_ItemArray,
+        /// <summary>
+        /// 行内数据有改动
+        /// </summary>
+        Rows_Item
+    }
 }

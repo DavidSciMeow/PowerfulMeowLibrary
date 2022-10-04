@@ -27,11 +27,7 @@ namespace Meow.DataBase.SQLite
             conn.Open();
         }
 
-        /// <summary>
-        /// 准备数据库
-        /// </summary>
-        /// <param name="cmdText">命令</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public SQLiteDBH PrepareDb(string cmdText)
         {
             if (conn.State != ConnectionState.Open) { conn.Open(); }
@@ -39,12 +35,7 @@ namespace Meow.DataBase.SQLite
             command.CommandText = cmdText;
             return this;
         }
-        /// <summary>
-        /// 准备数据库
-        /// </summary>
-        /// <param name="cmdText">命令</param>
-        /// <param name="cmdParms">命令参数</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public SQLiteDBH PrepareDb(string cmdText, params SqliteParameter[] cmdParms)
         {
             if (conn.State != ConnectionState.Open) { conn.Open(); }
@@ -60,16 +51,9 @@ namespace Meow.DataBase.SQLite
             }
             return this;
         }
-        /// <summary>
-        /// 执行增删改
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public int ExecuteNonQuery() => command.ExecuteNonQuery();
-
-        /// <summary>
-        /// 获取结果表
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public DataTable GetTable()
         {
             if (command.CommandText.Contains("SELECT"))
@@ -83,6 +67,13 @@ namespace Meow.DataBase.SQLite
                 throw new Exception("No SELECT Present In Command, Please Use ExecuteNonQuery");
             }
         }
+
+        /// <inheritdoc/>
+        public bool SelectExist() => GetTable().Rows.Count > 0;
+        /// <inheritdoc/>
+        public DataRowCollection GetRows() => GetTable()?.Rows;
+        /// <inheritdoc/>
+        public T GetFirstRowItem<T>(string colname) => GetTable().Rows[0].Field<T>(colname);
 
         /// <summary>
         /// 删除数据库
@@ -125,6 +116,8 @@ namespace Meow.DataBase.SQLite
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
+
+
     }
 }
 

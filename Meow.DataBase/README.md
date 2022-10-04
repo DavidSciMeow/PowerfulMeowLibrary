@@ -6,22 +6,21 @@
 ## 1. 引 言
 ### 1.1 总 
 本包当前为Mysql.Data(Nuget)标准包的二次封装, 其目的是为了更加便捷的简写使用.  
+
 ### 1.2 包和包更新  
 您可以在 `Nuget` 搜索 `Electronicute.Meow.DataBase`  
 如果在Nuget更新您只需要关注VisualStudio的内部的Dep管理即可  
 如果为单独下载或者Clone本库请注意版本和时间  
+
 ### 1.3 包的计划内容  
-> 1. 更新关于DataTable绑定备份和云端快速缓存类的使用
-> 1. 更新关于DBO的使用方案
-> 1. 根据微软语法糖提供更多简写方案
+1. 更新关于DataTable绑定备份和云端快速缓存类的使用
+1. 根据微软语法糖提供更多简写方案
 
-### 1.4 本次更新内容(20220915)
-> 1. SQLite的链接模式,且和Mysql写法一致;
-> 1. SQLite的DBHelper;
-> 1. SQLite的快速删除库函数 `DeleteDb()`
-> 1. 将类合并, 类模式重新设计, 引入接口类 `IDbHelper<T>` 和 抽象类 `DbHelper`
-
-
+### 1.4 本次更新内容(20221004)
+1. SelectExist()函数, 用于检查选取域是否含有行.
+1. GetRows()函数, 用于直接获取行集合.
+1. GetFirstRowItem()函数, 用于直接获取一行(当选择域只有一行的时候)的某一列的某个单元.
+ 
 ----------
 
 ## 2. 包特性
@@ -119,9 +118,20 @@ var kx2 = d.PrepareDb("SELECT c FROM table WHERE c1=@c1 and c2=@c2 ORDER BY c DE
 
 ## 4.附录
 ### 4.1 返回值
-返回值均为Mysql.Data内部的合成值,包含了Mysql.Data的最佳实现,
-### 4.2 GetDataSet/GetTable的区别
-`GetDataSet`是一个`备用扩展`,`GetTable()` 和 `GetDataSet().Tables[0]` 完全一致
+返回值均为 System.Data 内部的合成值,包含了 System.Data 的最佳实现,
+### 4.2 内函数实现
+#### 4.2.1 SelectExist
+```csharp
+public bool SelectExist() => GetTable().Rows.Count > 0;
+```
+#### 4.2.2 GetRows
+```csharp
+public DataRowCollection GetRows() => GetTable()?.Rows;
+```
+#### 4.2.2 GetFirstRowItem\<T\>
+```csharp
+public T GetFirstRowItem<T>(string colname) => GetTable().Rows[0].Field<T>(colname);
+```
 ### 4.3 可不可以进行字符串内插来更改参数
 可以,但不建议,因为你需要`手动过滤`并且`防范Sql注入攻击`,  
 其实使用SqlPara也未必能`完全防御`但 无论是从`写法`还是`逻辑安全性`他都要比字符串内插高.

@@ -20,6 +20,24 @@ namespace Meow.DataBase
         /// </summary>
         /// <returns></returns>
         public DataTable GetTable();
+
+        /// <summary>
+        /// 选取的表内含有行(布尔检查)
+        /// </summary>
+        /// <returns></returns>
+        public bool SelectExist();
+        /// <summary>
+        /// 获取行(如果有)
+        /// </summary>
+        /// <returns></returns>
+        public DataRowCollection GetRows();
+        /// <summary>
+        /// 获取第一行的某一列内容
+        /// </summary>
+        /// <typeparam name="R">列数据结构</typeparam>
+        /// <param name="colname">列名</param>
+        /// <returns></returns>
+        public R GetFirstRowItem<R>(string colname);
         /// <summary>
         /// 准备命令并返回数据库类型的实例
         /// </summary>

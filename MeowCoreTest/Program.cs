@@ -1,22 +1,34 @@
 ﻿using Meow.Database.Mysql;
+using Meow.DataBase;
+using Meow.DataBase.SQLite;
+using Microsoft.Data.Sqlite;
 using System;
+using System.Data;
 
 namespace MeowCoreTest
 {
     internal class Program
     {
-        static readonly MysqlDBH ms = new("rinko", "112.6.216.175", "12306", "rinkobot", "rinkobot",log:true,keepAlive:true);
         public static void Main(string[] args)
         {
-            while (true)
-            {
-                var cr = Console.ReadLine();
-                if ("t".Equals(cr))
-                {
-                    var s = ms.PrepareDb("SELECT * FROM ServiceGroup").GetTable();
-                    Console.WriteLine(s.Columns.Count);
-                }
-            }
+            //while (true)
+            //{
+            //    var con = Console.ReadLine();
+            //    if ("a".Equals(con))
+            //    {
+            //        var a = dt.NewRow();
+            //        a["id"] = 2;
+            //        a["name"] = "test";
+            //        dt.Rows.Add(a);
+            //        dt.AcceptChanges();
+            //    }
+            //    else if ("d".Equals(con))
+            //    {
+            //        dt.Rows.Remove(dt.Rows[0]);
+            //        dt.AcceptChanges();
+            //    }
+            //}
+
         }
     }
 }
