@@ -203,7 +203,75 @@
         }
     }
 
-   
+    public struct RouteInfo
+    {
+        public string TrainId;
+        public string OperationId;
+        public int ServiceId;
+        public RouteStops Stops;
+        public struct RouteStops
+        {
+            public int Id;
+            public string Name;
+            public string Starts;
+            public string Ends;
+            public string Notes;
+        }
+        public string[] Operators;
+        public string Note;
+        public string Frequency;
+        public string TimeTableFormat;
+        public string OpSegment;
+        public string RouteType;
+    }
 
-
+    /*
+     * {
+        "success": true,
+        "data": {
+        "trainId": "CN~G0010",
+        "operationId": "G10",
+        "serviceId": 2,
+        "stops": [
+            [
+            6150361,
+            "上海虹桥",
+            "01000",
+            "01000",
+            "",
+            ""
+            ],
+            [
+            6080011,
+            "南京南",
+            "01059",
+            "01101",
+            "",
+            ""
+            ],
+            [
+            5960198,
+            "济南西",
+            "01258",
+            "01300",
+            "",
+            ""
+            ],
+            [
+            5900805,
+            "北京南",
+            "01426",
+            "01426",
+            "",
+            ""
+            ]
+        ],
+        "operators": [],
+        "note": null,
+        "frequency": null,
+        "timeTableFormat": "SIMPLE",
+        "opSegment": null,
+        "routeType": "T"
+        }
+     */
 }
