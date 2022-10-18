@@ -11,18 +11,11 @@ namespace MeowCoreTest
     {
         public static void Main(string[] args)
         {
-            var s = "京";
+            var s = "G1";
             SearchBase.Lang = LangPref.zhcn;
-            var sx = TRGet.Feature(s);
-            for (int i = 0; i < sx.Length; i++)
-            {
-                FeatureMatchResult x = sx[i];
-                Console.WriteLine($"{i}:{x.Name}");
-            }
-            var k = int.Parse(Console.ReadLine());
-            var d = sx[k].GetIfRailInfo();
-            Console.WriteLine(d);
-
+            var sx = TRGet.Train(s);
+            var a = sx[1].GetRouteInfo();
+            Console.WriteLine(a);
 
 
 

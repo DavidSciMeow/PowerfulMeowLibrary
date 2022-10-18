@@ -10,7 +10,6 @@ namespace Meow.TrainRadar
         private static string Langprefset() => $"{(Lang != null ? $"?locale={Lang}" : "")}";
         public static string GetMatchFeature(string feat) => Util.Network.Http.Get.String($"{BaseUrl}match_feature/{feat}{Langprefset()}").GetAwaiter().GetResult();
         public static string GetMatchTrain(string num) => Util.Network.Http.Get.String($"{BaseUrl}match_train/{num}{Langprefset()}").GetAwaiter().GetResult();
-        
         public static string GetSpecificTrainRoute(string num) => Util.Network.Http.Get.String($"{BaseUrl}route/{num}{Langprefset()}").GetAwaiter().GetResult();
         public static string GetSpecificTrainStation(string num) => Util.Network.Http.Get.String($"{BaseUrl}station/{num}{Langprefset()}").GetAwaiter().GetResult();
         public static string GetSpecificRail(string num) => Util.Network.Http.Get.String($"{BaseUrl}rail/{num}{Langprefset()}").GetAwaiter().GetResult();
@@ -190,6 +189,11 @@ namespace Meow.TrainRadar
         /// </summary>
         /// <returns></returns>
         public override string ToString() => $"[{Id}] {Name} ({From})->({To})";
+        public JObject GetRouteInfo()
+        {
+            var jo = JObject.Parse(SearchBase.GetSpecificTrainRoute(Id));
+            return jo;
+        }
     }
 
     public static class TRGet
