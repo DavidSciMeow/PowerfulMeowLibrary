@@ -98,8 +98,8 @@ namespace Meow.TrainRadar
                         Elec = jo?["elec"]?.ToString() ?? "",
                         RailService = Enum.Parse<RailServiceType>(jo?["railService"]?.ToString() ?? "N"),
                         RailType = Enum.Parse<RailSpdType>(jo?["railType"]?.ToString() ?? "N"),
-                        //Notes = JArray.Parse(jo?["notes"]?.ToString() ?? "[]").ToObject<string[]>() ?? Array.Empty<string>(),
-                        //Reference = JArray.Parse(jo?["reference"]?.ToString() ?? "[]").ToObject<string[]>() ?? Array.Empty<string>(),
+                        Notes = JArray.Parse(jo?["notes"]?.ToString() ?? "[]").ToObject<string[]>() ?? Array.Empty<string>(),
+                        Reference = JArray.Parse(jo?["reference"]?.ToString() ?? "[]").ToObject<string[]>() ?? Array.Empty<string>(),
                         Diagram = new()
                         {
                             Template = v,

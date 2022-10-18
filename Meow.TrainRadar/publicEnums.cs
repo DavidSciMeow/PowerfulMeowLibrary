@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Meow.TrainRadar
+﻿namespace Meow.TrainRadar
 {
     /// <summary>
     /// 铁路速度类型
@@ -140,6 +134,9 @@ namespace Meow.TrainRadar
         /// </summary>
         enus,
     }
+    /// <summary>
+    /// 搜索类型
+    /// </summary>
     public enum SearchType
     {
         /// <summary>

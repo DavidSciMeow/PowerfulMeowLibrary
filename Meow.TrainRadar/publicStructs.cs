@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Meow.TrainRadar
+﻿namespace Meow.TrainRadar
 {
     /// <summary>
     /// 火车线路类
