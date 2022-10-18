@@ -70,6 +70,12 @@ namespace Meow.Util.Network.Http
         /// <returns></returns>
         public static async Task<string> String(string url) => await Client.Basic.GetStringAsync(url);
         /// <summary>
+        /// Get/Binary [byte[]]
+        /// </summary>
+        /// <param name="url">地址</param>
+        /// <returns></returns>
+        public static async Task<byte[]> Binary(string url) => await Client.Basic.GetByteArrayAsync(url);
+        /// <summary>
         /// Get / Compression (GZIP/and.others)
         /// </summary>
         /// <param name="url">地址</param>

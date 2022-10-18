@@ -6,10 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Meow.DataBase\Meow.DataBase.csproj" />
-    <ProjectReference Include="..\Meow.Interpreter\Meow.Interpreter.csproj" />
-    <ProjectReference Include="..\Meow.Util\Meow.Util.csproj" />
-    <ProjectReference Include="..\Meow.Weather\Meow.Weather.csproj" />
+    <ProjectReference Include="..\Meow.FlightRadar\Meow.FlightRadar.csproj" />
+    <ProjectReference Include="..\Meow.TrainRadar\Meow.TrainRadar.csproj" />
   </ItemGroup>
 
 </Project>
