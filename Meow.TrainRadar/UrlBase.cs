@@ -61,7 +61,7 @@ namespace Meow.TrainRadar
                 var jo = GetInfo()?["data"];
                 if (jo != null)
                 {
-                    List<RailInfo.RailDiagram.REndPoint> rep = new();
+                    List<REndPoint> rep = new();
                     string v = "";
                     if (jo?["diagram"]?.HasValues ?? false)
                     {
@@ -70,7 +70,7 @@ namespace Meow.TrainRadar
                         foreach (var i in Ja)
                         {
                             var jopot = JArray.Parse(i?[3]?.ToString() ?? "[]");
-                            List<RailInfo.RailDiagram.REndPoint.REndPointInner> repi = new();
+                            List<REndPointInner> repi = new();
                             foreach (var j in jopot)
                             {
                                 repi.Add(new()
@@ -189,10 +189,44 @@ namespace Meow.TrainRadar
         /// </summary>
         /// <returns></returns>
         public override string ToString() => $"[{Id}] {Name} ({From})->({To})";
-        public JObject GetRouteInfo()
+        /// <summary>
+        /// 获取本车的路线
+        /// </summary>
+        /// <returns></returns>
+        public RouteInfo? GetRouteInfo()
         {
-            var jo = JObject.Parse(SearchBase.GetSpecificTrainRoute(Id));
-            return jo;
+            var jo = JObject.Parse(SearchBase.GetSpecificTrainRoute(Id))?["data"];
+            if(jo != null)
+            {
+                var stops = JArray.Parse(jo?["stops"]?.ToString() ?? "[]");
+                List<RouteStops> rs = new();
+                foreach(var i in stops)
+                {
+                    rs.Add(new()
+                    {
+                        Id = i?[0]?.ToObject<int>() ?? -1,
+                        Name = i?[1]?.ToString() ?? "",
+                        Starts = i?[2]?.ToString() ?? "",
+                        Ends = i?[3]?.ToString() ?? "",
+                        Notes = i?[4]?.ToString() ?? "",
+                        Notes2 = i?[5]?.ToString() ?? "",
+                    });
+                }
+                return new RouteInfo()
+                {
+                    TrainId = jo?["trainId"]?.ToString() ?? "",
+                    OperationId = jo?["operationId"]?.ToString() ?? "",
+                    ServiceId = Enum.Parse<ServiceType>(jo?["serviceId"]?.ToString() ?? "Other"),
+                    Operators = JArray.Parse(jo?["operators"]?.ToString() ?? "[]").ToObject<string[]>() ?? Array.Empty<string>(),
+                    Note = jo?["note"]?.ToString() ?? "",
+                    Frequency = jo?["frequency"]?.ToString() ?? "",
+                    TimeTableFormat = jo?["timeTableFormat"]?.ToString() ?? "",
+                    OpSegment = jo?["opSegment"]?.ToString() ?? "",
+                    RouteType = jo?["routeType"]?.ToString() ?? "",
+                    Stops = rs.ToArray(),
+                };
+            }
+            return null;
         }
     }
 

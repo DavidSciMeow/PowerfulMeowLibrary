@@ -1,7 +1,9 @@
-﻿namespace Meow.TrainRadar
+﻿using System.Text;
+
+namespace Meow.TrainRadar
 {
     /// <summary>
-    /// 火车线路类
+    /// 铁路信息
     /// </summary>
     public struct RailInfo
     {
@@ -41,61 +43,104 @@
         /// 参考文献
         /// </summary>
         public string[] Reference;
+    }
+    /// <summary>
+    /// 经停站类
+    /// </summary>
+    public struct RouteStops
+    {
         /// <summary>
-        /// 路线图
+        /// 站ID
         /// </summary>
-        public struct RailDiagram
-        {
-            /// <summary>
-            /// 模板类型
-            /// </summary>
-            public string Template;
-            /// <summary>
-            /// 逻辑线路
-            /// </summary>
-            public REndPoint[] Records;
-
-            /// <summary>
-            /// REP节点
-            /// </summary>
-            public struct REndPoint
-            {
-                /// <summary>
-                /// 绘图类型
-                /// </summary>
-                public string SType;
-                /// <summary>
-                /// 里程
-                /// </summary>
-                public int? Miles;
-                /// <summary>
-                /// 线路类型
-                /// </summary>
-                public string RailType;
-                /// <summary>
-                /// 内部结构
-                /// </summary>
-                public REndPointInner[] Points;
-                /// <summary>
-                /// REP内部结构
-                /// </summary>
-                public struct REndPointInner
-                {
-                    /// <summary>
-                    /// 当前节点类型
-                    /// </summary>
-                    public StationType Type;
-                    /// <summary>
-                    /// Id
-                    /// </summary>
-                    public int Id;
-                    /// <summary>
-                    /// 线路名称
-                    /// </summary>
-                    public string Name;
-                }
-            }
-        }
+        public int Id;
+        /// <summary>
+        /// 站名
+        /// </summary>
+        public string Name;
+        /// <summary>
+        /// 到站时间
+        /// </summary>
+        public string Starts;
+        /// <summary>
+        /// 发车时间
+        /// </summary>
+        public string Ends;
+        /// <summary>
+        /// 其他事项
+        /// </summary>
+        public string Notes;
+        /// <summary>
+        /// 其他事项2
+        /// </summary>
+        public string Notes2;
+    }
+    /// <summary>
+    /// 路线图
+    /// </summary>
+    public struct RailDiagram
+    {
+        /// <summary>
+        /// 模板类型
+        /// </summary>
+        public string Template;
+        /// <summary>
+        /// 逻辑线路
+        /// </summary>
+        public REndPoint[] Records;
+    }
+    /// <summary>
+    /// REP节点
+    /// </summary>
+    public struct REndPoint
+    {
+        /// <summary>
+        /// 绘图类型
+        /// </summary>
+        public string SType;
+        /// <summary>
+        /// 里程
+        /// </summary>
+        public int? Miles;
+        /// <summary>
+        /// 线路类型
+        /// </summary>
+        public string RailType;
+        /// <summary>
+        /// 内部结构
+        /// </summary>
+        public REndPointInner[] Points;
+    }
+    /// <summary>
+    /// REP内部结构
+    /// </summary>
+    public struct REndPointInner
+    {
+        /// <summary>
+        /// 当前节点类型
+        /// </summary>
+        public StationType Type;
+        /// <summary>
+        /// Id
+        /// </summary>
+        public int Id;
+        /// <summary>
+        /// 线路名称
+        /// </summary>
+        public string Name;
+    }
+    /// <summary>
+    /// 铁路管理局信息
+    /// </summary>
+    public struct BureauInfo
+    {
+        /// <summary>
+        /// 铁路局信息
+        /// </summary>
+        public string Name;
+        /// <summary>
+        /// 铁路局Logo
+        /// </summary>
+        public string Logo;
     }
     /// <summary>
     /// 火车站信息
@@ -118,20 +163,6 @@
         /// 铁路局信息
         /// </summary>
         public BureauInfo Bureau;
-        /// <summary>
-        /// 铁路管理局信息
-        /// </summary>
-        public struct BureauInfo
-        {
-            /// <summary>
-            /// 铁路局信息
-            /// </summary>
-            public string Name;
-            /// <summary>
-            /// 铁路局Logo
-            /// </summary>
-            public string Logo;
-        }
         /// <summary>
         /// 运营人
         /// </summary>
@@ -180,6 +211,7 @@
         /// 具体地址
         /// </summary>
         public string Location;
+
         /// <summary>
         /// 重载的字符串显示
         /// <para>
@@ -202,76 +234,68 @@
                 $"[{Country} {Location}]|[{X}:{Y}]\n";
         }
     }
-
+    /// <summary>
+    /// 运行路线信息
+    /// </summary>
     public struct RouteInfo
     {
+        /// <summary>
+        /// 火车ID
+        /// </summary>
         public string TrainId;
+        /// <summary>
+        /// 车次
+        /// </summary>
         public string OperationId;
-        public int ServiceId;
-        public RouteStops Stops;
-        public struct RouteStops
-        {
-            public int Id;
-            public string Name;
-            public string Starts;
-            public string Ends;
-            public string Notes;
-        }
+        /// <summary>
+        /// 车类型
+        /// </summary>
+        public ServiceType ServiceId;
+        /// <summary>
+        /// 经停站列表
+        /// </summary>
+        public RouteStops[] Stops;
+        /// <summary>
+        /// 运营商
+        /// </summary>
         public string[] Operators;
+        /// <summary>
+        /// 备注
+        /// </summary>
         public string Note;
+        /// <summary>
+        /// 班次
+        /// </summary>
         public string Frequency;
+        /// <summary>
+        /// 时间表格式类型
+        /// </summary>
         public string TimeTableFormat;
+        /// <summary>
+        /// 分段运营 *
+        /// </summary>
         public string OpSegment;
+        /// <summary>
+        /// *
+        /// </summary>
         public string RouteType;
+
+        /// <summary>
+        /// 重载的字符串显示
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder sb = new();
+            for (int i = 0; i < Stops.Length; i++)
+            {
+                RouteStops v = Stops[i];
+                sb.AppendLine(i != 0 ? $"|\n|-[到:{v.Starts}]" : "");
+                sb.AppendLine($"|-[{v.Id}] {v.Name} ");
+                sb.AppendLine(i != (Stops.Length-1) ? $"|\n|-[开:{v.Ends}]": "");
+            }
+            return $"{OperationId}次 :: [ {ServiceId} | {RouteType} ]\n{sb}";
+        }
     }
 
-    /*
-     * {
-        "success": true,
-        "data": {
-        "trainId": "CN~G0010",
-        "operationId": "G10",
-        "serviceId": 2,
-        "stops": [
-            [
-            6150361,
-            "上海虹桥",
-            "01000",
-            "01000",
-            "",
-            ""
-            ],
-            [
-            6080011,
-            "南京南",
-            "01059",
-            "01101",
-            "",
-            ""
-            ],
-            [
-            5960198,
-            "济南西",
-            "01258",
-            "01300",
-            "",
-            ""
-            ],
-            [
-            5900805,
-            "北京南",
-            "01426",
-            "01426",
-            "",
-            ""
-            ]
-        ],
-        "operators": [],
-        "note": null,
-        "frequency": null,
-        "timeTableFormat": "SIMPLE",
-        "opSegment": null,
-        "routeType": "T"
-        }
-     */
 }

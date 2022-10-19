@@ -67,7 +67,7 @@
         P,
     }
     /// <summary>
-    /// 车站服务类型
+    /// 服务类型
     /// </summary>
     public enum ServiceType
     {
