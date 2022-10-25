@@ -43,6 +43,18 @@ namespace Meow.TrainRadar
         /// 参考文献
         /// </summary>
         public string[] Reference;
+
+        /// <summary>
+        /// 扩展ToString
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"[{Name}] Lnum:{Linenum} Speed:{DesignSpeed} E:{Elec}\n" +
+                $"RailServiceType:{RailService}\n" +
+                $"RailType:{RailType}\n" +
+                $"Notes:{Notes[0..]} | Reference:{Reference[0..]}";
+        }
     }
     /// <summary>
     /// 经停站类
@@ -89,7 +101,7 @@ namespace Meow.TrainRadar
         public REndPoint[] Records;
     }
     /// <summary>
-    /// REP节点
+    /// 轨道节点
     /// </summary>
     public struct REndPoint
     {
@@ -291,8 +303,8 @@ namespace Meow.TrainRadar
             {
                 RouteStops v = Stops[i];
                 sb.AppendLine(i != 0 ? $"|\n|-[到:{v.Starts}]" : "");
-                sb.AppendLine($"|-[{v.Id}] {v.Name} ");
-                sb.AppendLine(i != (Stops.Length-1) ? $"|\n|-[开:{v.Ends}]": "");
+                sb.AppendLine($"|- ({v.Name}) ");
+                sb.AppendLine(i != (Stops.Length-1) ? $"|-[开:{v.Ends}]\n|": "");
             }
             return $"{OperationId}次 :: [ {ServiceId} | {RouteType} ]\n{sb}";
         }

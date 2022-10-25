@@ -1,9 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <PackageId>Electronicute.Meow.TrainRadar</PackageId>
+    <Company>Electronicute</Company>
+    <Authors>DavidSciMeow</Authors>
+    <Product>TrainRadar</Product>
+    <Copyright>@ 2022 Electronicute</Copyright>
+    <Version>1.0.0</Version>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary/tree/master/Meow.TrainRadar</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>Train, TrainRadar, ChinaTrain, ChinaRail, RailSearch, China, Library</PackageTags>
+    <NeutralLanguage>zh-cn</NeutralLanguage>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>LGPL-2.0-only</PackageLicenseExpression>
+    <Description>A TrainRadar Baseon </Description>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +26,13 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Meow.Util\Meow.Util.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>

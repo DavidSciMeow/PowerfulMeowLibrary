@@ -1,29 +1,51 @@
 ﻿using Newtonsoft.Json.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace Meow.TrainRadar
 {
-    public static class SearchBase
+    /// <summary>
+    /// 查找模式
+    /// </summary>
+    public class Search
     {
-        public static LangPref? Lang = null;
-        static readonly string BaseUrl = "http://cnrail.geogv.org/api/v1/";
-        private static string Langprefset() => $"{(Lang != null ? $"?locale={Lang}" : "")}";
-        public static string GetMatchFeature(string feat) => Util.Network.Http.Get.String($"{BaseUrl}match_feature/{feat}{Langprefset()}").GetAwaiter().GetResult();
-        public static string GetMatchTrain(string num) => Util.Network.Http.Get.String($"{BaseUrl}match_train/{num}{Langprefset()}").GetAwaiter().GetResult();
-        public static string GetSpecificTrainRoute(string num) => Util.Network.Http.Get.String($"{BaseUrl}route/{num}{Langprefset()}").GetAwaiter().GetResult();
-        public static string GetSpecificTrainStation(string num) => Util.Network.Http.Get.String($"{BaseUrl}station/{num}{Langprefset()}").GetAwaiter().GetResult();
-        public static string GetSpecificRail(string num) => Util.Network.Http.Get.String($"{BaseUrl}rail/{num}{Langprefset()}").GetAwaiter().GetResult();
+        /// <summary>
+        /// 数据
+        /// </summary>
+        public SearchResult[]? Data;
+        /// <summary>
+        /// 有返回值
+        /// </summary>
+        public bool HaveValue;
+        /// <summary>
+        /// 搜索模式
+        /// </summary>
+        /// <param name="predstr">匹配字</param>
+        public Search(string predstr)
+        {
+            var a = Regex.IsMatch(predstr, @"^[0-9]{1,4}$");
+            var b = Regex.IsMatch(predstr, @"^[a-zA-Z]{1}[0-9]{1,4}$");
+            if ( a || b )
+            {
+                Data = TRGet.Train(predstr.ToUpper());
+            }
+            else
+            {
+                Data = TRGet.Feature(predstr);
+            }
+            HaveValue = (Data != null && Data.Length > 0);
+        }
     }
 
     /// <summary>
-    /// 车站,线路查找结果
+    /// 搜索结果
     /// </summary>
-    public struct FeatureMatchResult
+    public class SearchResult
     {
         /// <summary>
         /// Id
         /// </summary>
-        public int Id;
+        public string? Id;
         /// <summary>
         /// 获取的模式类型
         /// </summary>
@@ -31,14 +53,19 @@ namespace Meow.TrainRadar
         /// <summary>
         /// 名称
         /// </summary>
-        public string Name;
+        public string? Name;
+    }
+    /// <summary>
+    /// 车站,线路查找结果
+    /// </summary>
+    public class FeatureMatchResult : SearchResult
+    {
         /// <summary>
         /// 重载的字符串显示
         /// <para>$"[{Id}] {Type} : {Name}"</para>
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => $"[{Id}] {Type} : {Name}";
-
+        public override string ToString() => $"{(Type == SearchType.STATION?"车站":"线路")} : {Name}";
         /// <summary>
         /// 获取详细信息
         /// </summary>
@@ -54,7 +81,7 @@ namespace Meow.TrainRadar
         /// 获取路线信息
         /// </summary>
         /// <returns></returns>
-        public RailInfo? GetIfRailInfo()
+        public RailInfo? GetRailInfo()
         {
             if (Type == SearchType.RAIL)
             {
@@ -76,7 +103,7 @@ namespace Meow.TrainRadar
                                 repi.Add(new()
                                 {
                                     Type = Enum.Parse<StationType>(j?[0]?.ToString() ?? "N"),
-                                    Id = int.Parse(j?[1]?.ToString() ?? "0"),
+                                    Id = j?[1]?.ToObject<int>() ?? -1,
                                     Name = j?[2]?.ToString() ?? "",
                                 });
                             }
@@ -113,7 +140,7 @@ namespace Meow.TrainRadar
         /// 获得车站信息
         /// </summary>
         /// <returns></returns>
-        public StationInfo? GetIfStationInfo()
+        public StationInfo? GetStationInfo()
         {
             if(Type == SearchType.STATION)
             {
@@ -157,45 +184,32 @@ namespace Meow.TrainRadar
             return null;
         }
     }
-
     /// <summary>
     /// 车次匹配结果
     /// </summary>
-    public struct TrainMatchResult
+    public class TrainMatchResult : SearchResult
     {
-        /// <summary>
-        /// 车次识别号
-        /// </summary>
-        public string Id;
-        /// <summary>
-        /// 搜索类型
-        /// </summary>
-        public SearchType Type;
-        /// <summary>
-        /// 搜索名
-        /// </summary>
-        public string Name;
         /// <summary>
         /// 始发站
         /// </summary>
-        public string From;
+        public string? From;
         /// <summary>
         /// 终到站
         /// </summary>
-        public string To;
+        public string? To;
         /// <summary>
         /// 重载的字符串显示
         /// <para>$"[{Id}] {Name} ({From})->({To})"</para>
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => $"[{Id}] {Name} ({From})->({To})";
+        public override string ToString() => $"[{Name}] ({From})->({To})";
         /// <summary>
         /// 获取本车的路线
         /// </summary>
         /// <returns></returns>
         public RouteInfo? GetRouteInfo()
         {
-            var jo = JObject.Parse(SearchBase.GetSpecificTrainRoute(Id))?["data"];
+            var jo = JObject.Parse(SearchBase.GetSpecificTrainRoute($"{Id}"))?["data"];
             if(jo != null)
             {
                 var stops = JArray.Parse(jo?["stops"]?.ToString() ?? "[]");
@@ -229,7 +243,51 @@ namespace Meow.TrainRadar
             return null;
         }
     }
-
+    /// <summary>
+    /// 搜索底底层逻辑
+    /// </summary>
+    public static class SearchBase
+    {
+        /// <summary>
+        /// 语言偏好
+        /// </summary>
+        public static LangPref? Lang = null;
+        private static readonly string BaseUrl = "http://cnrail.geogv.org/api/v1/";
+        private static string Langprefset() => $"{(Lang != null ? $"?locale={Lang}" : "")}";
+        /// <summary>
+        /// 查找车站,铁路线
+        /// </summary>
+        /// <param name="feat">搜索词</param>
+        /// <returns></returns>
+        public static string GetMatchFeature(string feat) => Util.Network.Http.Get.String($"{BaseUrl}match_feature/{feat}{Langprefset()}").GetAwaiter().GetResult();
+        /// <summary>
+        /// 查找符合的火车
+        /// </summary>
+        /// <param name="id">列车id</param>
+        /// <returns></returns>
+        public static string GetMatchTrain(string id) => Util.Network.Http.Get.String($"{BaseUrl}match_train/{id}{Langprefset()}").GetAwaiter().GetResult();
+        /// <summary>
+        /// 获取特定火车的路线
+        /// </summary>
+        /// <param name="id">列车编号id</param>
+        /// <returns></returns>
+        public static string GetSpecificTrainRoute(string id) => Util.Network.Http.Get.String($"{BaseUrl}route/{id}{Langprefset()}").GetAwaiter().GetResult();
+        /// <summary>
+        /// 获取特定车站
+        /// </summary>
+        /// <param name="id">车站id</param>
+        /// <returns></returns>
+        public static string GetSpecificTrainStation(string id) => Util.Network.Http.Get.String($"{BaseUrl}station/{id}{Langprefset()}").GetAwaiter().GetResult();
+        /// <summary>
+        /// 获取特定路线
+        /// </summary>
+        /// <param name="id">路线id</param>
+        /// <returns></returns>
+        public static string GetSpecificRail(string id) => Util.Network.Http.Get.String($"{BaseUrl}rail/{id}{Langprefset()}").GetAwaiter().GetResult();
+    }
+    /// <summary>
+    /// 静态获取
+    /// </summary>
     public static class TRGet
     {
         /// <summary>
@@ -243,17 +301,17 @@ namespace Meow.TrainRadar
             var jo = JObject.Parse(SearchBase.GetMatchFeature(feat));
             if (jo != null)
             {
-                if(jo["success"]?.ToObject<bool>() == true)
+                if (jo["success"]?.ToObject<bool>() == true)
                 {
                     if (!string.IsNullOrEmpty(jo?["data"]?.ToString()))
                     {
                         List<FeatureMatchResult> r = new();
                         var ja = JArray.Parse(jo?["data"]?.ToString() ?? "");
-                        foreach(var i in ja)
+                        foreach (var i in ja)
                         {
                             r.Add(new FeatureMatchResult()
                             {
-                                Id = i?[0]?.ToObject<int>() ?? -1,
+                                Id = i?[0]?.ToString() ?? "",
                                 Type = Enum.Parse<SearchType>(i?[1]?.ToString() ?? ""),
                                 Name = i?[2]?.ToString() ?? "",
                             });
