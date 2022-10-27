@@ -50,10 +50,31 @@ namespace Meow.TrainRadar
         /// <returns></returns>
         public override string ToString()
         {
-            return $"[{Name}] Lnum:{Linenum} Speed:{DesignSpeed} E:{Elec}\n" +
-                $"RailServiceType:{RailService}\n" +
-                $"RailType:{RailType}\n" +
-                $"Notes:{Notes[0..]} | Reference:{Reference[0..]}";
+            var n = new StringBuilder();
+            if(Reference.Length > 0)
+            {
+                n.Append("选编:");
+                foreach (var i in Reference)
+                {
+                    n.Append($" {i}");
+                }
+                n.Append(" | ");
+            }
+            if(Notes.Length > 0)
+            {
+                n.Append("备注:");
+                foreach (var i in Notes)
+                {
+                    n.Append($" {i}");
+                }
+            }
+            return $"[{Name}]\n" +
+                $"线路数量: {Linenum}\n" +
+                $"设计时速: {DesignSpeed}\n" +
+                $"电气化: {Elec}\n" +
+                $"铁路服务类型: {RailService}\n" +
+                $"铁路类型: {RailType}\n" +
+                $"{n}";
         }
     }
     /// <summary>
@@ -172,13 +193,9 @@ namespace Meow.TrainRadar
         /// </summary>
         public StationType Type;
         /// <summary>
-        /// 铁路局信息
-        /// </summary>
-        public BureauInfo Bureau;
-        /// <summary>
         /// 运营人
         /// </summary>
-        public string Operators;
+        public BureauInfo Operators;
         /// <summary>
         /// 识别码
         /// </summary>
@@ -238,12 +255,17 @@ namespace Meow.TrainRadar
         /// <returns></returns>
         public override string ToString()
         {
-            return $"{LocalName} {(LocalName != LocalizedName ? $"/{LocalizedName}" : "")}\n" +
-                $"[{TeleCode}]({(string.IsNullOrWhiteSpace(PinyinCode) ? "" : $" {PinyinCode}")}{(string.IsNullOrWhiteSpace(SedName) ? "" : $" {SedName}")})\n" +
-                $"[{Bureau.Name}{(string.IsNullOrWhiteSpace(Operators) ? "" : $" |{Operators}")}]\n" +
-                $"[{Id}::{(Status == "O"?"运营":"未运营")}]\n" +
-                $"[{ServiceClass}]\n" +
-                $"[{Country} {Location}]|[{X}:{Y}]\n";
+            var sb = new StringBuilder();
+            foreach(var i in ServiceClass)
+            {
+                sb.Append($"{(i==ServiceType.P_Plus?"P+":i)} ");
+            }
+            return $"- {LocalName} {(LocalName != LocalizedName ? $"/{LocalizedName}" : "")} - \n" +
+                $"[{Id}::{TeleCode}]({(string.IsNullOrWhiteSpace(PinyinCode) ? "" : $"{PinyinCode}")}{(string.IsNullOrWhiteSpace(SedName) ? "" : $" | {SedName}")})\n" +
+                $"管局信息:[{Operators.Name}]\n" +
+                $"运营状态:[{(Status == "O"?"运营":"未运营")}]\n" +
+                $"服务类型[:{sb}]\n" +
+                $"车站地址:[{Country} {Location}]\n";
         }
     }
     /// <summary>

@@ -9,6 +9,11 @@ namespace MeowCoreTest
         {
             Console.Write("\n输入待查字符 (按 Ctrl-C 退出):");
             var s = Console.ReadLine();
+            if (string.IsNullOrWhiteSpace(s))
+            {
+                Console.WriteLine("请输入字符");
+                return;
+            }
             var d = new Search(s);
             if (d.HaveValue)
             {

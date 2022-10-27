@@ -73,8 +73,8 @@ namespace Meow.TrainRadar
         /// <exception cref="Exception"></exception>
         JObject GetInfo() => Type switch
         {
-            SearchType.STATION => JObject.Parse(SearchBase.GetSpecificTrainStation(Id.ToString())),
-            SearchType.RAIL => JObject.Parse(SearchBase.GetSpecificRail(Id.ToString())),
+            SearchType.STATION => JObject.Parse(SearchBase.GetSpecificTrainStation(Id?.ToString())),
+            SearchType.RAIL => JObject.Parse(SearchBase.GetSpecificRail(Id?.ToString())),
             _ => throw new Exception("Err on Type"),
         };
         /// <summary>
@@ -156,17 +156,42 @@ namespace Meow.TrainRadar
                 }
                 if (jo != null)
                 {
-                    return new StationInfo()
+                    BureauInfo b;
+
+                    try
+                    {
+                        try
+                        {
+                            b = new BureauInfo()
+                            {
+                                Name = jo?["bureau"]?["name"]?.ToString() ?? "",
+                                Logo = jo?["bureau"]?["logo"]?.ToString() ?? "",
+                            };
+                        }
+                        catch
+                        {
+                            b = new BureauInfo()
+                            {
+                                Name = jo?["operators"]?["name"]?.ToString() ?? "",
+                                Logo = jo?["operators"]?["name"]?.ToString() ?? "",
+                            };
+                        }
+                    }
+                    catch
+                    {
+                        b = new BureauInfo()
+                        {
+                            Name = "null",
+                            Logo = "null",
+                        };
+                    }
+                    
+                    var r = new StationInfo()
                     {
                         TeleCode = jo?["teleCode"]?.ToString() ?? "",
                         PinyinCode = jo?["pinyinCode"]?.ToString() ?? "",
                         Type = Enum.Parse<StationType>(jo?["type"]?.ToString() ?? ""),
-                        Bureau = new()
-                        {
-                            Name = jo?["bureau"]?["name"]?.ToString() ?? "",
-                            Logo = jo?["bureau"]?["logo"]?.ToString() ?? "",
-                        },
-                        Operators = jo?["operators"]?.ToString() ?? "",
+                        Operators = b,
                         Id = jo?["id"]?.ToString() ?? "",
                         LocalName = jo?["localName"]?.ToString() ?? "",
                         LocalizedName = jo?["localizedName"]?.ToString() ?? "",
@@ -179,6 +204,7 @@ namespace Meow.TrainRadar
                         Y = jo?["y"]?.ToObject<int>() ?? 0,
                         Location = jo?["location"]?.ToString() ?? "",
                     };
+                    return r;
                 }
             }
             return null;

@@ -21,6 +21,10 @@
         /// 快速
         /// </summary>
         RR,
+        /// <summary>
+        /// ?
+        /// </summary>
+        LINK,
     }
     /// <summary>
     /// 列车类型
