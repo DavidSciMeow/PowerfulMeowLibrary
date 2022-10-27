@@ -18,23 +18,22 @@
 
 ---
 
-<center><h2>目录</h2></center>
-<a href="#1"><h3>1. 概述</h3></a>
+## 目录
+> 1. 概述  
+>> 1.1 文件组织概述  
+>> 1.2 工作流程概述  
+>> 1.3 建议查询逻辑  
 
-> <a href="#1.1"><h5>1.1 文件组织概述</h5></a>
-> <a href="#1.2"><h5>1.2 工作流程概述</h5></a>
-> <a href="#1.3"><h5>1.3 建议查询逻辑</h5></a>
+>2. 内函数一览  
+>> 2.1 类内函数实现  
 
-<a href="#2"><h3>2. 内函数一览</h3></a>
-> <a href="#2.1"><h5>2.1 类内函数实现</h5></a>
-
-<a href="#3"><h3>3. 计划更新内容</h3></a>
+>3. 计划更新内容  
 
 ---
 
 
-# 1. 概述 <a id="1"></a>
-## 1.1 文件组织概述 <a id="1.1"></a>
+# 1. 概述
+## 1.1 文件组织概述
 
 ### 枚举列文件 publicEnums.cs 
 (负责一切可知的枚举类型,包括以下类型)
@@ -44,6 +43,7 @@
 > ServiceType (服务类型)  
 > LangPref (语言枚举)  
 > SearchType (搜索类型)  
+
 ### 结构定义类 publicStructs.cs
 (负责一切可知的结构类型,包括以下类型)
 > *Struct* RailInfo (铁路信息)  
@@ -54,6 +54,7 @@
 > *Struct* BureauInfo (铁路管理局信息)  
 > *Struct* StationInfo (火车站信息)  
 > *Struct* RouteInfo (运行路线信息)  
+
 ### 底文件 UrlBase.cs
 (负责和API交互逻辑,转义API返回值到C#类等)
 > ***class*** Search (查找模式基类)  
@@ -63,7 +64,8 @@
 
 > ***Static class*** SearchBase (搜索层固定逻辑)  
 > ***Static class*** TRGet (静态获取)  
-## 1.2 调用流程概述 <a id="1.2"></a>
+
+## 1.2 调用流程概述
 ```mermaid
 graph TB
     1[开始]
@@ -90,7 +92,8 @@ graph TB
     5.12 --> 6
     5.13 --> 6
 ```
-## 1.3 简易查询逻辑 <a id="1.3"></a>
+
+## 1.3 简易查询逻辑
 ```csharp
 //...Main(string[] args)
 {
@@ -184,8 +187,8 @@ public static void TrainSearchConsole()
     </code></pre>
 </details>
 
-# 2. 内函数一览 <a id="2"></a>
-## 2.1 类内函数实现 <a id="2.1"></a>
+# 2. 内函数一览
+## 2.1 类内函数实现
 ### 更多实现细节请在VS调用时查看
 > 枚举类 `没有`实现 内函数  
 
@@ -220,6 +223,6 @@ public static void TrainSearchConsole()
 > `+s GetSpecificTrainStation(string)` 查找特定车站  
 > `+s GetSpecificRail(string)` 查找特定路线  
 
-# 3. 计划更新内容 <a id="3"></a>
+# 3. 计划更新内容
 >1. 绘制路线图并输出png/base64等
 >1. 保存图像类存储结果
