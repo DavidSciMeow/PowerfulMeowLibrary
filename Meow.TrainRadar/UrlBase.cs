@@ -218,7 +218,7 @@ namespace Meow.TrainRadar
                 {
                     rs.Add(new()
                     {
-                        Id = i?[0]?.ToObject<int>() ?? -1,
+                        Id = i?[0]?.ToString() ?? "",
                         Name = i?[1]?.ToString() ?? "",
                         Starts = i?[2]?.ToString() ?? "",
                         Ends = i?[3]?.ToString() ?? "",

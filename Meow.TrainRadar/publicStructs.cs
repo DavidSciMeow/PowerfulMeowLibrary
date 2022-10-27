@@ -64,7 +64,7 @@ namespace Meow.TrainRadar
         /// <summary>
         /// 站ID
         /// </summary>
-        public int Id;
+        public string Id;
         /// <summary>
         /// 站名
         /// </summary>
