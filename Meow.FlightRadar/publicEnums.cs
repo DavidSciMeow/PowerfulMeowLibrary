@@ -1,11 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Meow.FlightRadar
+﻿namespace Meow.FlightRadar
 {
+    /// <summary>
+    /// 飞行规则
+    /// </summary>
+    public enum FlightRule
+    {
+        /// <summary>
+        /// 无
+        /// </summary>
+        None,
+        /// <summary>
+        /// 目视飞行规则
+        /// </summary>
+        VFR,
+        /// <summary>
+        /// 边缘目视飞行规则
+        /// </summary>
+        MVFR,
+        /// <summary>
+        /// 底仪表飞行规则
+        /// </summary>
+        LIFR,
+        /// <summary>
+        /// 仪表飞行规则
+        /// </summary>
+        IFR,
+        /// <summary>
+        /// 
+        /// </summary>
+        BCAT1,
+    }
     /// <summary>
     /// 语言首选项
     /// </summary>

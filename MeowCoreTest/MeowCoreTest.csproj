@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Meow.FlightRadar\Meow.FlightRadar.csproj" />
     <ProjectReference Include="..\Meow.TrainRadar\Meow.TrainRadar.csproj" />
   </ItemGroup>
 

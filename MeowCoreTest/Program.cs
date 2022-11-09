@@ -1,5 +1,7 @@
 ﻿using Meow.FlightRadar;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections.Generic;
 
 namespace MeowCoreTest
 {
@@ -7,36 +9,17 @@ namespace MeowCoreTest
     {
         public static void Main(string[] args)
         {
-            //var doc = FRGet.LiveAirportDoc("KPKD");
-            //var issec = FRGet.DeterminAirportSecondaryLoc(doc);
-            //var ibbd = FRGet.GetBoard(doc, BoardType.arrivals);
-
-            var airportname = "SWA";
-            if (FRGet.DeterminAirPortExist(airportname))
+            _ = args;
+            //var k = Meow.Util.Network.Http.Get.String(UrlMapping.LiveFleet).GetAwaiter().GetResult();
+            //Console.WriteLine(k);
+            while (true)
             {
-                var doc = FRGet.LiveAirportWeatherDoc(airportname);
-
-                if (FRGet.DeterminAirportLiveWeather(doc))
-                {
-                    var sd = FRGet.GetLiveAirportWeather(doc);
-                    Console.WriteLine("Live:");
-                    foreach (var i in sd)
-                    {
-                        Console.WriteLine(i);
-                    }
-                }
-
-                Console.WriteLine("-----");
-                Console.WriteLine("History:");
-                var x = FRGet.GetAirportWeatherMsg(doc);
-                foreach (var i in x)
-                {
-                    Console.WriteLine(i);
-                }
-            }
-            else
-            {
-                Console.WriteLine("NO SUCH AIRPORT");
+                //CUtil.ConsoleSearchAirline();
+                CUtil.ConsoleSearchAirport();
+                //CUtil.ConsoleOutputAirport();
+                //CUtil.ConsoleGetAirportWeatherMsg();
+                //CUtil.ConsoleGetAirportWeather();
+                //CUtil.ConsoleGetLiveAirportBoard();
             }
         }
     }
