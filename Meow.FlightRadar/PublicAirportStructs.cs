@@ -1,4 +1,7 @@
-﻿using System.Text;
+﻿using Meow.Util.Network.Http;
+using Newtonsoft.Json.Linq;
+using System.Text;
+using Meow.Util;
 
 namespace Meow.FlightRadar
 {
@@ -12,7 +15,7 @@ namespace Meow.FlightRadar
         /// </summary>
         public string Location;
         /// <summary>
-        /// 坐标X
+        /// 坐标X 
         /// </summary>
         public double CoordinateX;
         /// <summary>
@@ -50,6 +53,7 @@ namespace Meow.FlightRadar
         /// (管制名称,频率)
         /// </summary>
         public (string RadioName, string Freq)[] RadioFreqList;
+
         /// <summary>
         /// 重写的字符串表示
         /// </summary>
@@ -109,8 +113,6 @@ namespace Meow.FlightRadar
             return sb.ToString();
         }
     }
-
-
     /// <summary>
     /// 航班模型
     /// </summary>
@@ -140,6 +142,7 @@ namespace Meow.FlightRadar
         /// 到港时间
         /// </summary>
         public (DateTime? Time, string Zone) Arrv;
+
         /// <summary>
         /// 重写的字符串表示
         /// </summary>
@@ -147,7 +150,6 @@ namespace Meow.FlightRadar
         public override string ToString() => $"[ {Identity,-8} /{AircraftType,5} ] {Dept.Time,-22} -> {Arrv.Time,-22} " +
             $"{{{((Type==BoardType.arrivals || Type == BoardType.enroute)?"->":"<-")} {Place} }}";
     }
-
     /// <summary>
     /// 天气终端模型
     /// </summary>
@@ -166,10 +168,6 @@ namespace Meow.FlightRadar
         /// </summary>
         public string[] WeaType;
         /// <summary>
-        /// AGL高度
-        /// </summary>
-        public string HeightAGL;
-        /// <summary>
         /// 能见度
         /// </summary>
         public string Visibility;
@@ -182,7 +180,6 @@ namespace Meow.FlightRadar
         /// <para>[0 Calm] [1-360 deg] [361 Variable] </para>
         /// </summary>
         public int WindDir;
-
         /// <summary>
         /// 风速 M/s
         /// </summary>
@@ -215,7 +212,6 @@ namespace Meow.FlightRadar
         /// 气压(修正海压英尺汞柱)
         /// </summary>
         public double PressureInHg;
-
         /// <summary>
         /// 密度高度
         /// </summary>
@@ -224,6 +220,7 @@ namespace Meow.FlightRadar
         /// 备注
         /// </summary>
         public string Remarks;
+
         /// <summary>
         /// 重写的字符串表示
         /// </summary>
@@ -237,7 +234,7 @@ namespace Meow.FlightRadar
             }
             return $"{Time:MM-dd HH:mm} [{FlightRules,-6}] " +
                     $"[{TempDegC,3}°C/{DewPointC,3}°C] [{(WindDir == 0 ? $"    CALM    ]" : $"{(WindDir == 361 ? "VARI" : WindDir),4}°@{SpeedMps,3}M/s]")} " +
-                    $"[{RelHumid,3}% @ {PressureHpa,5}Hpa] DA:{DensityAltitude}ft HAGL:{(HeightAGL == "Clouds and visibility are OK." ? "CAVOK" : HeightAGL)}" +
+                    $"[{RelHumid,3}% @ {PressureHpa,5}Hpa] DA:{DensityAltitude}ft " +
                     $"{(string.IsNullOrWhiteSpace(sb.ToString()) ? "[N]" : $" [{sb}] ")} " +
                     $"{(string.IsNullOrWhiteSpace(Visibility) ? "[N]" : $" {Visibility} ")} " +
                     $"{(string.IsNullOrWhiteSpace(Remarks) ? "[N]" : Remarks)}";
@@ -255,7 +252,7 @@ namespace Meow.FlightRadar
             }
             return $"{Time:MM-dd HH:mm} [{FlightRules,-6}] " +
                     $"[{TempDegF,3}°F/{DewPointF,3}°F] [{(WindDir == 0 ? $"    CALM    ]" : $"{(WindDir == 361 ? "VARI" : WindDir),4}°@{SpeedKt,3}kt]")} " +
-                    $"[{RelHumid,3}% @ {PressureHpa,5}Hpa] DA:{DensityAltitude}ft HAGL:{(HeightAGL == "Clouds and visibility are OK."?"CAVOK":HeightAGL)}" +
+                    $"[{RelHumid,3}% @ {PressureHpa,5}Hpa] DA:{DensityAltitude}ft " +
                     $"{(string.IsNullOrWhiteSpace(sb.ToString()) ? "[N]" : $" [{sb}] ")} " +
                     $"{(string.IsNullOrWhiteSpace(Visibility) ? "[N]" : $" {Visibility} ")} " +
                     $"{(string.IsNullOrWhiteSpace(Remarks) ? "[N]" : Remarks)}";

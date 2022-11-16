@@ -1,12 +1,15 @@
 ﻿using HtmlAgilityPack;
+using Newtonsoft.Json.Linq;
 using System.Globalization;
+using Meow.Util.Network.Http;
+using Meow.FlightRadar.Base;
 
 namespace Meow.FlightRadar
 {
     /// <summary>
-    /// 静态机场类
+    /// 静态工具类
     /// </summary>
-    public static class SAirport
+    public static class SBase
     {
         /// <summary>
         /// 用于LOAD文件的实例
@@ -31,6 +34,12 @@ namespace Meow.FlightRadar
         /// <param name="ICAOIdent">>机场ICAO注册号</param>
         /// <returns></returns>
         public static HtmlDocument LiveAirportFBODoc(string ICAOIdent) => HW.Load(UrlMapping.LiveAirPortResources(ICAOIdent));
+        /// <summary>
+        /// 获取实时航班
+        /// </summary>
+        /// <param name="FlightNum"></param>
+        /// <returns></returns>
+        public static HtmlDocument LiveFlightDoc(string FlightNum) => HW.Load(UrlMapping.LiveFlight(FlightNum));
         /*--Kits--*/
         /// <summary>
         /// 判定机场是否存在
@@ -98,9 +107,9 @@ namespace Meow.FlightRadar
             var fbomap = new FBOModel();
 
             var n1 = liveairportfbodoc.DocumentNode
-                ?.SelectSingleNode("/html[1]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[3]/div[1]/table[1]")
-                ?.SelectNodes("tr")?[0]
-                ?.SelectNodes("td");
+                .SelectSingleNode("/html[1]/div[1]/div[1]/div[1]/div[1]/div[3]/div[1]/div[3]/div[1]/table[1]")
+                .SelectNodes("tr")[0]
+                .SelectNodes("td");
 
             fbomap.Location = n1[0].InnerText.Replace("\t", "").Replace("\n", " ").Trim();
             var cae = n1[1].InnerText.Replace("\t", "").Replace("\n", " ").Trim().Replace("  ", "|").Split("|");
@@ -336,7 +345,7 @@ namespace Meow.FlightRadar
             {
                 foreach (HtmlNode row in table.SelectNodes("tr"))//每个行
                 {
-                    //try
+                    try
                     {
                         var n = row.SelectNodes("th|td");
 
@@ -358,19 +367,19 @@ namespace Meow.FlightRadar
                         DateTime dt;
                         {
                             var datetime = $"{DateTime.Now.Year}-{n[0].InnerText} {n[1].InnerText}"
-                                .Replace("月", string.Empty)
-                                .Replace("十一", "11")
-                                .Replace("十二", "12")
-                                .Replace("一", "01")
-                                .Replace("二", "02")
-                                .Replace("三", "03")
-                                .Replace("四", "04")
-                                .Replace("五", "05")
-                                .Replace("六", "06")
-                                .Replace("七", "07")
-                                .Replace("八", "08")
-                                .Replace("九", "09")
-                                .Replace("十", "10");
+                            .Replace("月", string.Empty)
+                            .Replace("十一", "11")
+                            .Replace("十二", "12")
+                            .Replace("一", "01")
+                            .Replace("二", "02")
+                            .Replace("三", "03")
+                            .Replace("四", "04")
+                            .Replace("五", "05")
+                            .Replace("六", "06")
+                            .Replace("七", "07")
+                            .Replace("八", "08")
+                            .Replace("九", "09")
+                            .Replace("十", "10");
                             dt = DateTime.ParseExact(datetime, "yyyy-dd-MM HH:mm", CultureInfo.InvariantCulture);
                         } //DateTime Convert
                         int winddir;
@@ -422,7 +431,6 @@ namespace Meow.FlightRadar
                             SpeedKt = speedkt,
                             SpeedMps = speedmps,
                             WeaType = n?[5]?.InnerHtml?.Split("<br>")[..^1] ?? Array.Empty<string>(),
-                            HeightAGL = n?[6]?.InnerText ?? string.Empty,
                             Visibility = n?[7]?.InnerText ?? string.Empty,
                             TempDegC = tempc,
                             TempDegF = tempf,
@@ -435,7 +443,7 @@ namespace Meow.FlightRadar
                             Remarks = n?[15]?.InnerText ?? string.Empty,
                         });
                     }
-                    //catch
+                    catch
                     {
                         //node err
                     }
@@ -486,6 +494,26 @@ namespace Meow.FlightRadar
                 }
             }
             return aprt.ToArray();
+        }
+        /*--FlightInfo--*/
+        /// <summary>
+        /// 获取追踪飞机的信息
+        /// </summary>
+        /// <param name="liveflightdoc">获取的liveflightdoc</param>
+        /// <returns></returns>
+        public static FlightTokenInfo? GetFlightTrack(HtmlDocument liveflightdoc)
+        {
+            var scripts = liveflightdoc.DocumentNode.SelectNodes("//script[not(@type)]");
+            foreach(var s in scripts)
+            {
+                if (s.InnerText.Contains("trackpollGlobals"))
+                {
+                    var json = s.InnerText.Replace("var trackpollGlobals = ", "").Replace(";", "").Trim();
+                    var jo = JObject.Parse(json);
+                    return new FlightTokenInfo(jo);
+                }
+            }
+            return null;
         }
     }
 }

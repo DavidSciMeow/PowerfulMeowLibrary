@@ -35,12 +35,18 @@ namespace Meow.FlightRadar
         /// 是否尾号
         /// </summary>
         public bool might_be_a_tail;
+
+        /// <summary>
+        /// 获取这个班机
+        /// </summary>
+        /// <returns></returns>
+        public Base.Flight Detail() => new(ident);
+        
         /// <summary>
         /// 重写的字符串表示
         /// </summary>
         /// <returns></returns>
         public override string ToString() => $"[{ident,-10}] [{((might_be_a_tail) ? "_YES_" : "_NOT_")}] [{major_airline,3}] {description}";
-
     }
     /// <summary>
     /// 搜索机场模式
@@ -63,17 +69,19 @@ namespace Meow.FlightRadar
         /// /
         /// </summary>
         public string ops;
+       
+        /// <summary>
+        /// 获取一个机场
+        /// </summary>
+        /// <returns></returns>
+        public Base.Airport Detail() => new(icao);
+
         /// <summary>
         /// 重写的字符串表示
         /// </summary>
         /// <returns></returns>
         public override string ToString() => $"{{{ops,7}}} [{icao}/{(string.IsNullOrEmpty(iata) ? "    " : iata.PadLeft(4))}] {description}";
 
-        /// <summary>
-        /// 获取一个机场
-        /// </summary>
-        /// <returns></returns>
-        public Base.Airport AirportDetail() => new(icao);
     }
     public static class SearchBase
     {
@@ -112,6 +120,5 @@ namespace Meow.FlightRadar
             }
             return l.ToArray();
         }
-
     }
 }

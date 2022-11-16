@@ -26,7 +26,7 @@
         /// </summary>
         IFR,
         /// <summary>
-        /// 
+        /// 低于CAT1条件
         /// </summary>
         BCAT1,
     }

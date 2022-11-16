@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace Meow.FlightRadar.Base
 {
+    /// <summary>
+    /// 机场类
+    /// </summary>
     public class Airport
     {
         /// <summary>
@@ -61,29 +65,29 @@ namespace Meow.FlightRadar.Base
         public Airport(string icao)
         {
             ICAO = icao.ToUpper();
-            var lad = SAirport.LiveAirportDoc(icao);
-            if (SAirport.DeterminAirPortExist(lad))
+            var lad = SBase.LiveAirportDoc(icao);
+            if (SBase.DeterminAirPortExist(lad))
             {
                 IsAirportExist = true;
                 //天气处理
-                var wd = SAirport.LiveAirportWeatherDoc(icao);
-                if (SAirport.DeterminAirportLiveWeather(wd))
+                var wd = SBase.LiveAirportWeatherDoc(icao);
+                if (SBase.DeterminAirportLiveWeather(wd))
                 {
-                    LiveWeatherMsg = SAirport.GetLiveAirportWeather(wd);
+                    LiveWeatherMsg = SBase.GetLiveAirportWeather(wd);
                 }
-                WeatherMsg = SAirport.GetAirportWeatherMsg(wd);
-                Weathers = SAirport.GetAirportWeather(wd);
+                WeatherMsg = SBase.GetAirportWeatherMsg(wd);
+                Weathers = SBase.GetAirportWeather(wd);
                 //进出港处理
-                IsAirportSecondaryLoc = SAirport.DeterminAirportSecondaryLoc(lad);
-                ArrivalsBoards = SAirport.GetBoard(lad, BoardType.arrivals);
-                DeparturesBoards = SAirport.GetBoard(lad, BoardType.departures);
-                EnrouteBoards = SAirport.GetBoard(lad, BoardType.enroute);
-                ScheduledBoards = SAirport.GetBoard(lad, BoardType.scheduled);
+                IsAirportSecondaryLoc = SBase.DeterminAirportSecondaryLoc(lad);
+                ArrivalsBoards = SBase.GetBoard(lad, BoardType.arrivals);
+                DeparturesBoards = SBase.GetBoard(lad, BoardType.departures);
+                EnrouteBoards = SBase.GetBoard(lad, BoardType.enroute);
+                ScheduledBoards = SBase.GetBoard(lad, BoardType.scheduled);
                 //FBOs
-                var lafbodoc = SAirport.LiveAirportFBODoc(icao);
-                if (SAirport.DeterminFBOExist(lafbodoc))
+                var lafbodoc = SBase.LiveAirportFBODoc(icao);
+                if (SBase.DeterminFBOExist(lafbodoc))
                 {
-                    FBOs = SAirport.GetFBOs(lafbodoc);
+                    FBOs = SBase.GetFBOs(lafbodoc);
                 }
             }
             else
@@ -156,6 +160,46 @@ namespace Meow.FlightRadar.Base
                 }
             }
             return sb.ToString();
+        }
+    }
+
+    public class Flight
+    {
+        /// <summary>
+        /// 当前飞行跟踪记录数据
+        /// </summary>
+        public JObject? Doc = null;
+        /// <summary>
+        /// 历史数据
+        /// </summary>
+        public List<FlightInfo> ActivityLog = new();
+        /// <summary>
+        /// 当前跟踪记录
+        /// </summary>
+        public FlightInfo? NowActivity = null;
+        /// <summary>
+        /// 飞行对查表信息
+        /// </summary>
+        public FlightTokenInfo? TokenInfo = null;
+
+        /// <summary>
+        /// 构造方法
+        /// </summary>
+        /// <param name="ICAOIdent"></param>
+        public Flight(string ICAOIdent)
+        {
+            TokenInfo = SBase.GetFlightTrack(SBase.LiveFlightDoc(ICAOIdent));
+            if(TokenInfo != null)
+            {
+                Doc = JObject.Parse(Util.Network.Http.Get.String(UrlMapping.LiveFlightInfo(TokenInfo?.Token ?? "", true)).GetAwaiter().GetResult());
+                var ft = Doc?["flights"]?.First?.First;
+                var aflja = JArray.Parse(ft?["activityLog"]?["flights"]?.ToString() ?? "[]");
+                foreach (var i in aflja)
+                {
+                    ActivityLog.Add(new(i));
+                }
+                NowActivity = new(ft);
+            }
         }
     }
 }

@@ -11,7 +11,7 @@ namespace Meow.FlightRadar
         /// <summary>
         /// FlightAware站
         /// </summary>
-        public const string FAC = "https://flightaware.com/";
+        public const string FAC = "https://zh.flightaware.com/";
         /// <summary>
         /// 语言设置
         /// </summary>
@@ -102,8 +102,15 @@ namespace Meow.FlightRadar
         /// <returns></returns>
         public static string LiveFleetHistory(string identname, int offset, string order = "ident", string sort = "ASC") => $"{LiveFleet}{identname}?;offset={offset};order={order};sort={sort}";
 
+        /// <summary>
+        /// 获取实时追踪飞机逻辑
+        /// </summary>
+        /// <param name="token">token</param>
+        /// <param name="summary">总结报告</param>
+        /// <returns></returns>
+        public static string LiveFlightInfo(string token, bool summary = true) => $"https://zh.flightaware.com/ajax/trackpoll.rvt?token={token}&locale=en_US&summary={(summary ? "1" : "0")}";
+        
         //https://zh.flightaware.com/ajax/trackpoll.rvt?;offset=40;order=ident;sort=ASC&token=88dd7c1a0d41355d9da1877765832cc0067ab830c15ae81b--4d6d515f350bcef6ff1fcb56a1fc6927674df5da&locale=en_US&summary=1
-
         //https://flightaware.com/resources/airport/{}/data/fbos //commairrlinks
         //https://flightaware.com/resources/airport/{}/ALL/all/pdf
     }

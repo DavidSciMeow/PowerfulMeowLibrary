@@ -1,7 +1,6 @@
 ﻿using Meow.FlightRadar;
-using Newtonsoft.Json.Linq;
+using Meow.FlightRadar.Base;
 using System;
-using System.Collections.Generic;
 
 namespace MeowCoreTest
 {
@@ -10,17 +9,27 @@ namespace MeowCoreTest
         public static void Main(string[] args)
         {
             _ = args;
-            //var k = Meow.Util.Network.Http.Get.String(UrlMapping.LiveFleet).GetAwaiter().GetResult();
-            //Console.WriteLine(k);
             while (true)
             {
-                //CUtil.ConsoleSearchAirline();
-                CUtil.ConsoleSearchAirport();
-                //CUtil.ConsoleOutputAirport();
-                //CUtil.ConsoleGetAirportWeatherMsg();
-                //CUtil.ConsoleGetAirportWeather();
-                //CUtil.ConsoleGetLiveAirportBoard();
+                Console.WriteLine("Search for Airport Hit 1, Airline Hit 2");
+                var ss = Console.ReadLine();
+                Console.Clear();
+                if("1" == ss)
+                {
+                    CUtil.ConsoleSearchAirport();
+                }
+                else if("2" == ss)
+                {
+                    CUtil.ConsoleSearchAirline();
+                }
+                Console.WriteLine("Complete, return menu with any Hit, esc to Quit");
+                if(Console.ReadKey().Key == ConsoleKey.Escape)
+                {
+                    return;
+                }
+                Console.Clear();
             }
+            
         }
     }
 }
