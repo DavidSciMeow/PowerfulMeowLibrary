@@ -28,6 +28,14 @@ namespace Meow.FlightRadar
             Latitude = latitude;
             Longitude = longitude;
         }
+        /// <summary>
+        /// 重写的字符串输出方法
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"[{(Latitude > 0 ? $"{Latitude} °N" : $"{-Latitude} °S")}, {(Longitude > 0 ? $"{Longitude} °E" : $"{-Longitude} °W")}]";
+        }
     }
     /// <summary>
     /// 机场所在时区
@@ -108,15 +116,15 @@ namespace Meow.FlightRadar
             if (j?["isLatLon"]?.ToObject<bool?>() ?? false)
             {
                 Coord = new(
-                j?["coord"]?[1]?.ToObject<double?>(),
-                j?["coord"]?[0]?.ToObject<double?>()
+                j?["coord"]?[0]?.ToObject<double?>(),
+                j?["coord"]?[1]?.ToObject<double?>()
                 );
             }
             else
             {
                 Coord = new(
-                j?["coord"]?[0]?.ToObject<double?>(),
-                j?["coord"]?[1]?.ToObject<double?>()
+                j?["coord"]?[1]?.ToObject<double?>(),
+                j?["coord"]?[0]?.ToObject<double?>()
                 );
             }
             ICAO = j?["icao"]?.ToString();
@@ -124,6 +132,14 @@ namespace Meow.FlightRadar
             Terminal = j?["terminal"]?.ToString();
             Delays = j?["delays"]?.ToString();
         }
+        /// <summary>
+        /// 重写的字符串输出方法
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => 
+            $"{((IsValidAirportCode ?? false) ? $"=[{ICAO}] {IATA}=" : $"-[{ICAO}] {IATA}-")} " +
+            $"{((!string.IsNullOrWhiteSpace(AltIdent)) ? $"[{AltIdent}]" : "")} @ {Coord}\n" +
+            $"TZ/LOC: [{TimeZone}] / {FriendlyLocation} {FriendlyName} {Terminal} {Gate}";
     }
     /// <summary>
     /// 飞行时间结构体
@@ -152,6 +168,66 @@ namespace Meow.FlightRadar
             Estimated = j?["estimated"]?.ToObject<long?>();
             Actual = j?["actual"]?.ToObject<long?>();
         }
+        /// <summary>
+        /// 重写的字符串输出方法
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            if (Actual != null)
+            {
+                return $"A:{{{Actual?.Second()}}}";
+            }
+            else if (Scheduled == null && Estimated == null)
+            {
+                return $"N:[-]";
+            }
+            else if (Scheduled == null)
+            {
+                return $"E:[{Estimated?.Second()}]";
+            }
+            else if ((Scheduled != null && Scheduled == Estimated) || Estimated == null)
+            {
+                return $"S:[{Scheduled?.Second()}]";
+            }
+            else
+            {
+                return $"S/E:[{Scheduled?.Second()}, [{(Estimated?.Second() - Scheduled?.Second())?.TotalSeconds}s]]";
+            }
+        }
+    }
+    public struct FDistance
+    {
+        /// <summary>
+        /// 已经过路程
+        /// </summary>
+        public long? Elapsed = null;
+        /// <summary>
+        /// 剩余路程
+        /// </summary>
+        public long? Remaining = null;
+        /// <summary>
+        /// 实际路程
+        /// </summary>
+        public long? Actual = null;
+        /// <summary>
+        /// 构造方法
+        /// </summary>
+        /// <param name="j">传入的JToken</param>
+        public FDistance(JToken? j)
+        {
+            if (j?.HasValues ?? false)
+            {
+                Elapsed = j?["elapsed"]?.ToObject<long?>();
+                Remaining = j?["remaining"]?.ToObject<long?>();
+                Actual = j?["actual"]?.ToObject<long?>();
+            }
+        }
+        /// <summary>
+        /// 重写的字符串输出方法
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => $"T:-{Elapsed}+{Remaining} A:{Actual}";
     }
     /// <summary>
     /// 飞行计划结构体
@@ -159,54 +235,132 @@ namespace Meow.FlightRadar
     public struct FPlan
     {
         /// <summary>
-        /// 上报速度
+        /// 上报速度 kt
         /// </summary>
-        public int? Speed;
+        public int? Speed = null;
         /// <summary>
-        /// 上报高度
+        /// 上报高度 FL
         /// </summary>
-        public int? Altitude;
+        public int? Altitude = null;
         /// <summary>
-        /// 上报路线
+        /// 上报路线 VectorRa
         /// </summary>
-        public string? Route;
+        public string? Route = null;
         /// <summary>
         /// 直线距离
         /// </summary>
-        public int? DirectDistance;
+        public int? DirectDistance = null;
         /// <summary>
         /// 计划距离
         /// </summary>
-        public int? PlannedDistance;
+        public int? PlannedDistance = null;
         /// <summary>
         /// 离场时间
         /// </summary>
-        public long? Departure;
+        public long? Departure = null;
         /// <summary>
         /// 预计途中时间
         /// </summary>
-        public int? ETE;
+        public int? ETE = null;
         /// <summary>
         /// 预计燃油消耗
         /// </summary>
-        public (long? Gallons, long? Pounds)? FuelBurn;
+        public (long? Gallons, long? Pounds)? FuelBurn = new(null, null);
         /// <summary>
         /// 构造方法
         /// </summary>
         /// <param name="j">传入的JToken</param>
         public FPlan(JToken? j)
         {
-            Speed = j?["speed"]?.ToObject<int?>();
-            Altitude = j?["altitude"]?.ToObject<int?>();
-            Route = j?["route"]?.ToString();
-            DirectDistance = j?["directDistance"]?.ToObject<int?>();
-            PlannedDistance = j?["plannedDistance"]?.ToObject<int?>();
-            Departure = j?["departure"]?.ToObject<long?>();
-            ETE = j?["ete"]?.ToObject<int?>();
-            FuelBurn = new(
-                j?["fuelBurn"]?["gallons"]?.ToObject<int?>(),
-                j?["fuelBurn"]?["pounds"]?.ToObject<int?>()
-                );
+            if(j?.HasValues ?? false)
+            {
+                Speed = j?["speed"]?.ToObject<int?>();
+                Altitude = j?["altitude"]?.ToObject<int?>();
+                Route = j?["route"]?.ToString();
+                DirectDistance = j?["directDistance"]?.ToObject<int?>();
+                PlannedDistance = j?["plannedDistance"]?.ToObject<int?>();
+                Departure = j?["departure"]?.ToObject<long?>();
+                ETE = j?["ete"]?.ToObject<int?>();
+                if (j?["fuelBurn"]?.HasValues ?? false)
+                {
+                    FuelBurn = new(
+                        j?["fuelBurn"]?["gallons"]?.ToObject<int?>(),
+                        j?["fuelBurn"]?["pounds"]?.ToObject<int?>()
+                        );
+                }
+            }
+        }
+        /// <summary>
+        /// 重写的字符串输出方法
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder sb = new();
+            if(Speed != null)
+            {
+                sb.AppendLine($"SPD :{Speed} kt");
+            }
+            else
+            {
+                sb.AppendLine($"SPD : _NO INFO_");
+            }
+            if(Altitude != null)
+            {
+                sb.AppendLine($"ALT : FL{Altitude}");
+            }
+            else
+            {
+                sb.AppendLine($"ALT : _NO INFO_");
+            }
+            if(Departure != null)
+            {
+                sb.AppendLine($"Dep Time: {Departure?.Second()}");
+            }
+            else
+            {
+                sb.AppendLine($"Dep Time: _NO INFO_");
+            }
+            if (Route != null)
+            {
+                sb.AppendLine($"ETE :: {ETE}s");
+                sb.AppendLine($"Route ::[ {Route} ]");
+            }
+            else
+            {
+                sb.AppendLine("_NO Route INFO_");
+            }
+            if (PlannedDistance != null && DirectDistance != null)
+            {
+                sb.AppendLine($"DD:{DirectDistance} | PD:{DirectDistance}");
+            }
+            else
+            {
+                if (DirectDistance != null)
+                {
+                    sb.AppendLine($"DD:{DirectDistance} | PD: _NONE_ ");
+                }
+                if (PlannedDistance != null)
+                {
+                    sb.AppendLine($"DD: _NONE_ | PD:{DirectDistance}");
+                }
+            }
+            if(FuelBurn?.Gallons != null && FuelBurn?.Pounds != null)
+            {
+                sb.AppendLine($"FUEL:{FuelBurn?.Gallons} gal/{FuelBurn?.Pounds} lb.");
+            }
+            else
+            {
+                if (FuelBurn?.Gallons != null)
+                {
+                    sb.AppendLine($"FUEL:{FuelBurn?.Gallons} gal");
+                }
+                if (FuelBurn?.Pounds != null)
+                {
+                    sb.AppendLine($"FUEL:{FuelBurn?.Pounds} lb.");
+                }
+            }
+            return sb.ToString();
         }
     }
     /// <summary>
@@ -296,6 +450,28 @@ namespace Meow.FlightRadar
             EngCount = j?["typeDetails"]?["engCount"]?.ToString();
             EngType = j?["typeDetails"]?["engType"]?.ToString();
         }
+        /// <summary>
+        /// 重写的字符串输出方法
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            StringBuilder sb = new();
+            sb.AppendLine($"[{Type}] {FriendlyType}");
+            if (!string.IsNullOrWhiteSpace(ManuFacturer))
+            {
+                sb.AppendLine($"ManuBy:[{ManuFacturer}]");
+            }
+            if (!string.IsNullOrWhiteSpace(Tail))
+            {
+                sb.AppendLine($"[{Tail} {(Heavy ?? false ? "Heavy" : "")} {(Lifeguard ?? false ? "Lifeguard" : "")}]");
+            }
+            if(!string.IsNullOrWhiteSpace(Owner))
+            {
+                sb.AppendLine($"Owner:[{OwnerLocation} {Owner} [{(CanMessage ?? false ? "CANMSG" : "")}] / {OwnerType}]");
+            }
+            return sb.ToString();
+        }
     }
     /// <summary>
     /// 航司信息
@@ -339,6 +515,11 @@ namespace Meow.FlightRadar
             CallSign = j?["callsign"]?.ToString();
             Url = j?["url"]?.ToString();
         }
+        /// <summary>
+        /// 重写的字符串输出方法
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => $"*{ICAO}[{IATA}] {{{CallSign}}} :: {ShortName}[{FullName}] ";
     }
     /// <summary>
     /// 共用呼号结构体
@@ -389,6 +570,15 @@ namespace Meow.FlightRadar
                 j?["thumbnail"]?["linkUrl"]?.ToString()
             );
             Links = new(j?["links"]);
+        }
+        /// <summary>
+        /// 重写的字符串输出方法
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString()
+        {
+            return $"[{Ident}::{DisplayIdent}::{IATAIdent}::{FriendlyIdent}]\n" +
+                $"{Airline}\n";
         }
     }
     /// <summary>
@@ -481,14 +671,19 @@ namespace Meow.FlightRadar
         {
             Timestamp = j?["timestamp"]?.ToObject<long?>();
             Coord = new(
-                j?["coord"]?[0]?.ToObject<double?>(),
-                j?["coord"]?[1]?.ToObject<double?>()
+                j?["coord"]?[1]?.ToObject<double?>(),
+                j?["coord"]?[0]?.ToObject<double?>()
                 );
-            Alt = j?["alt"]?.ToObject<int?>();
+            Alt = j?["alt"]?.ToObject<int?>()*100;
             GS = j?["gs"]?.ToObject<int?>();
             Type = j?["type"]?.ToString();
             Isolated = j?["isolated"]?.ToObject<bool?>();
         }
+        /// <summary>
+        /// 重写的字符串输出方法
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() => $"[{Type}] {Timestamp?.Second()}@{Coord} {Alt}ft {GS}kt";
     }
 
     /// <summary>
@@ -527,7 +722,7 @@ namespace Meow.FlightRadar
         /// 重写的字符串输出方法
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => $"[{UserToken}::{Interval}-{(SingalFlight ? "Y" : "N")}]\n::[{Token}]";
+        public override string ToString() => $"[{UserToken}::{Interval}-{(SingalFlight ? "▉" : " ")}]\n::[{Token}]";
     }
 
     /// <summary>
@@ -538,11 +733,11 @@ namespace Meow.FlightRadar
         /// <summary>
         /// 点对点模式
         /// </summary>
-        public bool? ADHOC;
+        public readonly bool? ADHOC;
         /// <summary>
         /// 点对点模式可用状态
         /// </summary>
-        public bool? ADHOCAvaliable;
+        public readonly bool? ADHOCAvaliable;
         /// <summary>
         /// 飞机类型(厂商模式)
         /// </summary>
@@ -558,7 +753,7 @@ namespace Meow.FlightRadar
         /// <summary>
         /// 备选状态
         /// </summary>
-        public bool? AireonCandidate;
+        public readonly bool? AireonCandidate;
         /// <summary>
         /// 航司
         /// </summary>
@@ -582,11 +777,11 @@ namespace Meow.FlightRadar
         /// <summary>
         /// 搜索状态
         /// </summary>
-        public bool? Blocked;
+        public readonly bool? Blocked;
         /// <summary>
         /// 用户搜索状态
         /// </summary>
-        public bool? BlockedForUser;
+        public readonly bool? BlockedForUser;
         /// <summary>
         /// 搜索屏蔽信息
         /// </summary>
@@ -598,11 +793,11 @@ namespace Meow.FlightRadar
         /// <summary>
         /// 航班是否取消
         /// </summary>
-        public bool? Cancelled;
+        public readonly bool? Cancelled;
         /// <summary>
         /// 航班可编辑状态
         /// </summary>
-        public bool? CanEdit;
+        public readonly bool? CanEdit;
         /// <summary>
         /// 驾驶舱信息
         /// </summary>
@@ -626,11 +821,11 @@ namespace Meow.FlightRadar
         /// <summary>
         /// 距离参数
         /// </summary>
-        public (int? Elapsed, int? Remaining, int? Actual) Distance;
+        public FDistance? Distance;
         /// <summary>
         /// 是否备降
         /// </summary>
-        public bool? Diverted;
+        public readonly bool? Diverted;
         /// <summary>
         /// 加密后航班识别号
         /// </summary>
@@ -650,19 +845,19 @@ namespace Meow.FlightRadar
         /// <summary>
         /// 飞行性能提示是否可用
         /// </summary>
-        public bool? FPASAvaliable;
+        public readonly bool? FPASAvaliable;
         /// <summary>
         /// 识别号
         /// </summary>
-        public string? FriendlyIdent;
+        public readonly string? FriendlyIdent;
         /// <summary>
         /// 频率参考单位超控
         /// </summary>
-        public bool? FRUOverride;
+        public readonly bool? FRUOverride;
         /// <summary>
         /// 引导航空 (?)
         /// </summary>
-        public bool? GA;
+        public readonly bool? GA;
         /// <summary>
         /// 到登机口时间
         /// </summary>
@@ -674,19 +869,19 @@ namespace Meow.FlightRadar
         /// <summary>
         /// 预选
         /// </summary>
-        public bool? GlobalCandidate;
+        public readonly bool? GlobalCandidate;
         /// <summary>
         /// 通用识别
         /// </summary>
-        public bool? GlobalIdent;
+        public readonly bool? GlobalIdent;
         /// <summary>
         /// 通用飞机细节参考
         /// </summary>
-        public bool? GlobalFlightFeatures;
+        public readonly bool? GlobalFlightFeatures;
         /// <summary>
         /// 通用五遍参考
         /// </summary>
-        public bool? GlobalLegSharing;
+        public readonly bool? GlobalLegSharing;
         /// <summary>
         /// 其他服务
         /// </summary>
@@ -694,7 +889,7 @@ namespace Meow.FlightRadar
         /// <summary>
         /// 通用观察逻辑
         /// </summary>
-        public bool? GlobalVisualizer;
+        public readonly bool? GlobalVisualizer;
         /// <summary>
         /// 地速
         /// </summary>
@@ -710,7 +905,7 @@ namespace Meow.FlightRadar
         /// <summary>
         /// 是否可查历史记录
         /// </summary>
-        public bool? Historical;
+        public readonly bool? Historical;
         /// <summary>
         /// IATA识别号
         /// </summary>
@@ -734,7 +929,7 @@ namespace Meow.FlightRadar
         /// <summary>
         /// 是否区间
         /// </summary>
-        public bool? Interregional;
+        public readonly bool? Interregional;
         /// <summary>
         /// 降落时间
         /// </summary>
@@ -762,7 +957,7 @@ namespace Meow.FlightRadar
         /// <summary>
         /// 预测是否可用
         /// </summary>
-        public bool? PredictedAvaliable;
+        public readonly bool? PredictedAvaliable;
         /// <summary>
         /// 预测时间
         /// </summary>
@@ -774,11 +969,11 @@ namespace Meow.FlightRadar
         /// <summary>
         /// 是否过时呼号
         /// </summary>
-        public bool? RedactedCallsign;
+        public readonly bool? RedactedCallsign;
         /// <summary>
         /// 是否过时尾号
         /// </summary>
-        public bool? RedactedTail;
+        public readonly bool? RedactedTail;
         /// <summary>
         /// 相关缩略图
         /// </summary>
@@ -790,7 +985,7 @@ namespace Meow.FlightRadar
         /// <summary>
         /// 结果未知
         /// </summary>
-        public bool? ResultUnknown;
+        public readonly bool? ResultUnknown;
         /// <summary>
         /// 归一化时间戳
         /// </summary>
@@ -806,7 +1001,7 @@ namespace Meow.FlightRadar
         /// <summary>
         /// 地面时间可见
         /// </summary>
-        public bool? ShowSurfaceTimes;
+        public readonly bool? ShowSurfaceTimes;
         /// <summary>
         /// 地面追踪可用状态
         /// </summary>
@@ -842,7 +1037,7 @@ namespace Meow.FlightRadar
         /// <summary>
         /// 是否使用共享地址
         /// </summary>
-        public bool? UsingShareUrl;
+        public readonly bool? UsingShareUrl;
         /// <summary>
         /// 航路点
         /// </summary>
@@ -900,18 +1095,7 @@ namespace Meow.FlightRadar
             Coord = i?["coord"]?.ToString();//*****
             Destination = new(i?["destination"]);
             DisplayIdent = i?["displayIdent"]?.ToString();
-            if (i?["distance"]?.HasValues ?? false)
-            {
-                Distance = new(
-                    i?["distance"]?["elapsed"]?.ToObject<int?>(),
-                    i?["distance"]?["remaining"]?.ToObject<int?>(),
-                    i?["distance"]?["actual"]?.ToObject<int?>()
-                    );
-            }
-            else
-            {
-                Distance = new(null, null, null);
-            }
+            Distance = new(i?["distance"]);
             Diverted = i?["diverted"]?.ToObject<bool?>();
             EncryptedFlightId = i?["encryptedFlightId"]?.ToString();
             FlightId = i?["flightId"]?.ToString();
@@ -1016,15 +1200,94 @@ namespace Meow.FlightRadar
             UsingShareUrl = i?["usingShareUrl"]?.ToObject<bool?>();
             foreach (var j in JArray.Parse(string.IsNullOrWhiteSpace(i?["waypoints"]?.ToString()) ? "[]" : i?["waypoints"]?.ToString() ?? ""))
             {
-                Waypoints.Add(new(j?[0]?.ToObject<double?>(), j?[1]?.ToObject<double?>()));
+                Waypoints.Add(new(j?[1]?.ToObject<double?>(), j?[0]?.ToObject<double?>()));
             }
             Weather = i?["weather"];//?.ToString();
         }
 
-        public override string ToString()
+        public string GetTrack()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
+            foreach (var i in Track)
+            {
+                sb.AppendLine(i?.ToString());
+            }
             return sb.ToString();
         }
+        public string GetBoolMap()
+        {
+            StringBuilder sb = new();
+            sb.AppendLine("┌───────┬──────┬───┬──┬──┐");
+            sb.AppendLine("│AAACDFF│GGGGGG│HIP│RR│RS│");
+            sb.AppendLine("│DSCAIPR│ACIFLV│INA│DD│EW│");
+            sb.AppendLine("│HT NVAU│_ADFSI│STV│ST│SS│");
+            sb.AppendLine("│OA_CESO│_NNS_S│TEI│GA│TF│");
+            sb.AppendLine("│CT_LDSD│_DT__U│YRL│NL│TT│");
+            sb.AppendLine("├───────┼──────┼───┼──┼──┤");
+            sb.Append('│');
+            sb.Append(ADHOC ?? false ? "▉" : " ");
+            sb.Append((ADHOCAvaliable ?? false ? "▉" : " "));
+            sb.Append((AireonCandidate ?? false ? "▉" : " "));
+            sb.Append((Cancelled ?? false ? "▉" : " "));
+            sb.Append((Diverted ?? false ? "▉" : " "));
+            sb.Append((FPASAvaliable ?? false ? "▉" : " "));
+            sb.Append((FRUOverride ?? false ? "▉" : " "));
+            sb.Append('│');
+            sb.Append((GA ?? false ? "▉" : " "));
+            sb.Append((GlobalCandidate ?? false ? "▉" : " "));
+            sb.Append((GlobalIdent ?? false ? "▉" : " "));
+            sb.Append((GlobalFlightFeatures ?? false ? "▉" : " "));
+            sb.Append((GlobalLegSharing ?? false ? "▉" : " "));
+            sb.Append((GlobalVisualizer ?? false ? "▉" : " "));
+            sb.Append('│');
+            sb.Append((Historical ?? false ? "▉" : " "));
+            sb.Append((Interregional ?? false ? "▉" : " "));
+            sb.Append((PredictedAvaliable ?? false ? "▉" : " "));
+            sb.Append('│');
+            sb.Append((RedactedCallsign ?? false ? "▉" : " "));
+            sb.Append((RedactedTail ?? false ? "▉" : " "));
+            sb.Append('│');
+            sb.Append((ResultUnknown ?? false ? "▉" : " "));
+            sb.Append((ShowSurfaceTimes ?? false ? "▉" : " "));
+            sb.AppendLine("│");
+            sb.AppendLine("└───────┴──────┴───┴──┴──┘");
+            return sb.ToString();
+        }
+        public string GetTimeTables()
+        {
+            StringBuilder sb = new();
+            if (!string.IsNullOrWhiteSpace(PoweredOn))
+            {
+                sb.AppendLine($"PWR--ON:{PoweredOn}");
+            }
+            if (!string.IsNullOrWhiteSpace(PoweredOff))
+            {
+                sb.AppendLine($"PWR-OFF:{PoweredOff}");
+            }
+            if (!string.IsNullOrWhiteSpace(TaxiIn))
+            {
+                sb.AppendLine($"TAXI-IN:{TaxiIn}");
+            }
+            if (!string.IsNullOrWhiteSpace(TaxiOut))
+            {
+                sb.AppendLine($"TAXIOUT:{TaxiOut}");
+            }
+            sb.AppendLine($"TAKEOFF:{TakeOffTimes}");
+            sb.AppendLine($"LANDING:{LandingTimes}");
+            sb.AppendLine($"GATEARI:{GateArrivalTimes}");
+            sb.AppendLine($"GATEDEP:{GateDepartureTimes}");
+            return sb.ToString();
+        }
+        public void GetIdent()
+        {
+            if(FriendlyIdent == Ident)
+            {
+                //return $"[{Ident}]";
+            }
+        }
+        //public override string ToString()
+        //{
+            //return $"{GetIdent()}";
+        //}
     }
 }

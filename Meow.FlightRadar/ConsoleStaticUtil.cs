@@ -122,6 +122,9 @@ namespace Meow.FlightRadar
                 Console.WriteLine("GETTING DATA.....");
                 var li = l[num].Detail();
                 Console.Clear();
+                Console.WriteLine(li.NowActivity?.Origin?.FriendlyName);
+                Console.WriteLine(li.NowActivity?.Origin?.FriendlyLocation);
+                Console.WriteLine(li.NowActivity?.Origin?.Coord.ToString());
                 Console.WriteLine(li.ToString());
             }
             else

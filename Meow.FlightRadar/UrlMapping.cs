@@ -11,7 +11,7 @@ namespace Meow.FlightRadar
         /// <summary>
         /// FlightAware站
         /// </summary>
-        public const string FAC = "https://zh.flightaware.com/";
+        public const string FAC = "https://flightaware.com/";
         /// <summary>
         /// 语言设置
         /// </summary>
