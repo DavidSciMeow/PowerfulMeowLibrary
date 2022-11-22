@@ -122,10 +122,14 @@ namespace Meow.FlightRadar
                 Console.WriteLine("GETTING DATA.....");
                 var li = l[num].Detail();
                 Console.Clear();
-                Console.WriteLine(li.NowActivity?.Origin?.FriendlyName);
-                Console.WriteLine(li.NowActivity?.Origin?.FriendlyLocation);
-                Console.WriteLine(li.NowActivity?.Origin?.Coord.ToString());
-                Console.WriteLine(li.ToString());
+                Console.WriteLine("----NowActivity----");
+                Console.WriteLine(li.NowActivity?.ToString());
+                Console.WriteLine("----ActivityLog----");
+                foreach(var xx in li.ActivityLog)
+                {
+                    Console.WriteLine($"\n ---Timestamp:{xx.Timestamp}---");
+                    Console.WriteLine(xx.ToString());
+                }
             }
             else
             {

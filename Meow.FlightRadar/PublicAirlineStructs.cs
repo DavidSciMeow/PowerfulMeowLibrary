@@ -1278,16 +1278,52 @@ namespace Meow.FlightRadar
             sb.AppendLine($"GATEDEP:{GateDepartureTimes}");
             return sb.ToString();
         }
-        public void GetIdent()
+        public string GetIdent()
         {
-            if(FriendlyIdent == Ident)
+            if (!string.IsNullOrWhiteSpace(Ident) && DisplayIdent == Ident)
             {
-                //return $"[{Ident}]";
+                if(!string.IsNullOrWhiteSpace(FriendlyIdent))
+                {
+                    if (!string.IsNullOrWhiteSpace(IATAIdent))
+                    {
+                        return $"{FriendlyIdent} [{Ident}/{IATAIdent}]";
+                    }
+                    else
+                    {
+                        return $"{FriendlyIdent} [{Ident}]";
+                    }
+                }
+                else
+                {
+                    return $"[{Ident}]";
+                }
+            }
+            else if(!string.IsNullOrWhiteSpace(FriendlyIdent) && string.IsNullOrWhiteSpace(Ident))
+            {
+                return $"{FriendlyIdent}";
+            }
+            else
+            {
+                return FlightId ?? "";
             }
         }
-        //public override string ToString()
-        //{
-            //return $"{GetIdent()}";
-        //}
+        public string GetOrigDest()
+        {
+            return $"[{Origin?.ICAO} {Origin?.FriendlyName}] --> [{Destination?.ICAO} {Destination?.FriendlyName}]";
+        }
+        public override string ToString()
+        {
+            return $"{GetIdent()}\n" +
+                $"From->To\n" +
+                $"{GetOrigDest()}\n" +
+                $"FlightPlan:\n" +
+                $"{FlightPlan}\n" +
+                $"TimeTables:\n" +
+                $"{GetTimeTables()}\n" +
+                $"FlightBoolMap:\n" +
+                $"{GetBoolMap()}\n" +
+                $"Track:\n" +
+                $"{GetTrack()}";
+        }
     }
 }

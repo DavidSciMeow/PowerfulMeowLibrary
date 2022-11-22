@@ -12,26 +12,17 @@ namespace MeowCoreTest
         public static void Main(string[] args)
         {
             _ = args;
-            var li = new Flight("CES7777");
-            Console.WriteLine(li?.NowActivity?.Origin?.ToString());
-            Console.WriteLine(li?.NowActivity?.Destination?.ToString());
-            Console.WriteLine(li?.NowActivity?.FlightPlan?.ToString());
-            Console.WriteLine(li?.NowActivity?.GetBoolMap());
-            Console.WriteLine(li?.NowActivity?.GetTimeTables());
-            Console.WriteLine(li?.NowActivity?.GetTrack());
-
-
-            /*
+            //var li = new Flight("CES7777");
             while (true)
             {
                 Console.WriteLine("Search for Airport Hit 1, Airline Hit 2");
-                var ss = Console.ReadLine();
+                var ss = Console.ReadKey().Key;
                 Console.Clear();
-                if("1" == ss)
+                if(ss is ConsoleKey.D1 or ConsoleKey.NumPad1)
                 {
                     CUtil.ConsoleSearchAirport();
                 }
-                else if("2" == ss)
+                else if(ss is ConsoleKey.D2 or ConsoleKey.NumPad2)
                 {
                     CUtil.ConsoleSearchAirline();
                 }
@@ -42,7 +33,6 @@ namespace MeowCoreTest
                 }
                 Console.Clear();
             }
-            */
         }
     }
 }
