@@ -191,7 +191,7 @@ namespace Meow.FlightRadar.Base
             TokenInfo = SBase.GetFlightTrack(SBase.LiveFlightDoc(ICAOIdent));
             if(TokenInfo != null)
             {
-                Doc = JObject.Parse(Util.Network.Http.Get.String(UrlMapping.LiveFlightInfo(TokenInfo?.Token ?? "", true)).GetAwaiter().GetResult());
+                Doc = JObject.Parse(Util.Network.Http.Get.String(UrlMapping.LivePullOut(TokenInfo?.Token ?? "", true)).GetAwaiter().GetResult());
                 var ft = Doc?["flights"]?.First?.First;
                 var aflja = JArray.Parse(ft?["activityLog"]?["flights"]?.ToString() ?? "[]");
                 foreach (var i in aflja)

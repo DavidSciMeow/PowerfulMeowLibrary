@@ -1,9 +1,5 @@
 ﻿using Meow.FlightRadar;
-using Meow.FlightRadar.Base;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 
 namespace MeowCoreTest
 {
@@ -12,10 +8,10 @@ namespace MeowCoreTest
         public static void Main(string[] args)
         {
             _ = args;
-            //var li = new Flight("CES7777");
+            Console.WriteLine("[...]");
             while (true)
             {
-                Console.WriteLine("Search for Airport Hit 1, Airline Hit 2");
+                Console.Write("Search for Airport Hit 1, Airline Hit 2, Fleet Hit 3, Update All Concurrent Data Hit 0");
                 var ss = Console.ReadKey().Key;
                 Console.Clear();
                 if(ss is ConsoleKey.D1 or ConsoleKey.NumPad1)
@@ -26,11 +22,21 @@ namespace MeowCoreTest
                 {
                     CUtil.ConsoleSearchAirline();
                 }
-                Console.WriteLine("Complete, return menu with any Hit, esc to Quit");
-                if(Console.ReadKey().Key == ConsoleKey.Escape)
+                else if(ss is ConsoleKey.D3 or ConsoleKey.NumPad3)
                 {
-                    return;
+                    CUtil.ConsoleSearchFleet();
                 }
+                else if (ss is ConsoleKey.D0 or ConsoleKey.NumPad0)
+                {
+                    CUtil.UpdateAllConcurrentData();
+                }
+                else
+                {
+                    Console.WriteLine("[...No Key Pressed...]");
+                    continue;
+                }
+                Console.WriteLine("Complete, Ctrl+C to Quit. Return Main Menu with any Other Hit.");
+                Console.ReadKey();
                 Console.Clear();
             }
         }

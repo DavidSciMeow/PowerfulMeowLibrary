@@ -11,10 +11,13 @@ namespace Meow.FlightRadar
     /// </summary>
     public static class SBase
     {
+        /*-*/
         /// <summary>
         /// 用于LOAD文件的实例
         /// </summary>
         private readonly static HtmlWeb HW = new();
+        /*-*/
+        public static FleetInfo[]? AllFleet { get; set; }
         /*--Base--*/
         /// <summary>
         /// 默认的机场文件
@@ -40,6 +43,17 @@ namespace Meow.FlightRadar
         /// <param name="FlightNum"></param>
         /// <returns></returns>
         public static HtmlDocument LiveFlightDoc(string FlightNum) => HW.Load(UrlMapping.LiveFlight(FlightNum));
+        /// <summary>
+        /// 获取所有航司
+        /// </summary>
+        /// <returns></returns>
+        public static HtmlDocument LiveAllFleetDoc() => HW.Load(UrlMapping.LiveFleet);
+        /// <summary>
+        /// 获取某航司的在场班次
+        /// </summary>
+        /// <param name="Fleet">航司名</param>
+        /// <returns></returns>
+        public static HtmlDocument LiveFleetDoc(string Fleet) => HW.Load(UrlMapping.LiveFleetNow(Fleet));
         /*--Kits--*/
         /// <summary>
         /// 判定机场是否存在
@@ -514,6 +528,28 @@ namespace Meow.FlightRadar
                 }
             }
             return null;
+        }
+        /*--Fleet--*/
+        /// <summary>
+        /// 获取所有航司
+        /// </summary>
+        /// <param name="livefleetdoc">获取的livefleetdoc</param>
+        /// <returns></returns>
+        public static FleetInfo[] GetAllFleet(HtmlDocument livefleetdoc)
+        {
+            List<FleetInfo> w = new();
+            var nc = livefleetdoc.GetElementbyId($"mainBody").SelectNodes("//div[1]//table[2]//tbody");
+            foreach (var i in nc[0].SelectNodes("tr"))
+            {
+                var n = i.SelectNodes("th|td");
+                w.Add(new()
+                {
+                    NumberOfFlight = int.Parse(n[0].InnerText),
+                    Predix = n[1].InnerText,
+                    AirlineOperator = n[2].InnerText
+                });
+            }
+            return w.ToArray();
         }
     }
 }
