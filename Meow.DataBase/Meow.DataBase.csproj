@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <PackageId>Electronicute.Meow.DataBase</PackageId>
-    <Version>5.2.1</Version>
+    <Version>5.2.2</Version>
     <Company>Electronicute</Company>
     <Product>Meow.DataBase</Product>
     <Authors>DavidSciMeow</Authors>

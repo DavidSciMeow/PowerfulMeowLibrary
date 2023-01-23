@@ -18,7 +18,10 @@ namespace Meow.Database.Mysql
         readonly System.Timers.Timer WatchDog;
         private void GlobalOpen()
         {
-            conn.Open();
+            if (conn.State is ConnectionState.Closed or ConnectionState.Broken)
+            {
+                conn.Open();
+            }
             command = ((MySqlConnection)conn).CreateCommand();
             ExtLog($"[MYSQLWD] Conn Opened");
             if (KeepAlive)
