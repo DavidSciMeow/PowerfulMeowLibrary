@@ -1,7 +1,6 @@
 ﻿using Meow.DataBase;
 using MySql.Data.MySqlClient;
 using System;
-using System.Collections.Generic;
 using System.Data;
 
 namespace Meow.Database.Mysql
@@ -29,7 +28,14 @@ namespace Meow.Database.Mysql
                 WatchDog.Elapsed += (e, c) =>
                 {
                     ExtLog($"[MYSQLWD] PINGED");
-                    ((MySqlConnection)conn).Ping();
+                    if (((MySqlConnection)conn).Ping())//if ping errs is connection dropped
+                    {
+                        conn.Close();
+                        if(conn.State is ConnectionState.Closed or ConnectionState.Broken)
+                        {
+                            conn.Open();
+                        }
+                    }
                 };
             }
         }
