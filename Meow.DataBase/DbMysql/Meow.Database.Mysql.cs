@@ -158,7 +158,9 @@ namespace Meow.Database.Mysql
         {
             try
             {
-                return ((MySqlCommand)command).ExecuteNonQuery();
+                var r = ((MySqlCommand)command).ExecuteNonQuery();
+                ((MySqlCommand)command).Dispose();
+                return r;
             }
             catch
             {
@@ -174,6 +176,7 @@ namespace Meow.Database.Mysql
                 adapter.SelectCommand = (MySqlCommand)command;
                 DataSet ds = new();
                 adapter.Fill(ds);
+                ((MySqlCommand)command).Dispose();
                 return ds.Tables[0];
             }
             catch

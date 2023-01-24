@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-
-namespace Meow.FlightRadar
+﻿namespace Meow.FlightRadar
 {
     /// <summary>
     /// Console Util
@@ -162,7 +155,7 @@ namespace Meow.FlightRadar
             {
                 Console.WriteLine("[Waiting For Data Returning...]");
                 var li = l[num].Detail();
-            Console.Clear();
+                Console.Clear();
                 Console.WriteLine("[Data Returned]");
                 Console.Clear();
                 Console.WriteLine("----NowActivity----");
@@ -219,8 +212,14 @@ namespace Meow.FlightRadar
                 if (i % 10 == 0)
                 {
                     Console.WriteLine();
-                    Console.WriteLine($" [{i}/{k.Count()}] For Next 10 Result Hit Any Key...");
-                    Console.ReadKey();
+                    Console.WriteLine($" [{i}/{k.Count()}] For Next 10 Result Hit Any Key... Exit Hit Esc or Q");
+                    var key = Console.ReadKey();
+                    if(key.Key is ConsoleKey.Escape or ConsoleKey.Q)
+                    {
+                        Console.WriteLine("\n");
+                        Console.WriteLine("--Search Interrupted--");
+                        return;
+                    }
                     Console.Clear();
                     Console.WriteLine("Num\tN#Fl [Pre] Name");
                     Console.WriteLine();
@@ -228,6 +227,53 @@ namespace Meow.FlightRadar
             }
             Console.WriteLine("\n");
             Console.WriteLine("--Search Complete--");
+        }
+
+        /// <summary>
+        /// 默认支持的控制台搜索程序
+        /// </summary>
+        public static void ConsoleEmbedded()
+        {
+            Console.WriteLine("[...]");
+            while (true)
+            {
+                try
+                {
+                    Console.Write("Search for Airport Hit 1, Airline Hit 2, Fleet Hit 3, Update All Concurrent Data Hit 0");
+                    var ss = Console.ReadKey().Key;
+                    Console.Clear();
+                    if (ss is ConsoleKey.D1 or ConsoleKey.NumPad1)
+                    {
+                        ConsoleSearchAirport();
+                    }
+                    else if (ss is ConsoleKey.D2 or ConsoleKey.NumPad2)
+                    {
+                        ConsoleSearchAirline();
+                    }
+                    else if (ss is ConsoleKey.D3 or ConsoleKey.NumPad3)
+                    {
+                        ConsoleSearchFleet();
+                    }
+                    else if (ss is ConsoleKey.D0 or ConsoleKey.NumPad0)
+                    {
+                        UpdateAllConcurrentData();
+                    }
+                    else
+                    {
+                        Console.WriteLine("[...No Key Pressed...]");
+                        continue;
+                    }
+                    Console.WriteLine("Complete, Ctrl+C to Quit. Return Main Menu with any Other Hit.");
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+                catch(Exception ex)
+                {
+                    Console.WriteLine($"\n{ex.Message}\n[SERVICE RESTARTING... HIT ANY KEY]");
+                    Console.ReadKey();
+                    Console.Clear();
+                }
+            }
         }
     }
 }
