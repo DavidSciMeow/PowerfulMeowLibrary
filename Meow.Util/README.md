@@ -18,7 +18,7 @@
 var pwd = "abc".DiscuzMd5();
 //标注 async 的是异步方法, 可以不带异步同步调用, 但也可以使用异步交换. 
 //例如 Get.String(string)
-var html = Get.String("www.github.com").GetAwaiter().GetResult();
+var html = Client.MString("www.github.com").GetAwaiter().GetResult();
 //or
 Task.Factory.StartNew(
 	async () => { 
