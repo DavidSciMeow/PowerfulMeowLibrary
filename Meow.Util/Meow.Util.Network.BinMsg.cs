@@ -10,7 +10,6 @@ namespace Meow.Util.Network
     /// <typeparam name="T">转换的内定类的类型</typeparam>
     public static class BinMsg<T>
     {
-
         /// <summary>
         /// 构建信息
         /// </summary>
@@ -36,7 +35,6 @@ namespace Meow.Util.Network
             }
             
         }
-
         /// <summary>
         /// 解密信息
         /// </summary>

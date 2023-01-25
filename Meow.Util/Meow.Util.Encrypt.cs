@@ -29,6 +29,5 @@ namespace Meow.Util.Encrypt
         /// <param name="salt">盐值</param>
         /// <returns></returns>
         public static string MD5S2ExpressPwd(this string pwd, string salt) => Md5($"{Md5(pwd, Encoding.ASCII)}{salt}", Encoding.ASCII);
-
     }
 }

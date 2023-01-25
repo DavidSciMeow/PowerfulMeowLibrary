@@ -9,6 +9,8 @@
 
 # 1 内函数一览
 ## 函数参数请在VisualStudio调用时查看
+## 本库在 ver.4.1.5 时进行了重大更新
+## 本库以后尽量仅更新静态帮助类(扩展方法)
 
 ```CSharp
 //标注 ext 的是静态扩展方法, 可以使用第一参数直接后接其他参数. 
@@ -27,8 +29,6 @@ Task.Factory.StartNew(
 
 |命名空间|类|成员名|作用|
 |----|----|----|----|
-|Meow.Util.Dir|DirX|GetWebSiteDirs(string)|获取一个网页URL的完整后缀路径|
-|----|----|----|----|
 |Meow.Util.Encrypt|Hash|`ext` DiscuzMd5(string)|用于特殊加密Discuz的MD5|
 |Meow.Util.Encrypt|Hash|`ext` Md5(string)|加密Md5|
 |Meow.Util.Encrypt|Hash|`ext` MD5S2ExpressPwd(string)|Md5Salt2加密方案|
@@ -46,12 +46,12 @@ Task.Factory.StartNew(
 |Meow.Util|Time|`ext` ToSecTimeStamp(DateTime)|时间类转换成秒制时间戳|
 |Meow.Util|Time|`ext` ToMiSecTimeStamp(DateTime)|时间类转换成毫秒制时间戳|
 |----|----|----|----|
-|Meow.Util.Network.Http|Client|(HttpClient) Basic| 基础的网络获取Client实例|
-|Meow.Util.Network.Http|Client|(HttpClient) Compression| 接受压缩的网络获取Client实例|
-|Meow.Util.Network.Http|Get|`async` String(string)| 获取某URL的字符串(通常小于83kb)|
-|Meow.Util.Network.Http|Get|`async` Block(string)| 获取某URL的一个块(可以是gzip压缩)|
-|Meow.Util.Network.Http|Get|File(string,string)| 获取某个URL的一个文件(当作文件下载)|
-|Meow.Util.Network.Http|Post|`async` Create(....)| 朝某个URL进行一次POST|
+|***Meow.Util.Network***|***BinMsg\<T\>***|***`static` BinMsg***|***比特信息报文组织包***|
+|----|----|----|----|
+|Meow.Util.Network.Http|HttpUtil|`ext` `async` MString(string)| 获取某URL的字符串(通常小于83kb)|
+|Meow.Util.Network.Http|HttpUtil|`ext` `async` MBlock(string)| 获取某URL的一个块(可以是gzip压缩)|
+|Meow.Util.Network.Http|HttpUtil|`ext` MFile(string,string)| 获取某个URL的一个文件(当作文件下载)|
+|Meow.Util.Network.Http|HttpUtil|`ext` `async` MPost(....)| 朝某个URL进行一次POST|
 |----|----|----|----|
 |Meow.Util.Imaging|Skia|FileToBase64(string)| 将文件转换成Base64格式|
 |Meow.Util.Imaging|Skia|Read(string)| 读取一个文件|
@@ -59,6 +59,9 @@ Task.Factory.StartNew(
 |Meow.Util.Imaging|Skia|`ext` ToBase64String(SKBitMap)| 转换一个SKbitmap到Base64|
 |Meow.Util.Imaging|Skia|`ext` Base64ToSKBitmap(string)| 转换一个base64编码字符串到SKbitmap|
 |Meow.Util.Imaging|Skia|`ext` ToBase64String(SKImage)| 转换一个SKImage到Base64|
+|----|----|----|----|
+|***Meow.Util.Proc***|***ProcBase***|***`Abstract` ProcBase***|***程序组基类***|
+|***Meow.Util.Proc***|***Linux***|***Linux(string, DataReceivedEventHandler, EventHandler, string)***|***创建Linux进程监视组***|
 
 # 2 更新计划
 1. 网络图片下载解析  
