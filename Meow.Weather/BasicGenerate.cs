@@ -2,13 +2,16 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Meow.Util.Network.Http;
 
 namespace Meow.Weather.CN
 {
     public sealed class Interpreter
     {
+        readonly static HttpClient Client = new();
         public static MWG RectifyWord(string input)
         {
             return input switch
@@ -229,7 +232,7 @@ namespace Meow.Weather.CN
         }
         private static async Task<string> DoGetProvInfo(string pattern)
         {
-            var prov = await Util.Network.Http.Get.String($"http://www.nmc.cn/f/rest/province");
+            var prov = await Client.MString($"http://www.nmc.cn/f/rest/province");
             var jo = JArray.Parse(prov);
             foreach(var d in jo)
             {
@@ -242,7 +245,7 @@ namespace Meow.Weather.CN
         }
         private static async Task<string> DoGetCityInfo(string pattern,string para)
         {
-            var prov = await Util.Network.Http.Get.String($"http://www.nmc.cn/f/rest/province/{para}");
+            var prov = await Client.MString($"http://www.nmc.cn/f/rest/province/{para}");
             var jo = JArray.Parse(prov);
             foreach (var d in jo)
             {
@@ -253,12 +256,12 @@ namespace Meow.Weather.CN
             }
             throw new("Para Err");
         }
-        private static async Task<string> DoGetCityInfo(string para) => JArray.Parse(await Util.Network.Http.Get.String($"http://www.nmc.cn/f/rest/province/{para}")).First["code"].ToString();
-        private static async Task<string> DoGetPercBasicInfo(string para) => await Util.Network.Http.Get.String($"http://www.nmc.cn/f/rest/real/{para}");
-        private static async Task<string> DoGetPercAQIInfo(string para) => await Util.Network.Http.Get.String($"http://www.nmc.cn/f/rest/aqi/{para}");
-        private static async Task<string> DoGetPercPassedInfo(string para) => await Util.Network.Http.Get.String($"http://www.nmc.cn/f/rest/passed/{para}");
-        private static async Task<string> DoGetPercTempchartInfo(string para) => await Util.Network.Http.Get.String($"http://www.nmc.cn/f/rest/tempchart/{para}");
-        private static async Task<string> DoGetPercWeatherInfo(string para) => await Util.Network.Http.Get.String($"http://www.nmc.cn/f/rest/weather/?stationid={para}");
+        private static async Task<string> DoGetCityInfo(string para) => JArray.Parse(await Client.MString($"http://www.nmc.cn/f/rest/province/{para}")).First["code"].ToString();
+        private static async Task<string> DoGetPercBasicInfo(string para) => await Client.MString($"http://www.nmc.cn/f/rest/real/{para}");
+        private static async Task<string> DoGetPercAQIInfo(string para) => await Client.MString($"http://www.nmc.cn/f/rest/aqi/{para}");
+        private static async Task<string> DoGetPercPassedInfo(string para) => await Client.MString($"http://www.nmc.cn/f/rest/passed/{para}");
+        private static async Task<string> DoGetPercTempchartInfo(string para) => await Client.MString($"http://www.nmc.cn/f/rest/tempchart/{para}");
+        private static async Task<string> DoGetPercWeatherInfo(string para) => await Client.MString($"http://www.nmc.cn/f/rest/weather/?stationid={para}");
     }
     public class WImage
     {
@@ -443,9 +446,11 @@ namespace Meow.Weather.CN
 
             namespace 污染气象条件
             {
+                #pragma warning disable IDE1006 // Naming Styles
                 public sealed class _24小时 : MWG{ public _24小时() : base($"environment/air_pollution-24.html") { } }
                 public sealed class _48小时 : MWG{ public _48小时() : base($"environment/air_pollution-48.html") { } }
                 public sealed class _72小时 : MWG{ public _72小时() : base($"environment/air_pollution-72.html") { } }
+                #pragma warning restore IDE1006 // Naming Styles
             }
         }
         namespace 农业气象

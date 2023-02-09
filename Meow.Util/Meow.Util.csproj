@@ -11,7 +11,7 @@
     <NeutralLanguage>zh-CN</NeutralLanguage>
     <PackageProjectUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary/tree/master/Meow.Util</PackageProjectUrl>
     <RepositoryUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary/tree/master/Meow.Util</RepositoryUrl>
-    <Version>4.1.5-pre</Version>
+    <Version>4.1.5</Version>
     <RepositoryType>gitrepo</RepositoryType>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Description>MeowPowerfulLibrary - Util Core

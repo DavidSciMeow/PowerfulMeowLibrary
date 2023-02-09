@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <PackageId>Electronicute.Voice.Silk</PackageId>
+    <Company>Electronicute</Company>
+    <Product>Electronicute.Voice.Silk</Product>
+    <Authors>DavidSciMeow</Authors>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <Version>1.1.2-pre</Version>
+  </PropertyGroup>
+
+</Project>
