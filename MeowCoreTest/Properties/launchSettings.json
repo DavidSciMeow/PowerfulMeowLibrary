@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MeowCoreTest": {
+      "commandName": "Project",
+      "commandLineArgs": "./a.mp3 ./a.silk"
+    }
+  }
+}

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -13,6 +13,8 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary/tree/master/Meow.Voice.Silk</RepositoryUrl>
     <PackageProjectUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary/tree/master/Meow.Voice.Silk</PackageProjectUrl>
+    <Copyright>@ 2023 Electronicute</Copyright>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

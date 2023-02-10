@@ -5,9 +5,8 @@ namespace MeowCoreTest
     {
         public static void Main(string[] args)
         {
-            _ = args;
-            var pf = new Meow.Voice.Silk.Encoder();
-            pf.Encode(@"D:\Users\David\Desktop\ASPQR\平原之舞BF4.mp3").GetAwaiter().GetResult().ConvertFile(@"D:\Users\David\Desktop\ASPQR\a.silk");
+            var pf = new Meow.Voice.Silk.Encoder(log:true);
+            pf.Encode(args[0]).GetAwaiter().GetResult().ConvertFile(args[1]);
         }
     }
 }
