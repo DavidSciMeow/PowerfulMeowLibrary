@@ -25,6 +25,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meow.Voice.Silk", "Meow.Voice.Silk\Meow.Voice.Silk\Meow.Voice.Silk.csproj", "{BBA3B815-20E8-4ED3-BA9B-5F538AD9D643}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MeowVoice", "MeowVoice", "{B794AC8A-F671-4869-943E-7A13D1EEBF6A}"
+	ProjectSection(SolutionItems) = preProject
+		Meow.Voice.Silk\README.md = Meow.Voice.Silk\README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meow.Voice.NativeAssets.Linux", "Meow.Voice.Silk\Meow.Voice.NativeAssets.Linux\Meow.Voice.NativeAssets.Linux.csproj", "{65D59BB2-3008-4662-8941-495A546F244D}"
 EndProject

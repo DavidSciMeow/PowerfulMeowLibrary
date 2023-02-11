@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <PackageId>Electronicute.Voice.Silk</PackageId>
+    <PackageId>Electronicute.Meow.Voice.Silk</PackageId>
     <Company>Electronicute</Company>
     <Product>Electronicute.Voice.Silk</Product>
     <Authors>DavidSciMeow</Authors>
@@ -18,5 +18,9 @@
     <Description>A Voice Encoder Of Silk in OICQ(QQ) for China Developer</Description>
     <PackageTags>Silk, Voice, QQ, OICQ</PackageTags>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="README.md" />
+  </ItemGroup>
 
 </Project>
