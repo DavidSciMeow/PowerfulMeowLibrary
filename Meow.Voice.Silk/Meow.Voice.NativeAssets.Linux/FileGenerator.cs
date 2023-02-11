@@ -7,7 +7,13 @@ namespace Meow.Voice.NativeAssets.Linux
         static void GenerateFile(string path = "./")
         {
             OutputEncoderFile(path);
-            OutputDecoderFile(path);
+            OutputDecoderFile(path); 
+            OutputFFmpegFile(path);
+        }
+        static void OutputFFmpegFile(string path = "./")
+        {
+            File.WriteAllBytes(path + "ffmpeg", Properties.Resources.ffmpeg);
+            Chmods(path + "ffmpeg");
         }
         static void OutputEncoderFile(string path = "./")
         {

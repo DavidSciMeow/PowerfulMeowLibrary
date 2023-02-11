@@ -8,4 +8,10 @@
     <StartupObject>MeowCoreTest.Program</StartupObject>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Electronicute.Meow.Voice.NativeAssets.Linux" Version="2.0.0" />
+    <PackageReference Include="Electronicute.Meow.Voice.NativeAssets.Windows" Version="2.0.0" />
+    <PackageReference Include="Electronicute.Voice.Silk" Version="2.1.0" />
+  </ItemGroup>
+
 </Project>

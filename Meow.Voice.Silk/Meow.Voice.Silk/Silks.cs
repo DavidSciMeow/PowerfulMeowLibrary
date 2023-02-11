@@ -37,7 +37,7 @@ namespace Meow.Voice.Silk
             Platformid = Environment.OSVersion.Platform;
             if (Platformid == PlatformID.Unix)
             {
-                if (!File.Exists("./encoder") || !File.Exists("./decoder"))
+                if (!File.Exists("./encoder") || !File.Exists("./decoder") || !File.Exists("./ffmpeg"))
                 {
                     try
                     {

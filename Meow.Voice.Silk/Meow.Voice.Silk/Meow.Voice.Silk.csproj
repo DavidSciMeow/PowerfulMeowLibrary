@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>net6.0</TargetFramework>
@@ -9,12 +9,14 @@
     <Product>Electronicute.Voice.Silk</Product>
     <Authors>DavidSciMeow</Authors>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <Version>1.2.0</Version>
+    <Version>2.1.0</Version>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Copyright>@ 2023 Electronicute</Copyright>
+    <PackageProjectUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary/tree/master/Meow.Voice.Silk</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary/tree/master/Meow.Voice.Silk</RepositoryUrl>
+    <Description>A Voice Encoder Of Silk in OICQ(QQ) for China Developer</Description>
+    <PackageTags>Silk, Voice, QQ, OICQ</PackageTags>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="FFmpeg.AutoGen" Version="5.1.1" />
-  </ItemGroup>
 
 </Project>
