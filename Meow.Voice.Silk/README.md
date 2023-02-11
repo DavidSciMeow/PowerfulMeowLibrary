@@ -18,7 +18,7 @@
 ```Csharp
 Meow.Voice.Silk.Encoder encoder = new(log:false);
 var r = encoder.Encode("完全限定文件名").GetAwaiter().GetResult();
-r.ConvertFile("完全限定文件目录"); //转换成文件
+r.ConvertFile("完全限定文件目录"); //转换成文件 (转换出来的文件名和源文件名一样,后缀为silk,所以这里只写目录,而上面是全限定的文件名)
 var a = r.ConvertTOBase64(); //转换成Base64
 ```
 
