@@ -2,7 +2,7 @@
   "profiles": {
     "MeowCoreTest": {
       "commandName": "Project",
-      "commandLineArgs": "./a.mp3 ./a.silk"
+      "commandLineArgs": "decode ./a.silk ./"
     }
   }
 }

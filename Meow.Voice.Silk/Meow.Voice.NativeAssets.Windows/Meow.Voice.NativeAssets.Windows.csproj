@@ -10,7 +10,7 @@
     <Company>Electronicute</Company>
     <Product>Electronicute.Meow.Voice.NativeAssets.Windows</Product>
     <SignAssembly>False</SignAssembly>
-    <Version>1.0.1</Version>
+    <Version>1.2.0</Version>
     <Copyright>@ 2023 Electronicute</Copyright>
     <RepositoryType>git</RepositoryType>
     <PackageTags>Silk, Voice</PackageTags>
@@ -21,7 +21,6 @@
   <ItemGroup>
     <None Remove="Windows\decode.exe" />
     <None Remove="Windows\encode.exe" />
-    <None Remove="Windows\ffmpeg.exe" />
   </ItemGroup>
 
   <ItemGroup>
@@ -29,9 +28,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
     <EmbeddedResource Include="Windows\encode.exe">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Windows\ffmpeg.exe">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>

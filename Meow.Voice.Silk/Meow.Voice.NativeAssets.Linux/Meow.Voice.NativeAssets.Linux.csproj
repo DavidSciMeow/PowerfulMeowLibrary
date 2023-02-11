@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageId>Electronicute.Meow.Voice.NativeAssets.Linux</PackageId>
+    <PackageId>Electronicute.Meow.Voice.NativeAssets.Linux.Ubuntu</PackageId>
     <Authors>DavidSciMeow</Authors>
     <Company>Electronicute</Company>
     <Product>Electronicute.Meow.Voice.NativeAssets.Linux</Product>
@@ -14,7 +14,7 @@
     <RepositoryUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary/tree/master/Meow.Voice.Silk</RepositoryUrl>
     <PackageProjectUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary/tree/master/Meow.Voice.Silk</PackageProjectUrl>
     <Copyright>@ 2023 Electronicute</Copyright>
-    <Version>1.0.1</Version>
+    <Version>1.2.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

@@ -6,7 +6,6 @@
         {
             OutputEncoderFile(path);
             OutputDecoderFile(path);
-            OutputFFMPEGFile(path);
         }
         static void OutputEncoderFile(string path = "./")
         {
@@ -15,10 +14,6 @@
         static void OutputDecoderFile(string path = "./")
         {
             File.WriteAllBytes(path + "decoder.exe", Properties.Resources.decode);
-        }
-        static void OutputFFMPEGFile(string path = "./")
-        {
-            File.WriteAllBytes(path + "ffmpeg.exe", Properties.Resources.ffmpeg);
         }
     }
 }

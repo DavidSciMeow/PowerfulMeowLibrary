@@ -8,13 +8,4 @@
     <StartupObject>MeowCoreTest.Program</StartupObject>
   </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Electronicute.Meow.Voice.NativeAssets.Linux" Version="1.0.1" />
-    <PackageReference Include="Electronicute.Meow.Voice.NativeAssets.Windows" Version="1.0.1" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Meow.Voice.Silk\Meow.Voice.Silk\Meow.Voice.Silk.csproj" />
-  </ItemGroup>
-
 </Project>

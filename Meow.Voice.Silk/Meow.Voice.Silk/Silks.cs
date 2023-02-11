@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Threading.Tasks;
 
 namespace Meow.Voice.Silk
 {
@@ -11,27 +12,27 @@ namespace Meow.Voice.Silk
         /// 平台类型
         /// </summary>
         protected PlatformID Platformid { get; set; }
-    }
-    /// <summary>
-    /// 编码器接口
-    /// </summary>
-    public interface IEncodeable
-    {
         /// <summary>
-        /// 编码逻辑
+        /// 音频采样率(最高24000)
         /// </summary>
-        /// <param name="filePath">文件路径(全限定)</param>
-        /// <returns></returns>
-        public Task<SilkReturn> Encode(string filePath);
-    }
-
-
-    /// <summary>
-    /// Silk编码器
-    /// </summary>
-    public class Encoder : SilkConvertor, IEncodeable
-    {
-        void PreOSFileCheck()
+        public int SampRate { get; protected set; } = 24000;
+        /// <summary>
+        /// 是否记录转换日志
+        /// </summary>
+        public bool Log { get; protected set; } = false;
+        /// <summary>
+        /// FFMPEG使用文件名
+        /// </summary>
+        protected string FFmpegFileName { get; set; } = "";
+        /// <summary>
+        /// Convertor使用文件名
+        /// </summary>
+        protected string ConvertorFileName { get; set; } = "";
+        /// <summary>
+        /// 平台检查模式
+        /// </summary>
+        /// <exception cref="Exception">平台支持性错误</exception>
+        protected void PreOSFileCheck()
         {
             Platformid = Environment.OSVersion.Platform;
             if (Platformid == PlatformID.Unix)
@@ -54,7 +55,7 @@ namespace Meow.Voice.Silk
                     }
                     catch
                     {
-                        Console.WriteLine("[PreOSFileCheck - Linux] :: Do not Use Produce One File Mode");
+                        Logs("[PreOSFileCheck - Linux] :: Do not Use Produce One File Mode");
                         throw new Exception("Do not Use Produce One File Mode");
                     }
                 }
@@ -79,79 +80,41 @@ namespace Meow.Voice.Silk
                     }
                     catch
                     {
-                        Console.WriteLine("[PreOSFileCheck - Windows] :: Do not Use Produce One File Mode");
+                        Logs("[PreOSFileCheck - Windows] :: Do not Use Produce One File Mode");
                         throw new Exception("Do not Use Produce One File Mode");
                     }
-                    
-                    
+
+
                 }
             }
             else
             {
                 throw new Exception("System Type Not Supported");
             }
+
             if (!Directory.Exists("./temp"))
             {
                 Directory.CreateDirectory("./temp");
             }
         }
-        Task<SilkReturn> WindowsEncodingProcess(string filePath)
-        {
-            return Task<SilkReturn>.Factory.StartNew(() =>
-            {
-                try
-                {
-                    var uuid = Guid.NewGuid().ToString();
-                    Console.WriteLine("[FFMPEG] CONVERTING");
-                    SilkUtilProcess p1 = new($"./ffmpeg.exe", $"-hide_banner -i {filePath} -f s16le -b:a {KBitRate * 1000} -ar {SampRate} -ac 1 ./temp/{uuid}.pcm -y {(Log ? "" : "-loglevel panic")}");
-                    p1.WaitAndExit();
-                    Console.WriteLine("[ENCODE] CONVERTING");
-                    SilkUtilProcess p2 = new("./encoder.exe", $"./temp/{uuid}.pcm ./temp/{uuid}.silk -packetlength {PacketLength} -rate {KBitRate * 1000} -Fs_API {SampRate} -Fs_maxInternal {SampRate} -tencent {(Log ? "" : "-quiet")}");
-                    p2.WaitAndExit();
-                    Task.Delay(100).GetAwaiter().GetResult();
-                    File.Delete($"./temp/{uuid}.pcm");
-                    var pk = File.ReadAllBytes($"./temp/{uuid}.silk");
-                    File.Delete($"./temp/{uuid}.silk");
-                    Console.WriteLine("[ENCODE] COMPLETE");
-                    return new(pk);
-                }
-                catch
-                {
-                    throw;
-                }
-            });
-        }
-        Task<SilkReturn> LinuxEncodingProcess(string filePath)
-        {
-            return Task<SilkReturn>.Factory.StartNew(() =>
-            {
-                try
-                {
-                    var uuid = Guid.NewGuid().ToString();
-                    Console.WriteLine("[FFMPEG] CONVERTING");
-                    SilkUtilProcess p1 = new($"ffmpeg", $"-hide_banner -i {filePath} -f s16le -b:a {KBitRate * 1000} -ar {SampRate} -ac 1 ./temp/{uuid}.pcm -y -loglevel panic");
-                    p1.WaitAndExit();
-                    Console.WriteLine("[ENCODE] CONVERTING");
-                    SilkUtilProcess p2 = new("./encoder", $"./temp/{uuid}.pcm ./temp/{uuid}.silk -packetlength {PacketLength} -rate {KBitRate * 1000} -Fs_API {SampRate} -Fs_maxInternal {SampRate} -tencent -quiet");
-                    p2.WaitAndExit();
-                    Task.Delay(100).GetAwaiter().GetResult();
-                    File.Delete($"./temp/{uuid}.pcm");
-                    var pk = File.ReadAllBytes($"./temp/{uuid}.silk");
-                    File.Delete($"./temp/{uuid}.silk");
-                    Console.WriteLine("[ENCODE] COMPLETE");
-                    return new(pk);
-                }
-                catch
-                {
-                    throw;
-                }
-            });
-        }
-
         /// <summary>
-        /// 音频采样率(最高24000)
+        /// 记录日志
         /// </summary>
-        public int SampRate { get; } = 24000;
+        /// <param name="s">日志字符串</param>
+        protected void Logs(string s)
+        {
+            if (Log)
+            {
+                Console.WriteLine($"{s}");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Silk编码器
+    /// </summary>
+    public sealed class Encoder : SilkConvertor, IEncodeable
+    {
         /// <summary>
         /// 音频比特率(最高96k)
         /// </summary>
@@ -160,12 +123,9 @@ namespace Meow.Voice.Silk
         /// 单个组包长度(默认20ms)
         /// </summary>
         public int PacketLength { get; } = 20;
+
         /// <summary>
-        /// 是否记录转换日志
-        /// </summary>
-        public bool Log { get; } = false;
-        /// <summary>
-        /// 构造解码器<br/>如果您不知道参数是什么,请不要修改
+        /// 构造编码器<br/>如果您不知道参数是什么,请不要修改
         /// </summary>
         /// <param name="sampRate">音频采样率(最高24000)</param>
         /// <param name="kBitRate">音频比特率(最高96k)</param>
@@ -190,23 +150,147 @@ namespace Meow.Voice.Silk
             }
             Log = log;
             PreOSFileCheck();//检测系统模式
+
+            FFmpegFileName = "ffmpeg";
+            ConvertorFileName = "./encoder";
+            if (Platformid == PlatformID.Win32NT)
+            {
+                FFmpegFileName = "ffmpeg.exe";
+                ConvertorFileName = "./encoder.exe";
+            }
+            else
+            {
+                if (Platformid != PlatformID.Unix)
+                {
+                    throw new Exception("System Type Not Supported");
+                }
+            }
         }
 
         /// <inheritdoc/>
         public Task<SilkReturn> Encode(string filePath)
         {
-            if (Platformid == PlatformID.Unix)
+            return Task<SilkReturn>.Factory.StartNew(() =>
             {
-                return LinuxEncodingProcess(filePath);
+                try
+                {
+                    var uuid = Guid.NewGuid().ToString().Replace("-","");
+
+                    {
+                        Logs($"[FFMPEG] CONVERTING {filePath}");
+                        using SilkUtilProcess p = new(FFmpegFileName, $"-hide_banner -i {filePath} -f s16le -b:a {KBitRate * 1000} -ar {SampRate} -ac 1 ./temp/{uuid}.pcm -y -loglevel panic");
+                        p.WaitAndExit();
+                    }
+                    
+                    {
+                        Logs($"[ENCODE] CONVERTING {filePath}");
+                        using SilkUtilProcess p = new(ConvertorFileName, $"./temp/{uuid}.pcm ./temp/{uuid}.silk -packetlength {PacketLength} -rate {KBitRate * 1000} -Fs_API {SampRate} -Fs_maxInternal {SampRate} -tencent -quiet");
+                        p.WaitAndExit();
+                    }
+
+                    var pk = File.ReadAllBytes($"./temp/{uuid}.silk");
+                    File.Delete($"./temp/{uuid}.pcm");
+                    File.Delete($"./temp/{uuid}.silk");
+                    Logs($"[ENCODE] COMPLETE {filePath} -> silkV3");
+                    return new(pk, Path.GetFileNameWithoutExtension(filePath), FileExtension.silk);
+                }
+                catch
+                {
+                    throw;
+                }
+            });
+        }
+    }
+
+    /*
+    /// <summary>
+    /// Silk解码器
+    /// </summary>
+    public sealed class Decoder : SilkConvertor, IDecodeable
+    {
+        /// <summary>
+        /// 要转换到的格式
+        /// </summary>
+        public FileExtension Extension { get; }
+
+        /// <summary>
+        /// 构造解码器<br/>如果您不知道参数是什么,请不要修改
+        /// </summary>
+        /// <param name="ext">要转换到的格式</param>
+        /// <param name="sampRate">音频采样率(最高24000)</param>
+        /// <param name="log">是否记录转换日志</param>
+        public Decoder(FileExtension ext, int sampRate = 24000, bool log = false)
+        {
+            Extension = ext;
+            SampRate = sampRate;
+            if (sampRate > 24000)
+            {
+                throw new Exception("Max SampRate is 24000");
             }
-            else if (Platformid == PlatformID.Win32NT)
+            Log = log;
+            PreOSFileCheck();//检测系统模式
+
+            FFmpegFileName = "ffmpeg";
+            ConvertorFileName = "./decoder";
+            if (Platformid == PlatformID.Win32NT)
             {
-                return WindowsEncodingProcess(filePath);
+                FFmpegFileName = "ffmpeg.exe";
+                ConvertorFileName = "./decoder.exe";
             }
             else
             {
-                throw new Exception("System Type Not Supported");
+                if (Platformid != PlatformID.Unix)
+                {
+                    throw new Exception("System Type Not Supported");
+                }
             }
         }
+
+        /// <inheritdoc/>
+        public Task<SilkReturn> Decode(string filePath)
+        {
+            return Task<SilkReturn>.Factory.StartNew(() =>
+            {
+                var uuid = Guid.NewGuid().ToString().Replace("-","");
+                Logs($"[DECODE] CONVERTING {filePath}");
+                using var cv = new SilkUtilProcess(ConvertorFileName, $"{filePath} ./temp/{uuid}.pcm -Fs_API {SampRate} -quiet");
+                cv.WaitAndExit();
+                //ffmpeg -> (linux)
+                Logs($"[FFMPEG] CONVERTING {filePath}");
+                //判定文件类型
+                switch (Extension)
+                {
+                    case FileExtension.mp3:
+                        {
+                            var str = $"-hide_banner -y -f s16le " +
+                                    $"-ar {SampRate} -acodec pcm_s16le -ac 1 " +
+                                    $"-i {$"./temp/{uuid}.pcm"} {$"./temp/{uuid}.{Extension}"} -loglevel panic";
+                            using var p = new SilkUtilProcess(FFmpegFileName, str);
+                            p.WaitAndExit();
+                        };
+                        break;
+                    case FileExtension.wav:
+                        {
+                            var str = $"-hide_banner -y -f s16le " +
+                                    $"-ar {SampRate} -v 16 -ac 1 " +
+                                    $"-i {$"./temp/{uuid}.pcm"} {$"./temp/{uuid}.{Extension}"} -loglevel panic";
+                            using var p = new SilkUtilProcess(FFmpegFileName, str);
+                            p.WaitAndExit();
+                        };
+                        break;
+                    case FileExtension.silk: throw new Exception("Do not Supported ReConvert Extension");
+                    default: throw new Exception("Do not Supported this Extension");
+                }
+                //获取文件Byte
+                var pk = File.ReadAllBytes($"./temp/{uuid}.{Extension}");
+                //删除临时文件
+                File.Delete($"./temp/{uuid}.pcm");
+                File.Delete($"./temp/{uuid}.{Extension}");
+                //生成新文件
+                Logs($"[DECODE] COMPLETE {filePath} -> {Extension}");
+                return new(pk, Path.GetFileNameWithoutExtension(filePath), Extension);
+            });
+        }
     }
+    */
 }

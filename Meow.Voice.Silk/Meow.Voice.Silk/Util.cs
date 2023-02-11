@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Diagnostics;
 
 namespace Meow.Voice.Silk
 {
     /// <summary>
     /// 进程创建器
     /// </summary>
-    public class SilkUtilProcess
+    public class SilkUtilProcess : IDisposable
     {
-        Process p = new();
+        readonly Process p = new();
+        private bool disposedValue;
+        private bool exited = false;
+
         /// <summary>
         /// 标准进程创造器
         /// </summary>
@@ -21,15 +19,46 @@ namespace Meow.Voice.Silk
         public SilkUtilProcess(string proc, string cmd)
         {
             p = Process.Start(new ProcessStartInfo(proc, cmd)) ?? new();
+            p.EnableRaisingEvents = true;
             p.Start();
+            p.Exited += (sender, args) => { exited = true; };
         }
         /// <summary>
         /// 等待完成并退出
         /// </summary>
         public void WaitAndExit()
         {
-            p.WaitForExit();
-            p.Close();
+            while (true)
+            {
+                if (exited)
+                {
+                    return;
+                }
+            }
+        }
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="disposing"><inheritdoc/></param>
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposedValue)
+            {
+                if (disposing)
+                {
+                    p.Close();
+                }
+                p.Dispose();
+                disposedValue = true;
+            }
+        }
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public void Dispose()
+        {
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
     }
 
@@ -38,6 +67,9 @@ namespace Meow.Voice.Silk
     /// </summary>
     public struct SilkReturn
     {
+        private readonly string FileName;//文件名
+        private readonly FileExtension Ext;//后缀
+
         /// <summary>
         /// 比特模式的数据
         /// </summary>
@@ -46,12 +78,20 @@ namespace Meow.Voice.Silk
         /// 构造器
         /// </summary>
         /// <param name="data">数据</param>
-        public SilkReturn(byte[] data) => Data = data;
+        /// <param name="fileName">文件名称</param>
+        /// <param name="ext">转换的文件格式</param>
+        public SilkReturn(byte[] data, string fileName, FileExtension ext)
+        {
+            Data = data;
+            FileName = fileName;
+            Ext = ext;
+        }
+
         /// <summary>
         /// 转换为文件
         /// </summary>
-        /// <param name="Path">文件路径</param>
-        public void ConvertFile(string Path) => File.WriteAllBytes(Path, Data);
+        /// <param name="FilePath">文件路径</param>
+        public void ConvertFile(string FilePath) => File.WriteAllBytes(Path.Combine(FilePath, $"{FileName}.{Ext}"), Data);
         /// <summary>
         /// 转换至Base64模式
         /// </summary>
