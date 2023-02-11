@@ -6,8 +6,8 @@
 ## 功能表
 | --          | 编码器 | 解码器 |
 |-------------|-----|-----|
-| Window.x64  ![](https://img.shields.io/nuget/dt/Electronicute.Meow.Voice.NativeAssets.Windows) | Voice.Encoder   |  正在开发  | 
-| Linux.Amd64 ![](https://img.shields.io/nuget/dt/Electronicute.Meow.Voice.NativeAssets.Linux) | Voice.Encoder   |  正在开发  |
+| Window.x64  <br/> ![](https://img.shields.io/nuget/dt/Electronicute.Meow.Voice.NativeAssets.Windows) | Voice.Encoder   |  正在开发  | 
+| Linux.Amd64 <br/> ![](https://img.shields.io/nuget/dt/Electronicute.Meow.Voice.NativeAssets.Linux) | Voice.Encoder   |  正在开发  |
 | Windows.x86 | 不支持  |  不支持  |
 | Linux.i386  | 不支持  |  不支持  |
 
