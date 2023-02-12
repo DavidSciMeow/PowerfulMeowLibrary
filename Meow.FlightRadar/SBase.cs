@@ -16,7 +16,14 @@ namespace Meow.FlightRadar
         /// 用于LOAD文件的实例
         /// </summary>
         private readonly static HtmlWeb HW = new();
+        /// <summary>
+        /// 基使用的Client
+        /// </summary>
+        public static HttpClient BaseClient { get; set; } = new();
         /*-*/
+        /// <summary>
+        /// 默认存储的所有航司(缓存)
+        /// </summary>
         public static FleetInfo[]? AllFleet { get; set; }
         /*--Base--*/
         /// <summary>
@@ -58,7 +65,7 @@ namespace Meow.FlightRadar
         /// <summary>
         /// 判定机场是否存在
         /// </summary>
-        /// <param name="ICAOIdent">机场ICAO注册号</param>
+        /// <param name="liveairportdoc">机场文档</param>
         /// <returns></returns>
         public static bool DeterminAirPortExist(HtmlDocument liveairportdoc)
         {

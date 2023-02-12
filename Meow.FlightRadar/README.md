@@ -9,7 +9,8 @@
 ```
 @copy 
 { 
-    @FlightAware (仅用于学习研究之用, 正版获取信息请联系官方)
+    @FlightAware 
+    (仅用于学习研究之用, 获取更加详细实时信息请联系官方)
     LittleSciMeow (Electronicute) 
     2022 dec 27.
 }
@@ -78,6 +79,41 @@
 
 # 3. 一般性(控制台应用程序)的提前实现
 
+## 3.1 ConsoleStaticUtil.cs
+您可以通过使用`Meow.FlightRadar.CUtil.*`类内的函数来完成一般控制台的查询操作.  
+CUtil类实现了大部分已经包装的查询操作, 如下:
+
+|方法签名|用途|
+|----|----|
+|ConsoleEmbedded| 完整的控制台嵌套程序 |
+|ConsoleGetAirportWeather|获得机场天气(表格)|
+|ConsoleGetLiveAirportBoard|获得机场的进出港安排表|
+|ConsoleGetAirportWeatherMsg|获得机场的ATIS通波字符串`(如果支持)`|
+|ConsoleSearchAirport|搜索某个机场|
+|ConsoleSearchAirline|搜索某个航班|
+|UpdateAllConcurrentData|更新缓存数据|
+|ConsoleSearchFleet|搜索某个航司|
+
 # 4. 复用代码
 
+## 4.1 
+
 # 5. 全局Q&A
+
+## 5.1 什么是 FlightAware 机场等级
+根据 Flightaware 的官方分级, 机场分为第一管制区和第二管制区,   
+由于其飞机数据是用户自己的基站获取的, 导致有些数据并不实时,    
+在搜索到的机场内可以判断其是否位于第一管制区, 相较于其中的飞机,   
+第二管制区的飞机不会直接朝 FlightAware 上报其飞机信息等,  
+目前国内航班暂未有第一管制区功能, 大部分均位于第二管制区,   
+关于国内航班和国内信息保护规定, 详见CAAC官网.  
+
+## 5.2 能搜到什么样的"航班"
+根据民航规定, 任何在空的飞机均需要朝最少一个塔台(机场)报备信息,     
+且至少拥有一个A类型应答机, 一般民航还会装有C/S型号,   
+所以当民航以ADS-B形式发送信息时, 其信息将会被有些用户的基站捕捉,   
+信号解码后将上传FlightAware, 成为我们处理的信息.  
+然而军方应答机未必常开, 也未必在我们民航监听的频段,   
+但如果在此频段被捕捉, 则可以被搜索.
+
+## 5.3 

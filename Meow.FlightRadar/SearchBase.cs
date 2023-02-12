@@ -88,7 +88,7 @@ namespace Meow.FlightRadar
         public static SearchAirportResult[] SearchAiport(string name)
         {
             List<SearchAirportResult> l = new();
-            var j = Get.String(UrlMapping.SearchAirport(name)).GetAwaiter().GetResult();
+            var j = SBase.BaseClient.MString(UrlMapping.SearchAirport(name)).GetAwaiter().GetResult();
             var jo = JArray.Parse(JObject.Parse(j.ToString())?["data"]?.ToString() ?? "[]");
             foreach (var k in jo)
             {
@@ -105,7 +105,7 @@ namespace Meow.FlightRadar
         public static SearchFlightResult[] SearchAirline(string name)
         {
             List<SearchFlightResult> l = new();
-            var j = Get.String(UrlMapping.SearchFlight(name)).GetAwaiter().GetResult();
+            var j = SBase.BaseClient.MString(UrlMapping.SearchFlight(name)).GetAwaiter().GetResult();
             var jo = JArray.Parse(JObject.Parse(j)?["data"]?.ToString() ?? "[]");
             foreach (var i in jo)
             {

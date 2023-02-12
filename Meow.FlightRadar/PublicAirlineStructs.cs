@@ -196,6 +196,9 @@ namespace Meow.FlightRadar
             }
         }
     }
+    /// <summary>
+    /// 路程
+    /// </summary>
     public struct FDistance
     {
         /// <summary>

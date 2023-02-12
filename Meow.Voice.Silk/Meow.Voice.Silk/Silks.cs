@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Meow.Voice.Silk
 {
@@ -202,7 +201,7 @@ namespace Meow.Voice.Silk
         }
     }
 
-    /*
+    
     /// <summary>
     /// Silk解码器
     /// </summary>
@@ -256,10 +255,12 @@ namespace Meow.Voice.Silk
                 using var cv = new SilkUtilProcess(ConvertorFileName, $"{filePath} ./temp/{uuid}.pcm -Fs_API {SampRate} -quiet");
                 cv.WaitAndExit();
                 //ffmpeg -> (linux)
+
                 Logs($"[FFMPEG] CONVERTING {filePath}");
                 //判定文件类型
                 switch (Extension)
                 {
+
                     case FileExtension.mp3:
                         {
                             var str = $"-hide_banner -y -f s16le " +
@@ -292,5 +293,4 @@ namespace Meow.Voice.Silk
             });
         }
     }
-    */
 }

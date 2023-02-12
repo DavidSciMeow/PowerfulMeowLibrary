@@ -4,7 +4,36 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <DebugType>embedded</DebugType>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <PackageId>Electronicute.Meow.FlightRadar</PackageId>
+    <Authors>DavidSciMeow</Authors>
+    <Company>Electronicute</Company>
+    <Product>FlightRadar</Product>
+    <Description></Description>
+    <Copyright>@ 2023 Electronciute</Copyright>
+    <PackageProjectUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary/tree/master/Meow.FlightRadar</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary/tree/master/Meow.FlightRadar</RepositoryUrl>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>FlightRadar, Flight, Aero, FlightAwareSDK</PackageTags>
+    <Version>1.0.0</Version>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="..\Meow.Voice.Silk\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="HtmlAgilityPack" Version="1.11.46" />

@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Meow.Util.Network.Http;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -191,7 +192,7 @@ namespace Meow.FlightRadar.Base
             TokenInfo = SBase.GetFlightTrack(SBase.LiveFlightDoc(ICAOIdent));
             if(TokenInfo != null)
             {
-                Doc = JObject.Parse(Util.Network.Http.Get.String(UrlMapping.LivePullOut(TokenInfo?.Token ?? "", true)).GetAwaiter().GetResult());
+                Doc = JObject.Parse(SBase.BaseClient.MString(UrlMapping.LivePullOut(TokenInfo?.Token ?? "", true)).GetAwaiter().GetResult());
                 var ft = Doc?["flights"]?.First?.First;
                 var aflja = JArray.Parse(ft?["activityLog"]?["flights"]?.ToString() ?? "[]");
                 foreach (var i in aflja)
