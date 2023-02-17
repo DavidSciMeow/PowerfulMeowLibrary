@@ -23,7 +23,9 @@ Task.Factory.StartNew(
 	}
 );
 ```
-## 包 Electronicute.Util.Convert
+## 包 Electronicute.XUtil.Convert
+![](https://img.shields.io/nuget/vpre/Electronicute.XUtil.Convert?label=NuGet%20Version)
+![](https://img.shields.io/nuget/dt/Electronicute.XUtil.Convert?label=Nuget%20Download)
 |命名空间|类|成员名|作用|
 |----|----|----|----|
 |Meow.Util.Encrypt|Hash|`ext` DiscuzMd5(string)|用于特殊加密Discuz的MD5|
@@ -43,17 +45,21 @@ Task.Factory.StartNew(
 |Meow.Util|Time|`ext` ToSecTimeStamp(DateTime)|时间类转换成秒制时间戳|
 |Meow.Util|Time|`ext` ToMiSecTimeStamp(DateTime)|时间类转换成毫秒制时间戳|
 
-## 包 Electronicute.Util.Network
+## 包 Electronicute.XUtil.Network
+![](https://img.shields.io/nuget/vpre/Electronicute.XUtil.Network?label=NuGet%20Version)
+![](https://img.shields.io/nuget/dt/Electronicute.XUtil.Network?label=Nuget%20Download)
 |命名空间|类|成员名|作用|
 |----|----|----|----|
 |***Meow.Util.Network***|***BinMsg\<T\>***|***`static` BinMsg***|***比特信息报文组织包***|
 |----|----|----|----|
 |Meow.Util.Network.Http|HttpUtil|`ext` `async` MString(string)| 获取某URL的字符串(通常小于83kb)|
 |Meow.Util.Network.Http|HttpUtil|`ext` `async` MBlock(string)| 获取某URL的一个块(可以是gzip压缩)|
-|Meow.Util.Network.Http|HttpUtil|`ext` MFile(string,string)| 获取某个URL的一个文件(当作文件下载)|
+|Meow.Util.Network.Http|HttpUtil|`ext` `async` MFile(string,string)| 获取某个URL的一个文件(当作文件下载)|
 |Meow.Util.Network.Http|HttpUtil|`ext` `async` MPost(....)| 朝某个URL进行一次POST|
 
-## 包 Electronicute.Util.Imaging
+## 包 Electronicute.XUtil.Imaging 
+![](https://img.shields.io/nuget/vpre/Electronicute.XUtil.Imaging?label=NuGet%20Version)
+![](https://img.shields.io/nuget/dt/Electronicute.XUtil.Imaging?label=Nuget%20Download)
 |命名空间|类|成员名|作用|
 |----|----|----|----|
 |Meow.Util.Imaging|Skia|FileToBase64(string)| 将文件转换成Base64格式|
@@ -63,8 +69,9 @@ Task.Factory.StartNew(
 |Meow.Util.Imaging|Skia|`ext` Base64ToSKBitmap(string)| 转换一个base64编码字符串到SKbitmap|
 |Meow.Util.Imaging|Skia|`ext` ToBase64String(SKImage)| 转换一个SKImage到Base64|
 
-## 包 Electronicute.Util.Proc
+## 包 Electronicute.XUtil.Proc `未发布`
 |命名空间|类|成员名|作用|
+|----|----|----|----|
 |***Meow.Util.Proc***|***ProcBase***|***`Abstract` ProcBase***|***程序组基类***|
 |***Meow.Util.Proc***|***Linux***|***Linux(string, DataReceivedEventHandler, EventHandler, string)***|***创建Linux进程监视组***|
 
