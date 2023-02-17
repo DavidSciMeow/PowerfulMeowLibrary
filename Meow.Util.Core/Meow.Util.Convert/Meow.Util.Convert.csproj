@@ -4,7 +4,7 @@
     <TargetFramework>net6.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <PackageId>Electronicute.Util.Convert</PackageId>
+    <PackageId>Electronicute.XUtil.Convert</PackageId>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <Version>1.0.0</Version>
     <Authors>DavidSciMeow</Authors>
@@ -16,6 +16,8 @@
     <RepositoryUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary/tree/master/Meow.Util.Core</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
     <PackageTags>BinaryOperation, DateTime, Encrypt, DiscuzEncrypt</PackageTags>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
   </PropertyGroup>
 
 </Project>

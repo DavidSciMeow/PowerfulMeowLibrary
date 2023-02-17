@@ -25,10 +25,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Meow.Util\Meow.Util.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="README.md">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>

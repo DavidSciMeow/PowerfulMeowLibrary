@@ -5,7 +5,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageId>Electronicute.Util.Imaging</PackageId>
+    <PackageId>Electronicute.XUtil.Imaging</PackageId>
     <Authors>DavidSciMeow</Authors>
     <Company>Electronicute</Company>
     <Product>Util.Imaging</Product>
@@ -14,6 +14,9 @@
     <PackageProjectUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary/tree/master/Meow.Util.Core</PackageProjectUrl>
     <RepositoryUrl>https://github.com/DavidSciMeow/PowerfulMeowLibrary/tree/master/Meow.Util.Core</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
+    <PackageTags>skia, imaging</PackageTags>
+    <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
+    <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
   </PropertyGroup>
 
   <ItemGroup>

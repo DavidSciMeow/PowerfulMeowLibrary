@@ -8,8 +8,4 @@
     <StartupObject>MeowCoreTest.Program</StartupObject>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Meow.Util\Meow.Util.csproj" />
-  </ItemGroup>
-
 </Project>
