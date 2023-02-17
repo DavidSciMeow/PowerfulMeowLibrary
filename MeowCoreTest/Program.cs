@@ -1,6 +1,4 @@
-﻿using Meow.Util.Proc;
-using System.Text;
-
+﻿
 namespace MeowCoreTest
 {
     internal class Program
