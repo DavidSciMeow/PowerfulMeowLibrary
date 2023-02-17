@@ -33,6 +33,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meow.Voice.NativeAssets.Lin
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meow.Voice.NativeAssets.Windows", "Meow.Voice.Silk\Meow.Voice.NativeAssets.Windows\Meow.Voice.NativeAssets.Windows.csproj", "{846887B6-D97E-46A9-BA69-00266E1C3089}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MeowUtil", "MeowUtil", "{048240FF-E10A-461E-8DBF-4F2CF14BE016}"
+	ProjectSection(SolutionItems) = preProject
+		Meow.Util.Core\README.md = Meow.Util.Core\README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meow.Util.Convert", "Meow.Util.Core\Meow.Util.Convert\Meow.Util.Convert.csproj", "{8DDFD522-8A12-4251-80AE-4751CDC534CA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meow.Util.Imaging", "Meow.Util.Core\Meow.Util.Imaging\Meow.Util.Imaging.csproj", "{238544D6-3633-4949-B2FD-0BABA12AE201}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meow.Util.Network", "Meow.Util.Core\Meow.Util.Network\Meow.Util.Network.csproj", "{81C3E7DA-59AD-4219-AE11-B8065A660E80}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meow.Util.Proc", "Meow.Util.Core\Meow.Util.Proc\Meow.Util.Proc.csproj", "{A68428CF-C277-4A81-8FD7-069591176D63}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -79,6 +92,22 @@ Global
 		{846887B6-D97E-46A9-BA69-00266E1C3089}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{846887B6-D97E-46A9-BA69-00266E1C3089}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{846887B6-D97E-46A9-BA69-00266E1C3089}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8DDFD522-8A12-4251-80AE-4751CDC534CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8DDFD522-8A12-4251-80AE-4751CDC534CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8DDFD522-8A12-4251-80AE-4751CDC534CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8DDFD522-8A12-4251-80AE-4751CDC534CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{238544D6-3633-4949-B2FD-0BABA12AE201}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{238544D6-3633-4949-B2FD-0BABA12AE201}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{238544D6-3633-4949-B2FD-0BABA12AE201}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{238544D6-3633-4949-B2FD-0BABA12AE201}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81C3E7DA-59AD-4219-AE11-B8065A660E80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81C3E7DA-59AD-4219-AE11-B8065A660E80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81C3E7DA-59AD-4219-AE11-B8065A660E80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81C3E7DA-59AD-4219-AE11-B8065A660E80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A68428CF-C277-4A81-8FD7-069591176D63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A68428CF-C277-4A81-8FD7-069591176D63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A68428CF-C277-4A81-8FD7-069591176D63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A68428CF-C277-4A81-8FD7-069591176D63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -87,6 +116,10 @@ Global
 		{BBA3B815-20E8-4ED3-BA9B-5F538AD9D643} = {B794AC8A-F671-4869-943E-7A13D1EEBF6A}
 		{65D59BB2-3008-4662-8941-495A546F244D} = {B794AC8A-F671-4869-943E-7A13D1EEBF6A}
 		{846887B6-D97E-46A9-BA69-00266E1C3089} = {B794AC8A-F671-4869-943E-7A13D1EEBF6A}
+		{8DDFD522-8A12-4251-80AE-4751CDC534CA} = {048240FF-E10A-461E-8DBF-4F2CF14BE016}
+		{238544D6-3633-4949-B2FD-0BABA12AE201} = {048240FF-E10A-461E-8DBF-4F2CF14BE016}
+		{81C3E7DA-59AD-4219-AE11-B8065A660E80} = {048240FF-E10A-461E-8DBF-4F2CF14BE016}
+		{A68428CF-C277-4A81-8FD7-069591176D63} = {048240FF-E10A-461E-8DBF-4F2CF14BE016}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A38F47BA-7A1E-4752-8B3F-EFA5309E8BDE}

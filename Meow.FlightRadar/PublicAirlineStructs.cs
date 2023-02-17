@@ -1208,6 +1208,10 @@ namespace Meow.FlightRadar
             Weather = i?["weather"];//?.ToString();
         }
 
+        /// <summary>
+        /// 获取路径信息
+        /// </summary>
+        /// <returns></returns>
         public string GetTrack()
         {
             StringBuilder sb = new();

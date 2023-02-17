@@ -164,6 +164,9 @@ namespace Meow.FlightRadar.Base
         }
     }
 
+    /// <summary>
+    /// 飞机类
+    /// </summary>
     public class Flight
     {
         /// <summary>

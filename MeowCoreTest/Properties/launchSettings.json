@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "MeowCoreTest": {
-      "commandName": "Project",
-      "commandLineArgs": "encode ./a.mp3 ./"
-    }
-  }
-}
