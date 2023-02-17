@@ -50,7 +50,7 @@ Task.Factory.StartNew(
 |----|----|----|----|
 |Meow.Util.Network.Http|HttpUtil|`ext` `async` MString(string)| 获取某URL的字符串(通常小于83kb)|
 |Meow.Util.Network.Http|HttpUtil|`ext` `async` MBlock(string)| 获取某URL的一个块(可以是gzip压缩)|
-|Meow.Util.Network.Http|HttpUtil|`ext` MFile(string,string)| 获取某个URL的一个文件(当作文件下载)|
+|Meow.Util.Network.Http|HttpUtil|`ext` `async` MFile(string,string)| 获取某个URL的一个文件(当作文件下载)|
 |Meow.Util.Network.Http|HttpUtil|`ext` `async` MPost(....)| 朝某个URL进行一次POST|
 
 ## 包 Electronicute.Util.Imaging
