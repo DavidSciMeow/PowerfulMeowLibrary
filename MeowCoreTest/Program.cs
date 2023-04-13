@@ -1,4 +1,8 @@
-﻿using Meow.Util.Proc;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace MeowCoreTest
 {
@@ -6,8 +10,10 @@ namespace MeowCoreTest
     {
         public static void Main(string[] args)
         {
-            using var p = new LinuxCommand("mkdir", "a");
+            _ = args;
+
         }
+
     }
 }
 

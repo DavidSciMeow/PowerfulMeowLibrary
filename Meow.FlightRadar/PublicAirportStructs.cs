@@ -147,8 +147,7 @@ namespace Meow.FlightRadar
         /// 重写的字符串表示
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => $"[ {Identity,-8} /{AircraftType,5} ] {Dept.Time,-22} -> {Arrv.Time,-22} " +
-            $"{{{((Type==BoardType.arrivals || Type == BoardType.enroute)?"->":"<-")} {Place} }}";
+        public override string ToString() => $"[ {Identity,-8} /{AircraftType,5} ] {Dept.Time,-22} -> {Arrv.Time,-22} {{{((Type==BoardType.arrivals || Type == BoardType.enroute)?"->":"<-")} {Place} }}";
     }
     /// <summary>
     /// 天气终端模型

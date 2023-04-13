@@ -8,7 +8,7 @@ namespace Meow.DataBase
     /// <summary>
     /// 适用于Sqlite的同步监视器
     /// </summary>
-    public static class DbMysqlFastCache
+    public static class DbFastCache
     {
 
     }

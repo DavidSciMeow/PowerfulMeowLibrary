@@ -109,22 +109,4 @@ namespace Meow.Util.Proc
             StdIn?.WriteLine(command);
         }
     }
-
-    /// <summary>
-    /// 执行一次Linux命令并读取回值
-    /// </summary>
-    public sealed class LinuxCommand : ProcBase
-    {
-        /// <summary>
-        /// 创建并且启动一个Linux指令
-        /// </summary>
-        /// <param name="InvokeCommand">命令</param>
-        /// <param name="Args">参数</param>
-        public LinuxCommand(string InvokeCommand, string Args)
-        {
-            Base.Start();
-            Base.StartInfo = new(InvokeCommand, Args);
-            Base.WaitForExit();
-        }
-    }
 }

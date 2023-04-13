@@ -19,7 +19,7 @@
     <FileVersion></FileVersion>
     <EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
     <AnalysisLevel>latest</AnalysisLevel>
-    <Version>5.0.0</Version>
+    <Version>5.0.1</Version>
     <PackageId>Electronicute.Meow.Weather</PackageId>
     <Authors>DavidSciMeow</Authors>
     <Company>Electronicute</Company>
@@ -37,6 +37,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Electronicute.XUtil.Network" Version="1.0.0" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.36" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
   </ItemGroup>
