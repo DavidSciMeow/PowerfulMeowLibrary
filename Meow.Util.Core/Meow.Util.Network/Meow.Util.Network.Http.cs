@@ -258,8 +258,14 @@ namespace Meow.Util.Network.Http
         /// 初始化函数
         /// </summary>
         /// <param name="pooledConnextionLifeTime">连接池最大处理时间 (默认五分钟)</param>
+        /// <param name="connectTimeout">连接超时时间 (默认无穷[null])</param>
         /// <param name="avoidSSLCertifaction">SSL检测避免 (默认不避免)</param>
         /// <param name="autoDecomp">使用压缩模式 (默认开启)</param>
+        /// <param name="useCookies">使用Cookie (默认不允许)</param>
+        /// <param name="useProxy">使用代理 (默认不允许)</param>
+        /// <param name="allowAutoRedirect">允许重定向 (默认允许)</param>
+        /// <param name="maxAutomaticRedirections">最大重定向次数 (默认10次)</param>
+        /// <param name="enableMultipleHttp2Connections">多路复用 (默认开启)</param>
         public StaticHttp(
             TimeSpan? pooledConnextionLifeTime = null, TimeSpan? connectTimeout = null,
             bool avoidSSLCertifaction = false, bool autoDecomp = true, bool useCookies = false, bool useProxy = false, bool allowAutoRedirect = true,

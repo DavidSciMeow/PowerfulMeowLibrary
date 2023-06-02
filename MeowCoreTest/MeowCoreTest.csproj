@@ -10,11 +10,10 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.1" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.2-beta2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BusRadar\BusRadar.csproj" />
+    <ProjectReference Include="..\Meow.Weather\Meow.Weather.csproj" />
   </ItemGroup>
 
 </Project>

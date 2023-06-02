@@ -15,7 +15,25 @@ namespace MeowCoreTest
     {
         public static void Main(string[] args)
         {
-
+            if(args.Length == 1)
+            {
+                var d = Meow.Weather.CN.Interpreter.RectifyWord(args[0]);
+                Console.WriteLine(d.Data.Count);
+                foreach(var i in d.Data)
+                {
+                    Console.WriteLine($"{i.DataTime} -> {i.ImgUrl}");
+                }
+            }
+            else if(args.Length > 0) 
+            {
+                var d = Meow.Weather.CN.Interpreter.RectifyWord(args);
+                d.Wait();
+                Console.WriteLine(d.Result);
+            }
+            else
+            {
+                Console.WriteLine("usage errs");
+            }
         }
     }
 }

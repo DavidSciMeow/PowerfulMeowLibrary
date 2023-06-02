@@ -2,7 +2,6 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
-using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
 using Meow.Util.Network.Http;
@@ -11,7 +10,7 @@ namespace Meow.Weather.CN
 {
     public sealed class Interpreter
     {
-        readonly static HttpClient Client = new();
+        readonly static StaticHttp Client = new(avoidSSLCertifaction: true, autoDecomp: false);
         public static MWG RectifyWord(string input)
         {
             return input switch
@@ -232,7 +231,7 @@ namespace Meow.Weather.CN
         }
         private static async Task<string> DoGetProvInfo(string pattern)
         {
-            var prov = await Client.MString($"http://www.nmc.cn/f/rest/province");
+            var prov = await Client.GetString($"http://www.nmc.cn/f/rest/province");
             var jo = JArray.Parse(prov);
             foreach(var d in jo)
             {
@@ -245,7 +244,7 @@ namespace Meow.Weather.CN
         }
         private static async Task<string> DoGetCityInfo(string pattern,string para)
         {
-            var prov = await Client.MString($"http://www.nmc.cn/f/rest/province/{para}");
+            var prov = await Client.GetString($"http://www.nmc.cn/f/rest/province/{para}");
             var jo = JArray.Parse(prov);
             foreach (var d in jo)
             {
@@ -256,12 +255,12 @@ namespace Meow.Weather.CN
             }
             throw new("Para Err");
         }
-        private static async Task<string> DoGetCityInfo(string para) => JArray.Parse(await Client.MString($"http://www.nmc.cn/f/rest/province/{para}")).First["code"].ToString();
-        private static async Task<string> DoGetPercBasicInfo(string para) => await Client.MString($"http://www.nmc.cn/f/rest/real/{para}");
-        private static async Task<string> DoGetPercAQIInfo(string para) => await Client.MString($"http://www.nmc.cn/f/rest/aqi/{para}");
-        private static async Task<string> DoGetPercPassedInfo(string para) => await Client.MString($"http://www.nmc.cn/f/rest/passed/{para}");
-        private static async Task<string> DoGetPercTempchartInfo(string para) => await Client.MString($"http://www.nmc.cn/f/rest/tempchart/{para}");
-        private static async Task<string> DoGetPercWeatherInfo(string para) => await Client.MString($"http://www.nmc.cn/f/rest/weather/?stationid={para}");
+        private static async Task<string> DoGetCityInfo(string para) => JArray.Parse(await Client.GetString($"http://www.nmc.cn/f/rest/province/{para}")).First["code"].ToString();
+        private static async Task<string> DoGetPercBasicInfo(string para) => await Client.GetString($"http://www.nmc.cn/f/rest/real/{para}");
+        private static async Task<string> DoGetPercAQIInfo(string para) => await Client.GetString($"http://www.nmc.cn/f/rest/aqi/{para}");
+        private static async Task<string> DoGetPercPassedInfo(string para) => await Client.GetString($"http://www.nmc.cn/f/rest/passed/{para}");
+        private static async Task<string> DoGetPercTempchartInfo(string para) => await Client.GetString($"http://www.nmc.cn/f/rest/tempchart/{para}");
+        private static async Task<string> DoGetPercWeatherInfo(string para) => await Client.GetString($"http://www.nmc.cn/f/rest/weather/?stationid={para}");
     }
     public class WImage
     {
@@ -276,11 +275,7 @@ namespace Meow.Weather.CN
             HtmlDocument doc = new HtmlWeb().Load($"http://www.nmc.cn/publish/{input}");
             try
             {
-                var r = doc.GetElementbyId("timeWrap")?.ChildNodes; //fffmmWrap
-                if (r == null)
-                {
-                    r = doc.GetElementbyId("fffmmWrap")?.ChildNodes; //fffmmWrap
-                }
+                var r = (doc.GetElementbyId("timeWrap")?.ChildNodes) ?? (doc.GetElementbyId("fffmmWrap")?.ChildNodes); //fffmmWrap
                 foreach (var d in r)
                 {
                     var rx = d.Attributes["data-img"].Value;
@@ -343,24 +338,24 @@ namespace Meow.Weather.CN
             {
                 namespace 中国
                 {
-                    public sealed class 标准气压地面 : Observations { public 标准气压地面() : base($"china/dm/radar-h000.htm") { } }
-                    public sealed class 气压925百帕 : Observations { public 气压925百帕() : base($"china/dm/radar-h925.htm") { } }
-                    public sealed class 气压850百帕 : Observations { public 气压850百帕() : base($"china/dm/radar-h850.htm") { } }
-                    public sealed class 气压700百帕 : Observations { public 气压700百帕() : base($"china/dm/radar-h700.htm") { } }
-                    public sealed class 气压500百帕 : Observations { public 气压500百帕() : base($"china/dm/radar-h500.htm") { } }
-                    public sealed class 气压200百帕 : Observations { public 气压200百帕() : base($"china/dm/radar-h200.htm") { } }
-                    public sealed class 气压100百帕 : Observations { public 气压100百帕() : base($"china/dm/radar-h100.htm") { } }
+                    public sealed class 标准气压地面 : Observations { public 标准气压地面() : base($"china/dm/cloud-h000.htm") { } }
+                    public sealed class 气压925百帕 : Observations { public 气压925百帕() : base($"china/dm/cloud-h925.htm") { } }
+                    public sealed class 气压850百帕 : Observations { public 气压850百帕() : base($"china/dm/cloud-h850.htm") { } }
+                    public sealed class 气压700百帕 : Observations { public 气压700百帕() : base($"china/dm/cloud-h700.htm") { } }
+                    public sealed class 气压500百帕 : Observations { public 气压500百帕() : base($"china/dm/cloud-h500.htm") { } }
+                    public sealed class 气压200百帕 : Observations { public 气压200百帕() : base($"china/dm/cloud-h200.htm") { } }
+                    public sealed class 气压100百帕 : Observations { public 气压100百帕() : base($"china/dm/cloud-h100.htm") { } }
 
                 }
                 namespace 亚欧
                 {
-                    public sealed class 标准气压地面 : Observations { public 标准气压地面() : base($"asia/dm/radar-h000.htm") { } }
-                    public sealed class 气压925百帕 : Observations { public 气压925百帕() : base($"asia/dm/radar-h925.htm") { } }
-                    public sealed class 气压850百帕 : Observations { public 气压850百帕() : base($"asia/dm/radar-h850.htm") { } }
-                    public sealed class 气压700百帕 : Observations { public 气压700百帕() : base($"asia/dm/radar-h700.htm") { } }
-                    public sealed class 气压500百帕 : Observations { public 气压500百帕() : base($"asia/dm/radar-h500.htm") { } }
-                    public sealed class 气压200百帕 : Observations { public 气压200百帕() : base($"asia/dm/radar-h200.htm") { } }
-                    public sealed class 气压100百帕 : Observations { public 气压100百帕() : base($"asia/dm/radar-h100.htm") { } }
+                    public sealed class 标准气压地面 : Observations { public 标准气压地面() : base($"asia/dm/cloud-h000.htm") { } }
+                    public sealed class 气压925百帕 : Observations { public 气压925百帕() : base($"asia/dm/cloud-h925.htm") { } }
+                    public sealed class 气压850百帕 : Observations { public 气压850百帕() : base($"asia/dm/cloud-h850.htm") { } }
+                    public sealed class 气压700百帕 : Observations { public 气压700百帕() : base($"asia/dm/cloud-h700.htm") { } }
+                    public sealed class 气压500百帕 : Observations { public 气压500百帕() : base($"asia/dm/cloud-h500.htm") { } }
+                    public sealed class 气压200百帕 : Observations { public 气压200百帕() : base($"asia/dm/cloud-h200.htm") { } }
+                    public sealed class 气压100百帕 : Observations { public 气压100百帕() : base($"asia/dm/cloud-h100.htm") { } }
 
                 }
             }
