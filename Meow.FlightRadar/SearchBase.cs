@@ -1,9 +1,9 @@
 ﻿using HtmlAgilityPack;
+using Meow.Util.Network.Http;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Meow.Util.Network.Http;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,13 +40,13 @@ namespace Meow.FlightRadar
         /// 获取这个班机
         /// </summary>
         /// <returns></returns>
-        public Base.Flight Detail() => new(ident);
+        public readonly Base.Flight Detail() => new(ident);
         
         /// <summary>
         /// 重写的字符串表示
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => $"[{ident,-10}] [{((might_be_a_tail) ? "_YES_" : "_NOT_")}] [{major_airline,3}] {description}";
+        public readonly override string ToString() => $"[{ident,-10}] [{((might_be_a_tail) ? "_YES_" : "_NOT_")}] [{major_airline,3}] {description}";
     }
     /// <summary>
     /// 搜索机场模式
@@ -74,17 +74,25 @@ namespace Meow.FlightRadar
         /// 获取一个机场
         /// </summary>
         /// <returns></returns>
-        public Base.Airport Detail() => new(icao);
+        public readonly Base.Airport Detail() => new(icao);
 
         /// <summary>
         /// 重写的字符串表示
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => $"{{{ops,7}}} [{icao}/{(string.IsNullOrEmpty(iata) ? "    " : iata.PadLeft(4))}] {description}";
+        public override readonly string ToString() => $"{{{ops,7}}} [{icao}/{(string.IsNullOrEmpty(iata) ? "    " : iata.PadLeft(4))}] {description}";
 
     }
+    /// <summary>
+    /// 搜索底
+    /// </summary>
     public static class SearchBase
     {
+        /// <summary>
+        /// 搜索机场
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static SearchAirportResult[] SearchAiport(string name)
         {
             List<SearchAirportResult> l = new();
@@ -102,6 +110,11 @@ namespace Meow.FlightRadar
             }
             return l.ToArray();
         }
+        /// <summary>
+        /// 搜索航线
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static SearchFlightResult[] SearchAirline(string name)
         {
             List<SearchFlightResult> l = new();

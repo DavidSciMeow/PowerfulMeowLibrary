@@ -194,8 +194,10 @@ namespace Meow.FlightRadar
                     try
                     {
                         var n = row.SelectNodes("th|td");
-                        DateTimeFormatInfo dtfmt = new();
-                        dtfmt.ShortTimePattern = "hh:mm";
+                        DateTimeFormatInfo dtfmt = new()
+                        {
+                            ShortTimePattern = "hh:mm"
+                        };
                         var _a = n[3].InnerText.Replace("&nbsp;", " ").Split(" ");
                         var _b = n[5].InnerText.Replace("&nbsp;", " ").Split(" ");
                         var ddt = Convert.ToDateTime(_a[0], dtfmt);
@@ -237,8 +239,10 @@ namespace Meow.FlightRadar
                     try
                     {
                         var n = row.SelectNodes("th|td");
-                        DateTimeFormatInfo dtfmt = new();
-                        dtfmt.ShortTimePattern = "hh:mm";
+                        DateTimeFormatInfo dtfmt = new()
+                        {
+                            ShortTimePattern = "hh:mm"
+                        };
                         var _a = n[3].InnerText.Replace("&nbsp;", " ").Split(" ");
                         var _b = n[5].InnerText.Replace("&nbsp;", " ").Split(" ");
                         var ddt = Convert.ToDateTime(_a[0], dtfmt);
@@ -265,8 +269,10 @@ namespace Meow.FlightRadar
                     try
                     {
                         var n = row.SelectNodes("th|td");
-                        DateTimeFormatInfo dtfmt = new();
-                        dtfmt.ShortTimePattern = "hh:mm";
+                        DateTimeFormatInfo dtfmt = new()
+                        {
+                            ShortTimePattern = "hh:mm"
+                        };
                         var _a = n[3].InnerText.Replace("&nbsp;", " ").Split(" ");
                         var _b = n[5].InnerText.Replace("&nbsp;", " ").Split(" ");
                         var ddt = Convert.ToDateTime(_a[0], dtfmt);
@@ -293,8 +299,10 @@ namespace Meow.FlightRadar
                     try
                     {
                         var n = row.SelectNodes("th|td");
-                        DateTimeFormatInfo dtfmt = new();
-                        dtfmt.ShortTimePattern = "hh:mm";
+                        DateTimeFormatInfo dtfmt = new()
+                        {
+                            ShortTimePattern = "hh:mm"
+                        };
                         var _a = n[3].InnerText.Replace("&nbsp;", " ").Split(" ");
                         var _b = n[5].InnerText.Replace("&nbsp;", " ").Split(" ");
                         var ddt = Convert.ToDateTime(_a[0], dtfmt);
@@ -321,8 +329,10 @@ namespace Meow.FlightRadar
                     try
                     {
                         var n = row.SelectNodes("th|td");
-                        DateTimeFormatInfo dtfmt = new();
-                        dtfmt.ShortTimePattern = "hh:mm";
+                        DateTimeFormatInfo dtfmt = new()
+                        {
+                            ShortTimePattern = "hh:mm"
+                        };
                         var _a = n[3].InnerText.Replace("&nbsp;", " ").Split(" ");
                         var _b = n[5].InnerText.Replace("&nbsp;", " ").Split(" ");
                         var ddt = Convert.ToDateTime(_a[0], dtfmt);

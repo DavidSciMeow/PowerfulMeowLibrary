@@ -18,6 +18,6 @@
         /// 重写的字符串输出方法
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => $"{NumberOfFlight,-4} [{Predix}] {AirlineOperator}";
+        public override readonly string ToString() => $"{NumberOfFlight,-4} [{Predix}] {AirlineOperator}";
     }
 }

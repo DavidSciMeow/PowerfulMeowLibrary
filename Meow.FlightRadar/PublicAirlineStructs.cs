@@ -32,7 +32,7 @@ namespace Meow.FlightRadar
         /// 重写的字符串输出方法
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
+        public override readonly string ToString()
         {
             return $"[{(Latitude > 0 ? $"{Latitude} °N" : $"{-Latitude} °S")}, {(Longitude > 0 ? $"{Longitude} °E" : $"{-Longitude} °W")}]";
         }
@@ -90,7 +90,7 @@ namespace Meow.FlightRadar
         /// 获取这个机场信息
         /// </summary>
         /// <returns></returns>
-        public Base.Airport? GetAirport()
+        public readonly Base.Airport? GetAirport()
         {
             if((ICAO != null) && (IsValidAirportCode ?? false))
             {
@@ -136,7 +136,7 @@ namespace Meow.FlightRadar
         /// 重写的字符串输出方法
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => 
+        public override readonly string ToString() => 
             $"{((IsValidAirportCode ?? false) ? $"=[{ICAO}] {IATA}=" : $"-[{ICAO}] {IATA}-")} " +
             $"{((!string.IsNullOrWhiteSpace(AltIdent)) ? $"[{AltIdent}]" : "")} @ {Coord}\n" +
             $"TZ/LOC: [{TimeZone}] / {FriendlyLocation} {FriendlyName} {Terminal} {Gate}";
@@ -230,7 +230,7 @@ namespace Meow.FlightRadar
         /// 重写的字符串输出方法
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => $"T:-{Elapsed}+{Remaining} A:{Actual}";
+        public override readonly string ToString() => $"T:-{Elapsed}+{Remaining} A:{Actual}";
     }
     /// <summary>
     /// 飞行计划结构体
@@ -522,7 +522,7 @@ namespace Meow.FlightRadar
         /// 重写的字符串输出方法
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => $"*{ICAO}[{IATA}] {{{CallSign}}} :: {ShortName}[{FullName}] ";
+        public override readonly string ToString() => $"*{ICAO}[{IATA}] {{{CallSign}}} :: {ShortName}[{FullName}] ";
     }
     /// <summary>
     /// 共用呼号结构体
@@ -578,7 +578,7 @@ namespace Meow.FlightRadar
         /// 重写的字符串输出方法
         /// </summary>
         /// <returns></returns>
-        public override string ToString()
+        public override readonly string ToString()
         {
             return $"[{Ident}::{DisplayIdent}::{IATAIdent}::{FriendlyIdent}]\n" +
                 $"{Airline}\n";
@@ -725,7 +725,7 @@ namespace Meow.FlightRadar
         /// 重写的字符串输出方法
         /// </summary>
         /// <returns></returns>
-        public override string ToString() => $"[{UserToken}::{Interval}-{(SingalFlight ? "▉" : " ")}]\n::[{Token}]";
+        public override readonly string ToString() => $"[{UserToken}::{Interval}-{(SingalFlight ? "▉" : " ")}]\n::[{Token}]";
     }
 
     /// <summary>
@@ -1212,7 +1212,7 @@ namespace Meow.FlightRadar
         /// 获取路径信息
         /// </summary>
         /// <returns></returns>
-        public string GetTrack()
+        public readonly string GetTrack()
         {
             StringBuilder sb = new();
             foreach (var i in Track)
@@ -1221,7 +1221,7 @@ namespace Meow.FlightRadar
             }
             return sb.ToString();
         }
-        public string GetBoolMap()
+        public readonly string GetBoolMap()
         {
             StringBuilder sb = new();
             sb.AppendLine("┌───────┬──────┬───┬──┬──┐");
@@ -1285,7 +1285,7 @@ namespace Meow.FlightRadar
             sb.AppendLine($"GATEDEP:{GateDepartureTimes}");
             return sb.ToString();
         }
-        public string GetIdent()
+        public readonly string GetIdent()
         {
             if (!string.IsNullOrWhiteSpace(Ident) && DisplayIdent == Ident)
             {
@@ -1314,7 +1314,7 @@ namespace Meow.FlightRadar
                 return FlightId ?? "";
             }
         }
-        public string GetOrigDest()
+        public readonly string GetOrigDest()
         {
             return $"[{Origin?.ICAO} {Origin?.FriendlyName}] --> [{Destination?.ICAO} {Destination?.FriendlyName}]";
         }

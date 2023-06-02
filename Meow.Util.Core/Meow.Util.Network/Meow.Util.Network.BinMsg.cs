@@ -16,7 +16,9 @@ namespace Meow.Util.Network
         /// <returns></returns>
         public static byte[] Build([NotNullWhen(true)] T obj)
         {
+#if DEBUG
             DateTime dt1 = DateTime.Now;
+#endif
             byte[] buff;
             var size = Marshal.SizeOf(obj);
             buff = new byte[size];
@@ -24,8 +26,10 @@ namespace Meow.Util.Network
             if(obj is not null)
             {
                 Marshal.StructureToPtr(obj, ptr, true);
+#if DEBUG
                 DateTime dt2 = DateTime.Now;
                 Console.WriteLine($":: Marshal 序列化时间{dt2 - dt1} | PKG大小: {size} Bytes");
+#endif
                 return buff;
             }
             else
@@ -41,11 +45,15 @@ namespace Meow.Util.Network
         /// <returns></returns>
         public static T? Decon(byte[] buff)
         {
+#if DEBUG
             DateTime dt1 = DateTime.Now;
+#endif
             var ptr = Marshal.UnsafeAddrOfPinnedArrayElement(buff, 0);
             var obj = Marshal.PtrToStructure<T>(ptr);
+#if DEBUG
             DateTime dt2 = DateTime.Now;
             Console.WriteLine($":: Marshal 解析时间{dt2 - dt1} | Marshal类型: {typeof(T)}");
+#endif
             return obj;
         }
     }
