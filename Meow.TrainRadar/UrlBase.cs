@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using Meow.Util.Network.Http;
+using Newtonsoft.Json.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Util.Network.Http;
 
 namespace Meow.TrainRadar
 {
@@ -274,42 +276,44 @@ namespace Meow.TrainRadar
     /// </summary>
     public static class SearchBase
     {
+        private static readonly string BaseUrl = "http://cnrail.geogv.org/api/v1/";
+        private static StaticHttp sc = new(connectTimeout: TimeSpan.FromMinutes(5), avoidSSLCertifaction: true, useCookies: false);
+
         /// <summary>
         /// 语言偏好
         /// </summary>
         public static LangPref? Lang = null;
-        private static readonly string BaseUrl = "http://cnrail.geogv.org/api/v1/";
         private static string Langprefset() => $"{(Lang != null ? $"?locale={Lang}" : "")}";
         /// <summary>
         /// 查找车站,铁路线
         /// </summary>
         /// <param name="feat">搜索词</param>
         /// <returns></returns>
-        public static string GetMatchFeature(string feat) => Util.Network.Http.Get.String($"{BaseUrl}match_feature/{feat}{Langprefset()}").GetAwaiter().GetResult();
+        public static string GetMatchFeature(string feat) => sc.GetString($"{BaseUrl}match_feature/{feat}{Langprefset()}").GetAwaiter().GetResult();
         /// <summary>
         /// 查找符合的火车
         /// </summary>
         /// <param name="id">列车id</param>
         /// <returns></returns>
-        public static string GetMatchTrain(string id) => Util.Network.Http.Get.String($"{BaseUrl}match_train/{id}{Langprefset()}").GetAwaiter().GetResult();
+        public static string GetMatchTrain(string id) => sc.GetString($"{BaseUrl}match_train/{id}{Langprefset()}").GetAwaiter().GetResult();
         /// <summary>
         /// 获取特定火车的路线
         /// </summary>
         /// <param name="id">列车编号id</param>
         /// <returns></returns>
-        public static string GetSpecificTrainRoute(string id) => Util.Network.Http.Get.String($"{BaseUrl}route/{id}{Langprefset()}").GetAwaiter().GetResult();
+        public static string GetSpecificTrainRoute(string id) => sc.GetString($"{BaseUrl}route/{id}{Langprefset()}").GetAwaiter().GetResult();
         /// <summary>
         /// 获取特定车站
         /// </summary>
         /// <param name="id">车站id</param>
         /// <returns></returns>
-        public static string GetSpecificTrainStation(string id) => Util.Network.Http.Get.String($"{BaseUrl}station/{id}{Langprefset()}").GetAwaiter().GetResult();
+        public static string GetSpecificTrainStation(string id) => sc.GetString($"{BaseUrl}station/{id}{Langprefset()}").GetAwaiter().GetResult();
         /// <summary>
         /// 获取特定路线
         /// </summary>
         /// <param name="id">路线id</param>
         /// <returns></returns>
-        public static string GetSpecificRail(string id) => Util.Network.Http.Get.String($"{BaseUrl}rail/{id}{Langprefset()}").GetAwaiter().GetResult();
+        public static string GetSpecificRail(string id) => sc.GetString($"{BaseUrl}rail/{id}{Langprefset()}").GetAwaiter().GetResult();
     }
     /// <summary>
     /// 静态获取

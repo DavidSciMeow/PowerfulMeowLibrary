@@ -17,6 +17,8 @@
     <PackageTags>skia, imaging</PackageTags>
     <PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
     <PackageLicenseExpression>AGPL-3.0-or-later</PackageLicenseExpression>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <Version>2.0.0</Version>
   </PropertyGroup>
 
   <ItemGroup>
