@@ -1,13 +1,5 @@
-﻿using Meow.Util.Network.Http;
-using Microsoft.Extensions.Hosting;
+﻿using Meow.Util.Math;
 using System;
-using System.Collections.Generic;
-using System.Data;
-using System.IO;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MeowCoreTest
 {
@@ -15,24 +7,16 @@ namespace MeowCoreTest
     {
         public static void Main(string[] args)
         {
-            if(args.Length == 1)
+            Fraction[] f = { 0.5, 1, 1.5, 2, -1 };
+            Array.Sort(f);
+            foreach(var i in f)
             {
-                var d = Meow.Weather.CN.Interpreter.RectifyWord(args[0]);
-                Console.WriteLine(d.Data.Count);
-                foreach(var i in d.Data)
-                {
-                    Console.WriteLine($"{i.DataTime} -> {i.ImgUrl}");
-                }
+                Console.Write($"{i} ");
             }
-            else if(args.Length > 0) 
+            Console.WriteLine();
+            foreach (var i in f)
             {
-                var d = Meow.Weather.CN.Interpreter.RectifyWord(args);
-                d.Wait();
-                Console.WriteLine(d.Result);
-            }
-            else
-            {
-                Console.WriteLine("usage errs");
+                Console.Write($"{(double)i} ");
             }
         }
     }

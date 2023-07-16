@@ -44,7 +44,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meow.Util.Network", "Meow.U
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Meow.Util.Proc", "Meow.Util.Core\Meow.Util.Proc\Meow.Util.Proc.csproj", "{A68428CF-C277-4A81-8FD7-069591176D63}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusRadar", "BusRadar\BusRadar.csproj", "{530E54BE-0D11-4599-A5F6-FB1871082FC6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusRadar", "BusRadar\BusRadar.csproj", "{530E54BE-0D11-4599-A5F6-FB1871082FC6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Meow.Util.Math", "Meow.Util.Math\Meow.Util.Math.csproj", "{136E3219-30DB-490B-B1AE-C96C186148E3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -108,6 +110,10 @@ Global
 		{530E54BE-0D11-4599-A5F6-FB1871082FC6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{530E54BE-0D11-4599-A5F6-FB1871082FC6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{530E54BE-0D11-4599-A5F6-FB1871082FC6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{136E3219-30DB-490B-B1AE-C96C186148E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{136E3219-30DB-490B-B1AE-C96C186148E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{136E3219-30DB-490B-B1AE-C96C186148E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{136E3219-30DB-490B-B1AE-C96C186148E3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -120,6 +126,7 @@ Global
 		{238544D6-3633-4949-B2FD-0BABA12AE201} = {048240FF-E10A-461E-8DBF-4F2CF14BE016}
 		{81C3E7DA-59AD-4219-AE11-B8065A660E80} = {048240FF-E10A-461E-8DBF-4F2CF14BE016}
 		{A68428CF-C277-4A81-8FD7-069591176D63} = {048240FF-E10A-461E-8DBF-4F2CF14BE016}
+		{136E3219-30DB-490B-B1AE-C96C186148E3} = {048240FF-E10A-461E-8DBF-4F2CF14BE016}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {A38F47BA-7A1E-4752-8B3F-EFA5309E8BDE}

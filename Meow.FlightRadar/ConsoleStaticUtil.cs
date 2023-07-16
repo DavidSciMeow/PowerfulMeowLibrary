@@ -6,8 +6,6 @@
     /// </summary>
     public class CUtil
     {
-        
-
         /// <summary>
         /// 获取机场的天气情况实体类
         /// </summary>
