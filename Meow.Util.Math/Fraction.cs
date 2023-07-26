@@ -6,7 +6,7 @@ namespace Meow.Util.Math
     /// <summary>
     /// Fraction struct
     /// </summary>
-    public readonly struct Fraction : IEquatable<Fraction>, IComparable<Fraction>, ISpanFormattable, IConvertible
+    public readonly struct Fraction : IEquatable<Fraction>, IComparable<Fraction>
     {
         private readonly BigInteger num;
         private readonly BigInteger den;
@@ -20,6 +20,12 @@ namespace Meow.Util.Math
         /// </summary>
         public static bool FractionCreateWithSimp { get; set; } = false;
 
+        /// <summary>
+        /// generate a Fraction
+        /// </summary>
+        /// <param name="numerator">numerator</param>
+        /// <param name="denominator">denominator</param>
+        /// <exception cref="ArgumentException"></exception>
         public Fraction(double numerator, double denominator)
         {
             if (denominator == 0)
@@ -30,6 +36,12 @@ namespace Meow.Util.Math
             num = (BigInteger)(numerator / t);
             den = (BigInteger)(denominator / t);
         }
+        /// <summary>
+        /// generate a Fraction
+        /// </summary>
+        /// <param name="numerator">numerator</param>
+        /// <param name="denominator">denominator</param>
+        /// <exception cref="ArgumentException"></exception>
         public Fraction(long numerator, long denominator)
         {
             if (denominator == 0)
@@ -40,6 +52,12 @@ namespace Meow.Util.Math
             num = (BigInteger)(numerator / t);
             den = (BigInteger)(denominator / t);
         }
+        /// <summary>
+        /// generate a Fraction
+        /// </summary>
+        /// <param name="numerator">numerator</param>
+        /// <param name="denominator">denominator</param>
+        /// <exception cref="ArgumentException"></exception>
         public Fraction(BigInteger numerator, BigInteger denominator)
         {
             if (denominator == 0)
@@ -50,7 +68,6 @@ namespace Meow.Util.Math
             num = numerator / t;
             den = denominator / t;
         }
-        public Fraction(Fraction a) => this = DoSimpFraction(a);
 
         /// <summary>
         /// convert double number into Fraction of Most Simplify form
@@ -80,6 +97,26 @@ namespace Meow.Util.Math
         {
             BigInteger t = BigInteger.GreatestCommonDivisor(d.num, d.den);
             return new Fraction(d.num / t, d.den / t);
+        }
+
+
+        public static (long, Fraction)GetMixedFraction(Fraction b)
+        {
+            long dev = (long)BigInteger.DivRem(b.num, b.den, out var rem);
+            double devr = (double)rem / (double)b.den;
+            return (dev, devr);
+        }
+        public static (long, double) GetMixedFractionDoubleForm(Fraction b)
+        {
+            long dev = (long)BigInteger.DivRem(b.num, b.den, out var rem);
+            double devr = (double)rem / (double)b.den;
+            return (dev, devr);
+        }
+        public static double GetDoubleForm(Fraction b)
+        {
+            long dev = (long)BigInteger.DivRem(b.num, b.den, out var rem);
+            double devr = (double)rem / (double)b.den;
+            return dev + devr;
         }
 
         /// <summary>
@@ -116,59 +153,21 @@ namespace Meow.Util.Math
         public static implicit operator Fraction(float d) => DoSimpDouble(d);
         public static implicit operator Fraction(long d) => DoSimpDouble(d);
 
-        public static explicit operator double(Fraction b)
-        {
-            long dev = (long)BigInteger.DivRem(b.num, b.den, out var rem);
-            double devr = (double)rem / (double)b.den;
-            return dev + devr;
-        }
-        public static explicit operator (long intg, double remdg)(Fraction b)
-        {
-            long dev = (long)BigInteger.DivRem(b.num, b.den, out var rem);
-            double devr = (double)rem / (double)b.den;
-            return (dev, devr);
-        }
+        public static explicit operator double(Fraction b) => GetDoubleForm(b);
+        public static explicit operator (long intg, double remdg)(Fraction b) => GetMixedFractionDoubleForm(b);
+        public static explicit operator (long intg, Fraction remdg)(Fraction b) => GetMixedFraction(b);
 
-
-        /// <summary>
-        /// Fraction operator Positive
-        /// </summary>
-        /// <param name="a"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public static Fraction operator +(Fraction a) => a;
-        /// <summary>
-        /// Fraction operator Negative
-        /// </summary>
-        /// <param name="a"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public static Fraction operator -(Fraction a) => new(-a.num, a.den);
-        /// <summary>
-        /// Fraction operator Addition
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public static Fraction operator +(Fraction a, Fraction b) => new(a.num * b.den + b.num * a.den, a.den * b.den);
-        /// <summary>
-        /// Fraction operator Subtraction
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public static Fraction operator -(Fraction a, Fraction b) => a + (-b);
-        /// <summary>
-        /// Fraction operator Multiplication
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public static Fraction operator *(Fraction a, Fraction b) => new(a.num * b.num, a.den * b.den);
-        /// <summary>
-        /// Fraction operator Division
-        /// </summary>
-        /// <param name="a"></param>
-        /// <param name="b"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public static Fraction operator /(Fraction a, Fraction b) => (b.num == 0) ? throw new DivideByZeroException() : new Fraction(a.num * b.den, a.den * b.num);
         /// <summary>
         /// Fraction DoSimpOperator
@@ -176,39 +175,36 @@ namespace Meow.Util.Math
         /// <param name="a"></param>
         /// <param name="b"></param>
         /// <returns></returns>
-        public static Fraction operator %(Fraction a, bool b)
-        {
-            if (b)
-            {
-                return DoSimpFraction(a);
-            }
-            else
-            {
-                return a;
-            }
-        }
+        public static Fraction operator !(Fraction a) => DoSimpFraction(a);
+        /// <summary>
+        /// Fraction GetMixed Operator
+        /// </summary>
+        /// <param name="a"></param>
+        /// <returns></returns>
+        public static (long intg, double remdg) operator ~(Fraction a) => GetMixedFractionDoubleForm(a);
 
+        /// <inheritdoc/>
+        public static bool operator ==(Fraction left, Fraction right) => left.Equals(right);
+        /// <inheritdoc/>
+        public static bool operator !=(Fraction left, Fraction right) => !(left == right);
 
         /// <summary>
         /// returns a num/den type 
         /// </summary>
         /// <returns></returns>
         public override string ToString() => $"{num}/{den}";
-
-
+        /// <inheritdoc/>
         public bool Equals(Fraction other) => num == other.num && den == other.den;
+        /// <inheritdoc/>
         public override bool Equals(object? obj) => obj is Fraction f && Equals(f);
+        /// <inheritdoc/>
         public override int GetHashCode() => num.GetHashCode() ^ den.GetHashCode();
+        /// <inheritdoc/>
         public int CompareTo(Fraction obj) => (double)(this - obj) == 0 ? 0 : (double)(this - obj) < 0 ? -1 : 1;
 
-        public bool TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
-        {
-            throw new NotImplementedException();
-        }
 
-        public string ToString(string? format, IFormatProvider? formatProvider) => formatProvider is ICustomFormatter customFormatter ? customFormatter.Format(format, this, null) : ToString();
-        public static bool operator ==(Fraction left, Fraction right) => left.Equals(right);
-        public static bool operator !=(Fraction left, Fraction right) => !(left == right);
+
+
     }
 
     class FractionFormatter : IFormatProvider, ICustomFormatter
