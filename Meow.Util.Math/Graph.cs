@@ -1,4 +1,7 @@
-﻿namespace Meow.Util.Math.Graph
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Text;
+
+namespace Meow.Util.Math.Graph
 {
     public struct SNode : IEquatable<SNode>
     {

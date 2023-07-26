@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Meow.Util.Math\Meow.Util.Math.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="a">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
