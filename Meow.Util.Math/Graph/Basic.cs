@@ -18,76 +18,117 @@ namespace Meow.Util.Math.Graph
     /// <summary>
     /// 一般节点
     /// </summary>
-    /// <typeparam name="T">节点类型</typeparam>
+    /// <typeparam name="T">节点类型 (必须可比较是否相同)</typeparam>
     public struct Node<T> : IEnumerable<KeyValuePair<T, int>>, IEquatable<Node<T>> where T : IEquatable<T>
     {
+        /// <summary>
+        /// 唯一识别元素码
+        /// </summary>
         public readonly T Id;
-        public Dictionary<T, int> LinkSet { get; private set; } = new();
-        bool isSorted = false; // 当前节点的链接节点是否已排序
-        public readonly int Count => LinkSet.Count; //出度
+        /// <summary>
+        /// 内部维护邻接表
+        /// </summary>
+        Dictionary<T, int> LinkSet { get; set; } = new();
+        /// <summary>
+        /// 出度
+        /// </summary>
+        public readonly int Count => LinkSet.Count;
+        /// <summary>
+        /// 初始化节点
+        /// </summary>
+        /// <param name="Id">节点识别码</param>
         public Node(T Id) => this.Id = Id;
-        public readonly T this[int id] => LinkSet.ToArray()[id].Key;
-        //取节点的链接节点权重 σ(1)
+        /// <summary>
+        /// 按顺序获取节点 σ(n) + σ(1)
+        /// </summary>
+        /// <param name="pos">顺序</param>
+        /// <returns>获取到的节点</returns>
+        public readonly T this[int pos] => LinkSet.ToArray()[pos].Key;
+        /// <summary>
+        /// 取链接的节点权重 σ(1)
+        /// </summary>
+        /// <param name="id">节点识别码</param>
+        /// <returns>权重</returns>
         public readonly int GetWeight(T id) => LinkSet[id];
-        public readonly bool TryGetWeight(T id, out int w) => LinkSet.TryGetValue(id, out w);
-        //获取某个节点(按顺序)
-        public T GetShortestVet(int id)
-        {
-            if (!isSorted) SortNode();
-            return LinkSet.ToArray()[id].Key;
-        }
+        /// <summary>
+        /// 链接节点 σ(1)
+        /// </summary>
+        /// <param name="nodename">连接到</param>
+        /// <param name="weight">权重</param>
+        /// <returns>是否链接成功</returns>
+        public readonly bool LinkTo(T nodename, int weight = 1) => LinkSet.TryAdd(nodename, weight);
+        /// <summary>
+        /// 移除节点 σ(1)
+        /// </summary>
+        /// <param name="nodename">节点识别码</param>
+        /// <returns>是否移除成功</returns>
+        public readonly bool RemoveLink(T nodename) => LinkSet.Remove(nodename);
 
-        //链接节点 σ(1)
-        public bool LinkTo(T nodename, int weight = 1)
-        {
-            if(LinkSet.TryAdd(nodename, weight))
-            {
-                isSorted = false;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-        //移除节点 σ(1)
-        public bool RemoveLink(T nodename)
-        {
-            if (LinkSet.Remove(nodename))
-            {
-                isSorted = false;
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        //小端点枚举[快排/堆排] O(n ~ nlogn ~ n^2)
-        //发生无向图的时候进行一般设定排序, 不添加更改节点时不进行排序
-        //节点排序
-        public void SortNode()
-        {
-            List<KeyValuePair<T, int>> lst = LinkSet.ToList();
-            lst.Sort((a, b) => a.Value.CompareTo(b.Value));
-            LinkSet = lst.ToDictionary(v => v.Key, v => v.Value);
-            isSorted = true;
-        }
-
-        //接口&基础实现定义
-        public IEnumerator<KeyValuePair<T, int>> GetEnumerator()
-        {
-            if(!isSorted) SortNode();
-            return LinkSet.AsEnumerable().GetEnumerator();
-        }
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        /// <inheritdoc/>
+        public readonly IEnumerator<KeyValuePair<T, int>> GetEnumerator() => LinkSet.AsEnumerable().GetEnumerator();
+        /// <inheritdoc/>
+        readonly IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        /// <inheritdoc/>
         public override readonly bool Equals([NotNullWhen(true)] object? obj) => obj is Node<T> other && Equals(other);
+        /// <inheritdoc/>
         public override readonly int GetHashCode() => Id.GetHashCode();
+        /// <inheritdoc/>
         public override readonly string ToString() => $"[Node:{Id}]";
+        /// <inheritdoc/>
         public readonly bool Equals(Node<T> other) => Id.Equals(other.Id);
+        /// <inheritdoc/>
         public static bool operator ==(Node<T> left, Node<T> right) => left.Equals(right);
+        /// <inheritdoc/>
         public static bool operator !=(Node<T> left, Node<T> right) => !(left.Equals(right));
+    }
+
+    public static class GraphUtil
+    {
+        public static BGraph<string> ReadMappedStringNode(string[] lines)
+        {
+            BGraph<string> s = new();
+            bool defines_complete = false;
+            foreach (var i in lines)
+            {
+                if (i.StartsWith("#"))
+                {
+                    s.Insert(i.Replace("#", "").Trim());
+                }
+                else if (i == "$")
+                {
+                    defines_complete = true;
+                }
+                else if (defines_complete && i.Contains("->"))
+                {
+                    var dk = i.Split(':');
+                    var sx = dk[0].Split("->");
+                    if (dk.Length > 1 && dk[1].Length > 0)
+                    {
+                        if (int.TryParse(dk[1].Trim(), out var dkx))
+                        {
+                            s.LinkTo(sx[0].Trim(), sx[1].Trim(), dkx);
+                        }
+                    }
+                    s.LinkTo(sx[0].Trim(), sx[1].Trim());
+                }
+                else if (defines_complete && i.Contains('-'))
+                {
+                    var dk = i.Split(':');
+                    var sx = dk[0].Split('-');
+                    if (dk.Length > 1 && dk[1].Length > 0)
+                    {
+                        if (int.TryParse(dk[1].Trim(), out var dkx))
+                        {
+                            s.Link(sx[0].Trim(), sx[1].Trim(), dkx);
+                        }
+                    }
+                    s.Link(sx[0].Trim(), sx[1].Trim());
+                }
+            }
+            Console.WriteLine("ReadComplete");
+            return s;
+        }
+
     }
 
     /// <summary>
@@ -213,7 +254,6 @@ namespace Meow.Util.Math.Graph
             }
             return _tlist;
         }
-
 
         public void InteractiveTrack(T start, T end)
         {
