@@ -12,16 +12,13 @@ namespace Meow.Util.Convert.Bit
     /// <summary>
     /// 
     /// </summary>
-    public class LargeBit : IDisposable, IEquatable<LargeBit>
+    public struct LargeBit : IEquatable<LargeBit>
     {
         /*-locals-*/
         /// <summary>
         /// 逻辑指针
         /// </summary>
         public readonly bool[] Ptr;
-
-        /*-private locals-*/
-        private bool disposedValue;
 
         /*-Init-*/
         /// <summary>
@@ -57,7 +54,7 @@ namespace Meow.Util.Convert.Bit
         /// 要设置到的状态 <b>(true=1,false=0)</b> <br/>
         /// the state you want to set, which <i>true=1</i> and <i>false=0</i> bitwise.
         /// </param>
-        public void SetBit(long position, bool state) => Ptr[position] = state;
+        public readonly void SetBit(long position, bool state) => Ptr[position] = state;
         /// <summary>
         /// 获取在某位置的一个位, 本方法时间复杂度为 <b>O(1) <br/>
         /// Get the bit in Position that you select, which have a <i>O(1)</i> Time complexity 
@@ -70,7 +67,7 @@ namespace Meow.Util.Convert.Bit
         /// 获取到的位 <br/>
         /// the bit in Position that you select
         /// </returns>
-        public bool GetBit(long position) => Ptr[position];
+        public readonly bool GetBit(long position) => Ptr[position];
         /// <summary>
         /// 获取整个数值组, 本方法时间复杂度为 <b>O(1)</b> <br/>
         /// Get the whole Set of this Instance, which have a <i>O(1)</i> Time complexity 
@@ -79,7 +76,7 @@ namespace Meow.Util.Convert.Bit
         /// 获取的数值组
         /// The Sets (which in list of boolean)
         /// </returns>
-        public bool[] GetGroupList() => Ptr;
+        public readonly bool[] GetGroupList() => Ptr;
         /// <summary>
         /// 转换成字节数组
         /// </summary>
@@ -92,7 +89,7 @@ namespace Meow.Util.Convert.Bit
         /// <exception cref="ArgumentException">
         /// 
         /// </exception>
-        public byte[] ToByteArray()
+        public readonly byte[] ToByteArray()
         {
             if (Ptr.LongLength % 8 != 0)
             {
@@ -127,7 +124,7 @@ namespace Meow.Util.Convert.Bit
         /// 获得的布尔值 <br/>
         /// The boolean Value that retrive
         /// </returns>
-        public bool this[long pos] { get { return GetBit(pos); } set { SetBit(pos, value); } }
+        public readonly bool this[long pos] { get => GetBit(pos); set => SetBit(pos, value); }
         /// <summary>
         /// 默认以[0],[1]表示的二进制值 <br/>
         /// use default display to show the sequence with 0,1 which is binary
@@ -136,7 +133,7 @@ namespace Meow.Util.Convert.Bit
         /// 以[0],[1]表示的二进制值字符串 <br/>
         /// the string contains the 0,1
         /// </returns>
-        public override string ToString()
+        public override readonly string ToString()
         {
             StringBuilder sb = new();
             if(Ptr.LongLength > 0)
@@ -157,38 +154,11 @@ namespace Meow.Util.Convert.Bit
         /// <summary>
         /// <inheritdoc/>
         /// </summary>
-        /// <param name="disposing"><inheritdoc/></param>
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!disposedValue)
-            {
-                if (disposing)
-                {
-
-                }
-                disposedValue = true;
-            }
-        }
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
-        /// <summary>
-        /// <inheritdoc/>
-        /// </summary>
         /// <param name="other"><inheritdoc/></param>
         /// <returns><inheritdoc/></returns>
-        public bool Equals(LargeBit? other)
+        public readonly bool Equals(LargeBit other)
         {
-            if (other == null)
-            {
-                return false;
-            }
-            else if (other.Ptr.LongLength != Ptr.LongLength)
+            if (other.Ptr.LongLength != Ptr.LongLength)
             {
                 return false;
             }
@@ -369,6 +339,22 @@ namespace Meow.Util.Convert.Bit
             return ret;
         }
         /// <summary>
+        /// 二进制减法
+        /// </summary>
+        /// <param name="a">
+        /// 被减数
+        /// </param>
+        /// <param name="b">
+        /// 减数
+        /// </param>
+        /// <returns>
+        /// 二进制返回值
+        /// </returns>
+        public static bool[] Sub(bool[] a, bool[] b)
+        {
+
+        }
+        /// <summary>
         /// 二进制左移(进位)
         /// </summary>
         /// <param name="a">原数组</param>
@@ -393,6 +379,31 @@ namespace Meow.Util.Convert.Bit
         /// 
         /// </param>
         public static bool[] Mul(bool[] a, bool[] b)
+        {
+            bool[] temp = new bool[] { false };
+            for (long i = b.LongLength - 1; i >= 0; i--)
+            {
+                if (b[i]) //被乘数为1, 乘数左移
+                {
+                    var r = LeftPad(a, b.LongLength - 1 - i);
+                    temp = Add(temp, r);
+                }
+            }
+            return temp;
+        }
+        /// <summary>
+        /// 二进制除法
+        /// </summary>
+        /// <param name="a">
+        /// 
+        /// </param>
+        /// <param name="b">
+        /// 
+        /// </param>
+        /// <returns>
+        /// 
+        /// </returns>
+        public static bool[] Div(bool[] a, bool[] b)
         {
             bool[] temp = new bool[] { false };
             for (long i = b.LongLength - 1; i >= 0; i--)
