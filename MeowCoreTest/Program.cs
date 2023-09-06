@@ -1,5 +1,9 @@
-﻿using System;
-using Meow.Util.Math.Graph;
+﻿using Meow.Math.Graph;
+using System;
+using System.Collections.Generic;
+using System.Xml.Linq;
+
+
 
 string s = "" +
     "n1-n2\n" +
@@ -13,20 +17,15 @@ string s = "" +
     "n7-n8\n" +
     "n8-n4\n" +
     "";
-
 BGraph<string> g = GraphUtil.ReadMappedNode(s.Split("\n"));
-//Console.WriteLine(g.PrintEdge());
-Console.WriteLine("--BFS--");
-var q = g.BFS("n1");
-Console.WriteLine(q);
-foreach (var i in q.Value)
-{
-    Console.WriteLine($"{i}");
-}
-Console.WriteLine("--DFS--");
-var qx = g.DFS("n1");
-Console.WriteLine(qx);
-foreach (var i in qx.Value)
-{
-    Console.WriteLine($"{i}");
-}
+
+//while (true)
+//{
+//    Console.Write("StepInto:");
+//    var sk = Console.ReadLine();
+//    Console.WriteLine();
+//    if (sk != null) Step(sk, q);
+//    Console.Write("PressAnyToContinue:");
+//    Console.ReadLine();
+//    Console.Clear();
+//}

@@ -17,7 +17,7 @@ using System.Text.Json.Nodes;
 using System.Text.Unicode;
 using System.Threading.Tasks;
 
-namespace Meow.Util.Math.Graph
+namespace Meow.Math.Graph
 {
     /// <summary>
     /// 创建图工具
@@ -40,16 +40,8 @@ namespace Meow.Util.Math.Graph
                 {
                     var start = sx[0].Trim();
                     var end = sx[1].Trim();
-
-                    if (!s.ExistNodeById(start))
-                    {
-                        s.Insert(start);
-                    }
-                    if (!s.ExistNodeById(end))
-                    {
-                        s.Insert(end);
-                    }
-
+                    if (!s.ExistNodeById(start)) s.Insert(start);
+                    if (!s.ExistNodeById(end)) s.Insert(end);
                     if (int.TryParse(dk.Length > 1 ? dk[1].Trim() : "1", out var weig))
                     {
                         if (i.Contains('>'))
@@ -63,7 +55,6 @@ namespace Meow.Util.Math.Graph
                     }
                 }
             }
-            Console.WriteLine("ReadComplete");
             return s;
         }
         /// <summary>
@@ -178,19 +169,6 @@ namespace Meow.Util.Math.Graph
             }
             Console.WriteLine("路径已录入, 图已保存");
             return bG;
-        }
-        /// <summary>
-        /// 读取一个图文件 (二进制序列化器)
-        /// </summary>
-        /// <typeparam name="T">图节点类型</typeparam>
-        /// <param name="path">路径</param>
-        /// <returns>读取到的图</returns>
-        public static BGraph<T>? Read<T>(string path) where T : IEquatable<T>
-        {
-            var data = File.OpenRead(path);
-            var k = new BinaryFormatter().Deserialize(data);
-            var p = k as BGraph<T>?;
-            return p;
         }
     }
 }
