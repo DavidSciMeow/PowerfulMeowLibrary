@@ -1,21 +1,5 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using Meow.Math.Graph.Struct;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Security.Cryptography.X509Certificates;
-using System.Text;
-using System.Text.Encodings.Web;
-using System.Text.Json;
-using System.Text.Json.Nodes;
-using System.Text.Unicode;
-using System.Threading.Tasks;
 
 namespace Meow.Math.Graph
 {
@@ -36,7 +20,7 @@ namespace Meow.Math.Graph
             {
                 var dk = i.Split(':');
                 var sx = i.Contains('-') ? dk[0].Split('-') : dk[0].Split('>');
-                if(sx.Length > 1)
+                if (sx.Length > 1)
                 {
                     var start = sx[0].Trim();
                     var end = sx[1].Trim();
@@ -101,19 +85,19 @@ namespace Meow.Math.Graph
                 if (cl?.Contains('>') ?? false)
                 {
                     cl = cl.Replace(">", "");
-                    direction = true; 
+                    direction = true;
                 }
                 if (cl?.Contains('-') ?? false)
                 {
                     var tdx = cl.Split('-');
-                    if(tdx.Length > 1)
+                    if (tdx.Length > 1)
                     {
                         if (cl.Contains(':'))//带权
                         {
                             var kdx = tdx[1].Split(':');
-                            if(bG.ExistNodeById(tdx[0]) && bG.ExistNodeById(kdx[0]))
+                            if (bG.ExistNodeById(tdx[0]) && bG.ExistNodeById(kdx[0]))
                             {
-                                if(int.TryParse(kdx[1], out var i))
+                                if (int.TryParse(kdx[1], out var i))
                                 {
                                     if (direction)
                                     {
@@ -169,6 +153,51 @@ namespace Meow.Math.Graph
             }
             Console.WriteLine("路径已录入, 图已保存");
             return bG;
+        }
+    }
+    public static class TreeUtil
+    {
+        public static Tree<string>? ReadMappedTree(string[] seplines)
+        {
+            Tree<string>? tree = null;
+            bool _isRootDefine = false;
+            foreach(string line in seplines)
+            {
+                if (line.Contains('*'))
+                {
+                    if (!_isRootDefine)
+                    {
+                        tree = new(line.Replace("*", ""));
+                        _isRootDefine = true;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"{line} err by only one tree root can be define");
+                    }
+                }
+                else if (line.Contains('>'))
+                {
+                    if(!_isRootDefine)
+                    {
+                        Console.WriteLine($"No Root Node Define. >skip");
+                    }
+                    else
+                    {
+                        var spl = line.Split('>');
+                        var fn = spl[0];
+                        var sn = spl[1];
+                        if (!string.IsNullOrEmpty(fn) && !string.IsNullOrEmpty(sn) && tree is Tree<string> st && st[fn] is TreeNode<string> t)
+                        {
+                            st.Add(sn, t);
+                        }
+                        else
+                        {
+                            Console.WriteLine($"{line} have no splitable node");
+                        }
+                    }
+                }
+            }
+            return tree;
         }
     }
 }

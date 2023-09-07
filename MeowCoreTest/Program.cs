@@ -1,9 +1,6 @@
 ﻿using Meow.Math.Graph;
+using Meow.Math.Graph.Struct;
 using System;
-using System.Collections.Generic;
-using System.Xml.Linq;
-
-
 
 string s = "" +
     "n1-n2\n" +
@@ -17,8 +14,23 @@ string s = "" +
     "n7-n8\n" +
     "n8-n4\n" +
     "";
-BGraph<string> g = GraphUtil.ReadMappedNode(s.Split("\n"));
 
+string st = "" +
+    "*n1\n" +
+    "n1>n2\n" +
+       "n2>n6\n" +
+          "n6>n3\n" +
+    "n1>n5\n" +
+       "n5>n7\n" +
+       "n5>n8\n" +
+       "n5>n9\n" +
+    "";
+
+Tree<string>? gt = TreeUtil.ReadMappedTree(st.Split("\n"));
+Console.WriteLine(gt);
+//Console.WriteLine(gt);
+
+//BGraph<string> g = GraphUtil.ReadMappedNode(s.Split("\n"));
 //while (true)
 //{
 //    Console.Write("StepInto:");

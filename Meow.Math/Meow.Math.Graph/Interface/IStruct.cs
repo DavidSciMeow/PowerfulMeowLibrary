@@ -82,6 +82,7 @@ namespace Meow.Math.Graph.Interface
         /// <returns><inheritdoc/></returns>
         IEnumerator IEnumerable.GetEnumerator() => LinkSet.GetEnumerator();
     }
+
     /// <summary>
     /// 图的边
     /// </summary>
@@ -101,6 +102,7 @@ namespace Meow.Math.Graph.Interface
         /// </summary>
         double Weight { get; set; }
     }
+
     /// <summary>
     /// 图结构
     /// </summary>
@@ -287,23 +289,56 @@ namespace Meow.Math.Graph.Interface
     /// 树节点
     /// </summary>
     /// <typeparam name="T">树节点类型</typeparam>
-    public interface ITreeNode<T> where T : IEquatable<T>
+    public interface ITreeNode<T> : IEnumerable<T> where T : IEquatable<T>
     {
+        /// <summary>
+        /// 当前节点识别
+        /// </summary>
         T Id { get; }
+        /// <summary>
+        /// 父节点识别
+        /// </summary>
         T? ParentName { get; }
+        /// <summary>
+        /// 子节点识别
+        /// </summary>
         ISet<T> ChildsName { get; }
+        /// <summary>
+        /// 是否是根节点
+        /// </summary>
         bool IsRoot { get; }
+        /// <summary>
+        /// 是否是叶节点
+        /// </summary>
         bool IsLeaf { get; }
     }
+
     /// <summary>
     /// 树结构
     /// </summary>
     /// <typeparam name="T">树节点类型</typeparam>
-    public interface ITree<T> where T : IEquatable<T>
+    public interface ITree<T> : IEnumerable<KeyValuePair<T, ITreeNode<T>>> where T : IEquatable<T>
     {
+        /// <summary>
+        /// 树的根节点
+        /// </summary>
         ITreeNode<T> Root { get; }
+        /// <summary>
+        /// 树的节点集
+        /// </summary>
         IDictionary<T, ITreeNode<T>> NodeSet { get; }
-        ITreeNode<T> this[T key] { get; }
+        /// <summary>
+        /// 获取某个节点
+        /// </summary>
+        /// <param name="key"></param>
+        /// <returns></returns>
+        ITreeNode<T>? this[T key] { get; }
+        /// <summary>
+        /// 获得节点距离根节点深度
+        /// </summary>
+        /// <param name="Node">要到达的节点</param>
+        /// <returns>节点深度</returns>
+        int NodeDepth(T Node);
     }
 
 }
