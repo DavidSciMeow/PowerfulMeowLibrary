@@ -24,13 +24,17 @@ string st = "" +
        "n5>n7\n" +
        "n5>n8\n" +
        "n5>n9\n" +
+    "n1>n10\n" +
     "";
 
 Tree<string>? gt = TreeUtil.ReadMappedTree(st.Split("\n"));
 Console.WriteLine(gt);
-//Console.WriteLine(gt);
 
-//BGraph<string> g = GraphUtil.ReadMappedNode(s.Split("\n"));
+Console.WriteLine();
+
+BGraph<string> g = GraphUtil.ReadMappedNode(s.Split("\n"));
+Console.WriteLine(g);
+
 //while (true)
 //{
 //    Console.Write("StepInto:");

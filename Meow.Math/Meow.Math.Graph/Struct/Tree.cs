@@ -1,15 +1,13 @@
 ﻿using Meow.Math.Graph.Interface;
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using System.Xml;
-using System.Xml.Serialization;
 
 namespace Meow.Math.Graph.Struct
 {
+    /// <summary>
+    /// 树结构
+    /// </summary>
+    /// <typeparam name="T">节点类型</typeparam>
     public struct Tree<T> : ITree<T>, IEnumerable<KeyValuePair<T, ITreeNode<T>>> where T : IEquatable<T>
     {
         public Tree(ITreeNode<T> root)
@@ -22,24 +20,31 @@ namespace Meow.Math.Graph.Struct
         public ITreeNode<T> Root { get; private set; }
         public readonly ITreeNode<T> this[T key] => GetNodeById(key);
 
-        public readonly void Add(T Node, ITreeNode<T>? RootBy = null)
+        public readonly bool Add(T Node, ITreeNode<T>? RootBy = null)
         {
             RootBy ??= Root;
-            var _node = new TreeNode<T>(Node){ ParentName = RootBy.Id };
-            RootBy.ChildsName.Add(_node.Id);
-            NodeSet.Add(Node, _node);
+            var _node = new TreeNode<T>(Node) { ParentName = RootBy.Id };
+            if (NodeSet.TryAdd(Node, _node))
+            {
+                RootBy.ChildsName.Add(_node.Id);
+                return true;
+            }
+            return false;
         }
-        public readonly void Add(T Node, T RootBy) => Add(Node, this[RootBy]);
-        public readonly void AddToRoot(T Node) => Add(Node, Root);
-        public readonly ITreeNode<T> GetNodeById(T key)=> NodeSet.ContainsKey(key) ? NodeSet[key] : throw new("No such Node");
-        public readonly bool ExistNode(T key)=> NodeSet.ContainsKey(key);
+        public readonly bool Add(T Node, T RootBy) => Add(Node, this[RootBy]);
+        public readonly bool AddToRoot(T Node) => Add(Node, Root);
+        public readonly bool ExistNode(T key) => NodeSet.ContainsKey(key);
 
-        public readonly List<T> BFS()
+        //public readonly List<T> GetBranch()
+        //{
+
+        //}
+        public readonly List<T> BFS(T? node = default)
         {
-            HashSet<T> visited = new() { Root.Id };//标记头节点
+            HashSet<T> visited = new() { node ?? Root.Id };//标记头节点
             Queue<T> queue = new();
             List<T> path = new();
-            queue.Enqueue(Root.Id);//头节点入队
+            queue.Enqueue(node ?? Root.Id);//头节点入队
             while (queue.Any()) //σ(n) 任意队列不空
             {
                 var s = queue.Peek();//获取队列头元素
@@ -55,17 +60,16 @@ namespace Meow.Math.Graph.Struct
             }
             return path;
         }
-        public readonly List<T> DFS()
+        public readonly List<T> DFS(T? node = default)
         {
-            HashSet<T> visited = new() { Root.Id };//首元素访问标记
-            List<T> path = new() { Root.Id };//头元素入搜索表
+            HashSet<T> visited = new() { node ?? Root.Id };//首元素访问标记
+            List<T> path = new() { node ?? Root.Id };//头元素入搜索表
             Stack<T> ss = new();
-            ss.Push(Root.Id);//搜索元素入栈
+            ss.Push(node ?? Root.Id);//搜索元素入栈
             while (ss.Any())//σ(n) 若栈不空
             {
-                var node = ss.Peek();//获取栈顶元素
                 bool _isEdgeVisited = true;//标记边访问
-                foreach (var i in GetNodeById(node))//σ(n-k) 获得下一节点
+                foreach (var i in GetNodeById(ss.Peek()))//σ(n-k) 获得下一节点
                 {
                     if (visited.Add(i))//未访问节点则标记访问
                     {
@@ -112,7 +116,6 @@ namespace Meow.Math.Graph.Struct
 
         public readonly IEnumerator<KeyValuePair<T, ITreeNode<T>>> GetEnumerator() => NodeSet.GetEnumerator();
         readonly IEnumerator IEnumerable.GetEnumerator() => NodeSet.GetEnumerator();
-
         public override readonly string ToString()
         {
             StringBuilder sb = new();
@@ -124,13 +127,14 @@ namespace Meow.Math.Graph.Struct
             while (ss.Any())//σ(n) 若栈不空
             {
                 var node = ss.Peek();//获取栈顶元素
-                var _node = GetNodeById(node);
                 bool _isEdgeVisited = true;//标记边访问
-                foreach (T i in _node)//σ(n-k) 获得下一节点
+                int j = 0;
+                foreach (T i in GetNodeById(node))//σ(n-k) 获得下一节点
                 {
+                    j++;
                     if (visited.Add(i))//未访问节点则标记访问
                     {
-                        sb.AppendLine($"{$"└".PadLeft(ss.Count)}{i}");
+                        sb.AppendLine($"{$"{(j < GetSibling(i).Count ? "├" : "└")}".PadLeft(ss.Count)}{i}");
                         ss.Push(i);//入栈
                         _isEdgeVisited = false;//取消边访问
                         break;
@@ -140,6 +144,21 @@ namespace Meow.Math.Graph.Struct
                 if (_isEdgeVisited) ss.Pop();//边访问, 元素出栈
             }
             return sb.ToString();
+        }
+
+        public readonly ITreeNode<T> GetNodeById(T key) => NodeSet.ContainsKey(key) ? NodeSet[key] : throw new("No such Node");
+        public readonly List<ITreeNode<T>> GetSibling(T Node)
+        {
+            List<ITreeNode<T>> lt = new();
+            foreach(var i in GetNodeById(GetNodeById(Node).ParentName ?? Root.Id)) lt.Add(GetNodeById(i));
+            return lt;
+        }
+        public readonly ITreeNode<T> GetParent(T Node) => GetNodeById(GetNodeById(Node).ParentName ?? Root.Id);
+        public readonly List<ITreeNode<T>> GetDescendants(T Node)
+        {
+            List<ITreeNode<T>> lt = new();
+            foreach (var i in GetNodeById(Node)) lt.Add(GetNodeById(i));
+            return lt;
         }
     }
 }

@@ -333,12 +333,59 @@ namespace Meow.Math.Graph.Interface
         /// <param name="key"></param>
         /// <returns></returns>
         ITreeNode<T>? this[T key] { get; }
+
+        bool AddToRoot(T Node);
+        bool Add(T Node, ITreeNode<T>? RootBy = null);
+        bool Add(T Node, T RootBy); 
+
         /// <summary>
         /// 获得节点距离根节点深度
         /// </summary>
         /// <param name="Node">要到达的节点</param>
         /// <returns>节点深度</returns>
         int NodeDepth(T Node);
+        /// <summary>
+        /// 是否存在节点
+        /// </summary>
+        /// <param name="key">节点识别</param>
+        /// <returns>是否存在</returns>
+        bool ExistNode(T key);
+
+        /// <summary>
+        /// 获得某个树节点
+        /// </summary>
+        /// <param name="Node">节点</param>
+        /// <returns></returns>
+        ITreeNode<T> GetNodeById(T Node);
+        /// <summary>
+        /// 获得某个节点的兄弟节点
+        /// </summary>
+        /// <param name="Node">节点</param>
+        /// <returns></returns>
+        List<ITreeNode<T>> GetSibling(T Node);
+        /// <summary>
+        /// 获得某个节点的父节点
+        /// </summary>
+        /// <param name="Node">节点</param>
+        /// <returns></returns>
+        ITreeNode<T> GetParent(T Node);
+        /// <summary>
+        /// 获得某个节点的后代节点
+        /// </summary>
+        /// <param name="Node">节点</param>
+        /// <returns></returns>
+        List<ITreeNode<T>> GetDescendants(T Node);
+
+        /// <summary>
+        /// 广度优先遍历 (从根节点) σ(n)
+        /// </summary>
+        /// <returns>遍历次序</returns>
+        List<T> BFS(T? node = default);
+        /// <summary>
+        /// 深度优先遍历 (从根节点) σ(n)
+        /// </summary>
+        /// <returns>遍历次序</returns>
+        List<T> DFS(T? node = default);
     }
 
 }
