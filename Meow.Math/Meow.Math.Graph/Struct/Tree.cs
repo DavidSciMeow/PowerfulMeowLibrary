@@ -312,23 +312,28 @@ namespace Meow.Math.Graph.Struct
             return default;
         }
 
-        public Dictionary<T, TreeNode<T>> GetNodeTable()
+        public Dictionary<T, TreeNode<T>> NodeTable
         {
-            Dictionary<T, TreeNode<T>> rets = new();
-            foreach (var (node,nl) in AdjacencyTables)
+            get
             {
-                var p = GetParent(node);
-                var sib = new List<T>();
-                if (p is not null)
                 {
-                    foreach (var t in AdjacencyTables[p].ToArray())
+                    Dictionary<T, TreeNode<T>> rets = new();
+                    foreach (var (node, nl) in AdjacencyTables)
                     {
-                        if (!t.Equals(node)) sib.Add(t);
+                        var p = GetParent(node);
+                        var sib = new List<T>();
+                        if (p is not null)
+                        {
+                            foreach (var t in AdjacencyTables[p].ToArray())
+                            {
+                                if (!t.Equals(node)) sib.Add(t);
+                            }
+                        }
+                        rets.TryAdd(node, new TreeNode<T>(node, p, nl.ToArray(), sib.ToArray()));
                     }
+                    return rets;
                 }
-                rets.TryAdd(node,new TreeNode<T>(node,p,nl.ToArray(),sib.ToArray()));
             }
-            return rets;
         }
 
         public override string ToString()
@@ -341,22 +346,36 @@ namespace Meow.Math.Graph.Struct
             sb.Append($"{Root}\n");
             while (ss.Any())//σ(n) 若栈不空
             {
-                var node = ss.Peek();//获取栈顶元素
+                var parent = ss.Peek();//获取栈顶元素
                 bool _isEdgeVisited = true;//标记边访问
                 int j = 0;
-                foreach (T i in AdjacencyTables[node])//σ(n-k) 获得下一节点
+                foreach (T node in AdjacencyTables[parent])//σ(n-k) 获得下一节点
                 {
                     j++;
-                    if (visited.Add(i))//未访问节点则标记访问
+                    if (visited.Add(node))//未访问节点则标记访问
                     {
-                        sb.AppendLine($"{$"{(j < AdjacencyTables[node].Count ? "├" : "└")}".PadLeft(ss.Count)}{i}");
-                        ss.Push(i);//入栈
+                        char[] pred = new char[ss.Count];
+                        for (int i = 1; i < ss.Count; i++)//对于任意前序节点
+                        {
+                            var llast = AdjacencyTables[ss.ElementAt(i)].Last();//检测节点父节点的最后一个
+                            var desnode = ss.ElementAtOrDefault(i - 1);//当前遍历内节点
+                            pred[ss.Count - i] = llast?.Equals(desnode) ?? false ? ' ' : '│';//是的话就不写杠
+                        }
+                        sb.Append(pred);//正着输出前序关系
+                        //节点访问到
+                        var _tmp = $"{(j < AdjacencyTables[parent].Count ? "├" : "└")}{node}";
+                        sb.AppendLine(_tmp);
+
+                        ss.Push(node);//入栈
                         _isEdgeVisited = false;//取消边访问
                         break;
                     }
                 }
 
-                if (_isEdgeVisited) ss.Pop();//边访问, 元素出栈
+                if (_isEdgeVisited)
+                {
+                    ss.Pop();//边访问, 元素出栈
+                }
             }
             return sb.ToString();
         }

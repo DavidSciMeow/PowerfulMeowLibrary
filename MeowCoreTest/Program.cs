@@ -19,18 +19,15 @@ string s = "" +
 string st = "" +
     "*n1\n" +
     "n1>n2\n" +
-       "n2>n6\n" +
-          "n6>n3\n" +
-    "n1>n5\n" +
-       "n5>n7\n" +
-       "n5>n8\n" +
-       "n5>n9\n" +
-    "n1>n10\n" +
+       "n2>n3\n" +
+          "n3>n4\n" +
+             "n4>n5\n" +
+                "n5>n6\n" +
+    "n1>n111\n" +
+    "n1>n1112\n" +
     "";
 Tree<string>? gt = Util.ReadMappedTree(st.Split("\n"));
 Console.WriteLine(gt);
-var dx = gt?.GetNodeTable();
-Console.WriteLine(dx);
 
 //Console.WriteLine();
 
