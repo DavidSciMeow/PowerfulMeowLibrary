@@ -362,20 +362,14 @@ namespace Meow.Math.Graph.Struct
                             pred[ss.Count - i] = llast?.Equals(desnode) ?? false ? ' ' : '│';//是的话就不写杠
                         }
                         sb.Append(pred);//正着输出前序关系
-                        //节点访问到
-                        var _tmp = $"{(j < AdjacencyTables[parent].Count ? "├" : "└")}{node}";
-                        sb.AppendLine(_tmp);
-
+                        sb.AppendLine($"{(j < AdjacencyTables[parent].Count ? "├" : "└")}{node}");//节点访问到
                         ss.Push(node);//入栈
                         _isEdgeVisited = false;//取消边访问
                         break;
                     }
                 }
 
-                if (_isEdgeVisited)
-                {
-                    ss.Pop();//边访问, 元素出栈
-                }
+                if (_isEdgeVisited) ss.Pop();//边访问, 元素出栈
             }
             return sb.ToString();
         }

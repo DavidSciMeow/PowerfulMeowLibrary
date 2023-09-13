@@ -1,7 +1,6 @@
 ﻿using Meow.Math.Graph;
 using Meow.Math.Graph.Struct;
 using System;
-using System.Threading.Tasks;
 
 string s = "" +
     "n1-n2\n" +
