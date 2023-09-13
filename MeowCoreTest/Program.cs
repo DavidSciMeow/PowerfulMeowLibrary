@@ -1,6 +1,7 @@
 ﻿using Meow.Math.Graph;
 using Meow.Math.Graph.Struct;
 using System;
+using System.Threading.Tasks;
 
 string s = "" +
     "n1-n2\n" +
@@ -26,14 +27,17 @@ string st = "" +
        "n5>n9\n" +
     "n1>n10\n" +
     "";
-
-Tree<string>? gt = TreeUtil.ReadMappedTree(st.Split("\n"));
+Tree<string>? gt = Util.ReadMappedTree(st.Split("\n"));
 Console.WriteLine(gt);
+var dx = gt?.GetNodeTable();
+Console.WriteLine(dx);
 
-Console.WriteLine();
+//Console.WriteLine();
 
-BGraph<string> g = GraphUtil.ReadMappedNode(s.Split("\n"));
-Console.WriteLine(g);
+//BGraph<string> g = GraphUtil.ReadMappedNode(s.Split("\n"));
+//Console.WriteLine(g);
+
+
 
 //while (true)
 //{
