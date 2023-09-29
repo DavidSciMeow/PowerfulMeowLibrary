@@ -1,6 +1,7 @@
 ﻿using Meow.Math.Graph;
 using Meow.Math.Graph.Struct;
 using System;
+using System.IO;
 
 string s = "" +
     "n1-n2\n" +
@@ -16,8 +17,7 @@ string s = "" +
     "";
 
 
-Graph<string> g = Util.ReadMap(s.Split("\n"));
-Console.WriteLine(g.BellmanFord_Tree("n8")); 
+//Graph<string> g = Util.ReadMap(s.Split("\n"));
 
 //var sx = g.BellmanFord_Edge("n1","n8");
 //foreach(var i in sx)
@@ -25,9 +25,9 @@ Console.WriteLine(g.BellmanFord_Tree("n8"));
 //    Console.WriteLine(i);
 //}
 
-//var l = File.ReadAllLines("./a");
-//Graph<string> g = Util.ReadMap(l);
-//var sx = g.Dijkstra("台东", "中山公园");
+var l = File.ReadAllLines("./a");
+Graph<string> g = Util.ReadMap(l);
+Console.WriteLine(g.BellmanFord_Tree("青岛站"));
 
 
 

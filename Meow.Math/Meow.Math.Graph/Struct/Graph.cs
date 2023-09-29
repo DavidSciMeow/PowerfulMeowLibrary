@@ -273,6 +273,7 @@ namespace Meow.Math.Graph.Struct
                 throw new NodeUnreachableException();//节点全遍历后不可达
             }
         }
+        
         /// <summary>
         /// 使用 <b>贝尔曼福德算法</b>计算单源点最短距离和路径表<br/>Use <i><b>Bellman-Ford Algorithm</b></i> to find Single Node Shortest Path Related Nodes
         /// </summary>
@@ -283,7 +284,7 @@ namespace Meow.Math.Graph.Struct
             Dictionary<T, int> dist = new(); //源点最短路径表
             Dictionary<T, T> path = new();//前序节点表
 
-            foreach(var i in Nodes) dist.Add(i.Key, int.MaxValue); //初始化节点表 O(n)
+            foreach(var i in Nodes) dist.TryAdd(i.Key, int.MaxValue); //初始化节点表 O(n)
             dist[start] = 0;//设置起始点为0
 
             for (int i = 1; i <= Nodes.Count - 1; i++) // 松弛所有边 |V| - 1 次 (并记录任意边的前序) O(n-1)
@@ -292,7 +293,7 @@ namespace Meow.Math.Graph.Struct
                 {
                     if (dist[u] != int.MaxValue && dist[u] + w < dist[v])
                     {
-                        path.Add(v, u);
+                        path.TryAdd(v, u);
                         dist[v] = dist[u] + w;
                     }
                 }
@@ -316,7 +317,7 @@ namespace Meow.Math.Graph.Struct
             Dictionary<T, int> dist = new(); //源点最短路径表
             Dictionary<T, (T,T,int)> ppath = new();//前序节点表
 
-            foreach (var i in Nodes) dist.Add(i.Key, int.MaxValue); //初始化节点表 O(n)
+            foreach (var i in Nodes) dist.TryAdd(i.Key, int.MaxValue); //初始化节点表 O(n)
             dist[Start] = 0;//设置起始点为0
 
             for (int i = 1; i <= Nodes.Count - 1; i++) // 松弛所有边 |V| - 1 次 (并记录任意边的前序) O(n-1)
@@ -325,7 +326,7 @@ namespace Meow.Math.Graph.Struct
                 {
                     if (dist[u] != int.MaxValue && dist[u] + w < dist[v])
                     {
-                        ppath.Add(v, (v,u,w));
+                        ppath.TryAdd(v, (v,u,w));
                         dist[v] = dist[u] + w;
                     }
                 }
