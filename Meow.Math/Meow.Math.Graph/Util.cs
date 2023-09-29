@@ -2,8 +2,16 @@
 
 namespace Meow.Math.Graph
 {
+    /// <summary>
+    /// 
+    /// </summary>
     public static class Util
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="seplines"></param>
+        /// <returns></returns>
         public static Tree<string>? ReadMappedTree(string[] seplines)
         {
             Tree<string>? tree = null;
@@ -46,6 +54,11 @@ namespace Meow.Math.Graph
             }
             return tree;
         }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="seplines"></param>
+        /// <returns></returns>
         public static Graph<string> ReadMap(string[] seplines)
         {
             Graph<string> ms = new();

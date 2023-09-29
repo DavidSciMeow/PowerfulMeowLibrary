@@ -141,8 +141,9 @@ namespace Meow.Math.Graph.Struct
         /// </param>
         /// <returns>节点的父节点<br/>Node's Parent</returns>
         /// <exception cref="NodeNotExistException"></exception>
-        public T GetParent(T? node = default)
+        public T? GetParent(T? node = default)
         {
+            if (Root.Equals(node)) return default;
             foreach(var (p,nl) in AdjacencyTables) // O(n)
             {
                 if (node is not null && nl.Contains(node)) return p; // O(1)
@@ -150,6 +151,7 @@ namespace Meow.Math.Graph.Struct
             throw new NodeNotExistException();
         }
 
+        public IEnumerable<TreeNode<T>> LeafNode() => NodeTable.Where(k => k.Value.IsLeaf == true).Select(k => k.Value);
         public override string ToString()
         {
             StringBuilder sb = new();

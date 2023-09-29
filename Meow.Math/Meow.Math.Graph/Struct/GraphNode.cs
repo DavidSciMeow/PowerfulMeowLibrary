@@ -19,7 +19,14 @@ namespace Meow.Math.Graph.Struct
         /// Adjacency Tables which structure [Key, Value] is [Node ID (which linked), Edges Weight]
         /// </summary>
         public Dictionary<T, int> Edges { get; init; } = new();
-
+        /// <summary>
+        /// 根据节点名索引链接节点权重 <br/>
+        /// Get Weight of Linked Node (by Node Name)
+        /// <para>时间复杂度(Time Complexity) :: <i><b><see langword="O(1)" /></b></i></para>
+        /// </summary>
+        /// <param name="node">节点名<br/>Node Id</param>
+        /// <returns>索引到的节点权重<br/>weight that The node linked</returns>
+        public int this[T node] => Edges[node];
         public readonly bool Add(T node, int weight) => Edges.TryAdd(node, weight);
         public readonly bool Delete(T node) => Edges.Remove(node);
         public readonly bool Exist(T node) => Edges.ContainsKey(node);

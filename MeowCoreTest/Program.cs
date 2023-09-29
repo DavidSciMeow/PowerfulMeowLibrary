@@ -13,8 +13,24 @@ string s = "" +
     "n3-n4\n" +
     "n7-n8\n" +
     "n8-n4\n" +
-    "n111-n112\n" +
     "";
+
+
+Graph<string> g = Util.ReadMap(s.Split("\n"));
+Console.WriteLine(g.BellmanFord_Tree("n8")); 
+
+//var sx = g.BellmanFord_Edge("n1","n8");
+//foreach(var i in sx)
+//{
+//    Console.WriteLine(i);
+//}
+
+//var l = File.ReadAllLines("./a");
+//Graph<string> g = Util.ReadMap(l);
+//var sx = g.Dijkstra("台东", "中山公园");
+
+
+
 
 string st = "" +
     "*n1\n" +
@@ -36,27 +52,3 @@ string st = "" +
 //Tree<string>? gt = Util.ReadMappedTree(st.Split("\n"));
 //Console.WriteLine(gt);
 //gt?.BFS();
-
-Graph<string> g = Util.ReadMap(s.Split("\n"));
-var sx = g.Dijkstra("n1", "n111");
-//var l = File.ReadAllLines("./a");
-//Graph<string> g = Util.ReadMap(l);
-//var sx = g.Dijkstra("台东", "中山公园");
-int i = 0;
-foreach(var x in sx)
-{
-    Console.Write($"{x}\t {(i++ % 10 == 0 ? "\n" : "")}");
-}
-Console.WriteLine();
-
-
-//while (true)
-//{
-//    Console.Write("StepInto:");
-//    var sk = Console.ReadLine();
-//    Console.WriteLine();
-//    if (sk != null) Step(sk, q);
-//    Console.Write("PressAnyToContinue:");
-//    Console.ReadLine();
-//    Console.Clear();
-//}
