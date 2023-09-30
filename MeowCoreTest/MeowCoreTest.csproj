@@ -9,14 +9,4 @@
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Meow.Math\Meow.Math.Graph\Meow.Math.Graph.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="a">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-
 </Project>
