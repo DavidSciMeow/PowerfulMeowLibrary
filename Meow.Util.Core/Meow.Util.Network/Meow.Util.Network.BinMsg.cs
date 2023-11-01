@@ -14,7 +14,7 @@ namespace Meow.Util.Network
         /// </summary>
         /// <param name="obj">需要转换的对象</param>
         /// <returns></returns>
-        public static byte[] Build([NotNullWhen(true)] T obj)
+        public static byte[] Build(T obj)
         {
 #if DEBUG
             DateTime dt1 = DateTime.Now;
@@ -23,7 +23,7 @@ namespace Meow.Util.Network
             var size = Marshal.SizeOf(obj);
             buff = new byte[size];
             var ptr = Marshal.UnsafeAddrOfPinnedArrayElement(buff, 0);
-            if(obj is not null)
+            if(obj != null)
             {
                 Marshal.StructureToPtr(obj, ptr, true);
 #if DEBUG
@@ -43,7 +43,7 @@ namespace Meow.Util.Network
         /// </summary>
         /// <param name="buff">缓存的byte</param>
         /// <returns></returns>
-        public static T? Decon(byte[] buff)
+        public static T Decon(byte[] buff)
         {
 #if DEBUG
             DateTime dt1 = DateTime.Now;

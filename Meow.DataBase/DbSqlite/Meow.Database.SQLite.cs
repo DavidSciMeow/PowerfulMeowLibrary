@@ -26,7 +26,6 @@ namespace Meow.DataBase.SQLite
             conn = new SqliteConnection($"Data Source={dBfile}");
             conn.Open();
         }
-
         /// <inheritdoc/>
         public SQLiteDBH PrepareDb(string cmdText)
         {
@@ -58,7 +57,7 @@ namespace Meow.DataBase.SQLite
         {
             if (command.CommandText.Contains("SELECT"))
             {
-                DataTable dt = new();
+                DataTable dt = new DataTable();
                 dt.Load(command.ExecuteReader());
                 return dt;
             }
@@ -67,14 +66,12 @@ namespace Meow.DataBase.SQLite
                 throw new Exception("No SELECT Present In Command, Please Use ExecuteNonQuery");
             }
         }
-
         /// <inheritdoc/>
         public bool SelectExist() => GetTable().Rows.Count > 0;
         /// <inheritdoc/>
         public DataRowCollection GetRows() => GetTable()?.Rows;
         /// <inheritdoc/>
-        public T GetFirstRowItem<T>(string colname) => GetTable().Rows[0].Field<T>(colname);
-
+        public T GetFirstRowItem<T>(string colname) => (T)GetTable().Rows[0][colname];
         /// <summary>
         /// 删除数据库
         /// </summary>
@@ -84,7 +81,6 @@ namespace Meow.DataBase.SQLite
             File.Delete(DBfile);
             return true;
         }
-
         /// <summary>
         /// 释放资源
         /// </summary>
@@ -116,8 +112,6 @@ namespace Meow.DataBase.SQLite
             Dispose(disposing: true);
             GC.SuppressFinalize(this);
         }
-
-
     }
 }
 

@@ -18,7 +18,7 @@ namespace Meow.Database.Mysql
         readonly System.Timers.Timer WatchDog;
         private void GlobalOpen()
         {
-            if (conn.State is ConnectionState.Closed or ConnectionState.Broken)
+            if (conn.State == ConnectionState.Closed || conn.State == ConnectionState.Broken)
             {
                 conn.Open();
             }
@@ -34,7 +34,7 @@ namespace Meow.Database.Mysql
                     if (((MySqlConnection)conn).Ping())//if ping errs is connection dropped
                     {
                         conn.Close();
-                        if(conn.State is ConnectionState.Closed or ConnectionState.Broken)
+                        if(conn.State == ConnectionState.Closed || conn.State == ConnectionState.Broken)
                         {
                             conn.Open();
                         }
@@ -57,13 +57,12 @@ namespace Meow.Database.Mysql
         /// <para>to Initialize a link with a ConnectionString</para>
         /// </summary>
         /// <param name="d">链接字符串</param>
-        /// <param name="initOpen">是否初始化</param>
         /// <param name="log">是否记录日志</param>
         /// <param name="keepAlive">是否保持长连接</param>
         public MysqlDBH(string d, bool log = false, bool keepAlive = false)
         {
-            conn ??= new MySqlConnection(d);
-            WatchDog = new(MaxTimedOut);
+            if(conn is null) conn = new MySqlConnection(d);
+            WatchDog = new System.Timers.Timer(MaxTimedOut);
             Log = log;
             KeepAlive = keepAlive;
             GlobalOpen();
@@ -73,13 +72,12 @@ namespace Meow.Database.Mysql
         /// <para>to Initialize a link with a ConnectionString</para>
         /// </summary>
         /// <param name="d">链接字符串</param>
-        /// <param name="initOpen">是否初始化</param>
         /// <param name="log">是否记录日志</param>
         /// <param name="keepAlive">是否保持长连接</param>
         public MysqlDBH(MySqlConnection d, bool log = false, bool keepAlive = false)
         {
-            conn ??= d;
-            WatchDog = new(MaxTimedOut);
+            if (conn is null) conn = d;
+            WatchDog = new System.Timers.Timer(MaxTimedOut);
             Log = log;
             KeepAlive = keepAlive;
             GlobalOpen();
@@ -88,7 +86,6 @@ namespace Meow.Database.Mysql
         /// 初始化一个Mysql连接(字符串初始化)
         /// <para>to Initialize a link with a ConnectionString</para>
         /// </summary>
-        /// <param name="initOpen">是否初始化</param>
         /// <param name="log">是否记录日志</param>
         /// <param name="keepAlive">是否保持长连接</param>
         /// <param name="DataBase">数据库</param>
@@ -105,7 +102,7 @@ namespace Meow.Database.Mysql
             conn = new MySqlConnection(
                $"Database={DataBase};DataSource={DataSource};Port={Port};UserId={UserId};Password={password};Charset={Charset};{otherParameter}"
                );
-            WatchDog = new(MaxTimedOut);
+            WatchDog = new System.Timers.Timer(MaxTimedOut);
             Log = log;
             KeepAlive = keepAlive;
             GlobalOpen();
@@ -172,9 +169,11 @@ namespace Meow.Database.Mysql
         {
             try
             {
-                MySqlDataAdapter adapter = new();
-                adapter.SelectCommand = (MySqlCommand)command;
-                DataSet ds = new();
+                MySqlDataAdapter adapter = new MySqlDataAdapter
+                {
+                    SelectCommand = (MySqlCommand)command
+                };
+                DataSet ds = new DataSet();
                 adapter.Fill(ds);
                 ((MySqlCommand)command).Dispose();
                 return ds.Tables[0];
@@ -190,7 +189,7 @@ namespace Meow.Database.Mysql
         /// <inheritdoc/>
         public DataRowCollection GetRows() => GetTable()?.Rows;
         /// <inheritdoc/>
-        public R GetFirstRowItem<R>(string colname) => GetTable().Rows[0].Field<R>(colname);
+        public R GetFirstRowItem<R>(string colname) => (R)GetTable().Rows[0][colname];
 
         /// <summary>
         /// 默认关闭的Dispose

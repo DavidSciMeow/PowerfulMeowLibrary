@@ -89,7 +89,7 @@ namespace Meow.DataBase.SQLite
             {
                 constrains = $"PRIMARY KEY ('{col.ColumnName}'),";
             }
-            ss = ss[0..^1] + $"{(constrains == null ? "" : $", {constrains[0..^1]}")});";
+            ss = ss.Substring(0, ss.Length - 1) + $"{(constrains == null ? "" : $", {constrains.Substring(0, ss.Length - 1)}")});";
             return ss;
         }
         /// <summary>
@@ -222,28 +222,28 @@ namespace Meow.DataBase.SQLite
         /// <param name="dr">行</param>
         /// <param name="FieldName">列名</param>
         /// <returns></returns>
-        public static long GetInt(this DataRow dr, string FieldName) => dr.Field<long>(FieldName);
+        public static long GetInt(this DataRow dr, string FieldName) => dr.Get<long>(FieldName);
         /// <summary>
         /// 获得一个字符串
         /// </summary>
         /// <param name="dr">行</param>
         /// <param name="FieldName">列名</param>
         /// <returns></returns>
-        public static string GetString(this DataRow dr, string FieldName) => dr.Field<string>(FieldName);
+        public static string GetString(this DataRow dr, string FieldName) => dr.Get<string>(FieldName);
         /// <summary>
         /// 获取一个浮点数
         /// </summary>
         /// <param name="dr">行</param>
         /// <param name="FieldName">列名</param>
         /// <returns></returns>
-        public static double GetFloat(this DataRow dr, string FieldName) => dr.Field<double>(FieldName);
+        public static double GetFloat(this DataRow dr, string FieldName) => dr.Get<double>(FieldName);
         /// <summary>
         /// 获取一个二进制
         /// </summary>
         /// <param name="dr">行</param>
         /// <param name="FieldName">列名</param>
         /// <returns></returns>
-        public static byte[] GetBLOB(this DataRow dr, string FieldName) => dr.Field<byte[]>(FieldName);
+        public static byte[] GetBLOB(this DataRow dr, string FieldName) => dr.Get<byte[]>(FieldName);
         /// <summary>
         /// 获取一个T类型的值
         /// </summary>
@@ -251,6 +251,6 @@ namespace Meow.DataBase.SQLite
         /// <param name="dr">行</param>
         /// <param name="FieldName">列名</param>
         /// <returns></returns>
-        public static T Get<T>(this DataRow dr, string FieldName) => dr.Field<T>(FieldName);
+        public static T Get<T>(this DataRow dr, string FieldName) => (T)dr[FieldName];
     }
 }

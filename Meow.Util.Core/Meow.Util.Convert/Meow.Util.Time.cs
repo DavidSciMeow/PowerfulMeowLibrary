@@ -10,7 +10,7 @@ namespace Meow.Util.Convert
         /// <summary>
         /// TimeStamp起始点
         /// </summary>
-        private static readonly DateTime UnixTimeStampStart = new (1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+        private static readonly DateTime UnixTimeStampStart = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
         /// <summary>
         /// 秒制时间戳转换时间类
         /// </summary>

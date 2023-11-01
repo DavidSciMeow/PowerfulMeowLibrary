@@ -1,6 +1,7 @@
-﻿using System;
-using SkiaSharp;
+﻿using SkiaSharp;
+using System;
 using System.IO;
+using System.Text;
 
 namespace Meow.Util.Imaging
 {
@@ -14,10 +15,12 @@ namespace Meow.Util.Imaging
         /// </summary>
         public static string FileToBase64(string fileName)
         {
-            using FileStream fs = new(fileName, FileMode.Open, FileAccess.Read);
-            byte[] byteArray = new byte[fs.Length];
-            fs.Read(byteArray, 0, byteArray.Length);
-            return Convert.ToBase64String(byteArray);
+            using (FileStream fs = new FileStream(fileName, FileMode.Open, FileAccess.Read))
+            {
+                byte[] byteArray = new byte[fs.Length];
+                fs.Read(byteArray, 0, byteArray.Length);
+                return Convert.ToBase64String(byteArray);
+            }
         }
         /// <summary>
         /// 读取图片
@@ -25,6 +28,30 @@ namespace Meow.Util.Imaging
         /// <param name="fp">文件指针</param>
         /// <returns></returns>
         public static SKBitmap Read(string fp) => SKBitmap.Decode(new SKManagedStream(File.OpenRead(fp)));
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="skb"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
+        /// <returns></returns>
+        public static string PrintBW(this SKBitmap skb, int width = 100, int height = 50)
+        {
+            StringBuilder sb = new StringBuilder();
+            skb = skb.Resize(new SKSizeI(width, height), SKFilterQuality.High);
+            for (int i = 0; i < skb.Height; i++) 
+            {
+                for (int j = 0; j < skb.Width; j++)
+                {
+                    var pkc = skb.GetPixel(j, i);
+                    pkc.ToHsl(out var _, out var _, out var l);
+                    if (l > 50) sb.Append('█');
+                    else sb.Append(' ');
+                }
+                sb.AppendLine();
+            }
+            return sb.ToString();
+        }
         /// <summary>
         /// 保存位图图像
         /// </summary>
@@ -52,8 +79,8 @@ namespace Meow.Util.Imaging
         /// <returns></returns>
         public static string ToBase64String(this SKImage i)
         {
-            MemoryStream ms = new();
-            i.Encode(SkiaSharp.SKEncodedImageFormat.Jpeg, 100).SaveTo(ms);
+            MemoryStream ms = new MemoryStream();
+            i.Encode(SKEncodedImageFormat.Jpeg, 100).SaveTo(ms);
             byte[] arr = new byte[ms.Length];
             ms.Position = 0;
             ms.Read(arr, 0, (int)ms.Length);
